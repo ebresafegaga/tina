@@ -17,19 +17,19 @@
 %token THE
 %token DATA HAS
 
-%token MATCH WITH BAR ARROW END
-%token LET FN IN 
+%token MATCH WITH UNDERSCORE BAR ARROW
+%token LET MUT FN IN 
+%token COLONEQUALS
 
 %token IF THEN ELSE 
 
 %token PLUS STAR MINUS DIV
 
-%token SPACE 
+%token GT LT GTEQUALS LTEQUALS
 
 %token EOF
 
-
-%start <UntypedSyntax.toplevel list> toplevel
+%start <Ast.toplevel list> toplevel
 
 %%
 

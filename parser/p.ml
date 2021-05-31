@@ -1,0 +1,27 @@
+
+open Syntax
+
+let a = Ast.Fn ([], Ast.TODO)
+
+(*
+    claim sum (claim x Nat, Eq (x, 10) -> Nat)
+    def sum (x, y) = x + y 
+
+    fn (claim x Nat, claim y Nat) x + y 
+
+    claim a Nat 
+    def a = 34
+
+    claim b Int
+    def b = 45
+*)
+
+type abc = 
+    { first : int; 
+      mutable second : string }
+
+let a = { first = 34; second = "" }
+
+let () =
+    a.second <- "de";
+    ()
