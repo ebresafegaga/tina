@@ -24,7 +24,6 @@ let whitespace = [' ' '\t']+
 let newline = '\r' | '\n' | "\r\n"
 let id = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
 
-
 rule read_token = parse 
     | "true" { TRUE }   
     | "false" { FALSE }
@@ -67,6 +66,7 @@ rule read_token = parse
     | "Float" { TY_FLOAT }
     | "String" { TY_STRING }
     | "INT" { TY_INT }
+    | "TODO" { TK_TODO }
     | '"' { read_string (Buffer.create 17) lexbuf }
     | whitespace { read_token lexbuf }
     | newline  { next_line lexbuf; read_token lexbuf }

@@ -1,14 +1,13 @@
 open Utils
-
+open Naming
 
 type ty = 
-    | String 
-    | Nat 
-    | Int
-    | Float 
-    | Arrow of ty list * ty 
-
-type name = string
+    | TyString 
+    | TyNat 
+    | TyInt
+    | TyFloat 
+    | TyArrow of ty list * ty 
+    (* Record type *)
 
 type const = 
     | Bool of bool 
@@ -18,24 +17,23 @@ type const =
     | String of string 
 
 type pattern = 
-    | PVariable of name
+    | PVariable of PVarName.t 
 
 type expression = 
-    | Void 
-    | Variable of name 
-    | Constant of const
-    | If of expression * expression * expression
-    | Application of expression * expression list 
-    | Let of name * expression * expression
-    | List of expression list 
-    | Fn of name list * expression
-    | Annotated of expression * ty
-    | Sequence of expression list
-    | Match of expression * (pattern * expression) list 
-    | Record of (name * expression) list 
-    | TODO
-    
-type toplevel = 
-    | Claim of name * ty
-    | Def of name * expression
-    | Expression of expression
+    | Void of Loc.t 
+    | Variable of Loc.t * VarName.t
+    | Constant of Loc.t * const
+    | If of Loc.t * expression * expression * expression
+    | Application of Loc.t * expression * expression list 
+    | Let of Loc.t * VarName.t * expression * expression
+    (* LetMut *)
+    | Fn of Loc.t * VarName.t list * expression
+    | Annotated of Loc.t * expression * ty
+    | Sequence of Loc.t * expression list
+    | Match of Loc.t * expression * (pattern * expression) list 
+    | Record of Loc.t * (FieldName.t * expression) list 
+    | TODO of Loc.t 
+
+type claim = Claim of Loc.t * DefName.t * ty
+type def = Def of Loc.t * DefName.t * ty    
+type toplevel = Toplevel of claim list * def list * expression list

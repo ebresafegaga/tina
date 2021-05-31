@@ -1,5 +1,6 @@
 %{
     open Syntax
+    open Ast
 %}
 
 %token <int> INT
@@ -30,11 +31,38 @@
 
 %token TY_NAT TY_STRING TY_FLOAT TY_INT
 
+%token TK_TODO
+
 %token EOF
 
-%start <Ast.toplevel list> toplevel
+%start toplevel
+
+%type <Ast.toplevel list> toplevel
+%type <Ast.ty> ty
 
 %%
 
 toplevel: 
     | EOF { [] }
+
+claim: 
+    | CLAIM; id = ID; t = ty; { [] }
+
+def: 
+    | DEF; id = ID; args = arg_list; EQUALS; body = expression; { [] } 
+
+ty: 
+    | TY_NAT { TyNat }
+    | TY_STRING { TyString }
+    | TY_FLOAT { TyFloat }
+    | TY_INT { TyInt }
+    | LPAREN a = separated_list(COMMA, ty); ARROW; b = ty; RPAREN { TyArrow (a, b) }
+
+arg_list: 
+    | LPAREN; params=separated_list(COMMA,param); RPAREN { param s}
+
+param: 
+    | id = ID; { id }
+
+expression:
+    | TK_TODO { TODO }
