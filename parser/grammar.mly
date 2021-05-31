@@ -37,13 +37,13 @@
 
 %start toplevel
 
-%type <Ast.toplevel list> toplevel
+%type <Ast.toplevel> toplevel
 %type <Ast.ty> ty
 
 %%
 
 toplevel: 
-    | EOF { [] }
+    | EOF { Toplevel ([], [], []) }
 
 claim: 
     | CLAIM; id = ID; t = ty; { [] }
