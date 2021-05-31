@@ -35,5 +35,5 @@ type expression =
     | TODO of Loc.t 
 
 type claim = Claim of Loc.t * DefName.t * ty
-type def = Def of Loc.t * DefName.t * ty    
+type def = Def of Loc.t * DefName.t * expression   
 type toplevel = Toplevel of claim list * def list * expression list

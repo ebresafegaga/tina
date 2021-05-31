@@ -1,6 +1,7 @@
 %{
     open Syntax
     open Ast
+    open Naming 
 %}
 
 %token <int> INT
@@ -39,17 +40,23 @@
 
 %type <Ast.toplevel> toplevel
 %type <Ast.ty> ty
+%type <claim> claim 
+%type <def> def
+%type <expression> expression
 
 %%
 
 toplevel: 
-    | EOF { Toplevel ([], [], []) }
+    | claims = list(claim); defs = list(def); expressions = list(expression); EOF 
+    { Toplevel (claims, defs, expressions) }
 
 claim: 
-    | CLAIM; id = ID; t = ty; { [] }
+    | CLAIM; id = ID; t = ty; 
+    { Claim (Loc.dummy, DefName.of_string id, t) }
 
 def: 
-    | DEF; id = ID; args = arg_list; EQUALS; body = expression; { [] } 
+    | DEF; id = ID; args = arg_list; EQUALS; body = expression; 
+    { Def (Loc.dummy, DefName.of_string id, body) } 
 
 ty: 
     | TY_NAT { TyNat }
@@ -59,10 +66,10 @@ ty:
     | LPAREN a = separated_list(COMMA, ty); ARROW; b = ty; RPAREN { TyArrow (a, b) }
 
 arg_list: 
-    | LPAREN; params=separated_list(COMMA,param); RPAREN { param s}
+    | LPAREN; params=separated_list(COMMA,param); RPAREN { params }
 
 param: 
     | id = ID; { id }
 
 expression:
-    | TK_TODO { TODO }
+    | TK_TODO { TODO (Loc.dummy) }
