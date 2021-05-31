@@ -1,14 +1,11 @@
 open Utils
 
 
-type base_ty = 
+type ty = 
     | String 
     | Nat 
     | Int
     | Float 
-
-type ty = 
-    | Base of base_ty 
     | Arrow of ty list * ty 
 
 type name = string

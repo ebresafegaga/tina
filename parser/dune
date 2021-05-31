@@ -3,7 +3,7 @@
  (libraries utils syntax))
 
 
-; (ocamllex lexer)
+(ocamllex lexer)
 
-; (menhir 
-;   (modules grammar))
+(menhir 
+   (modules grammar))

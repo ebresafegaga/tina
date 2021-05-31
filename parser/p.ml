@@ -1,5 +1,12 @@
 
 open Syntax
+open Lexer
+
+let parse lexbuf = 
+    match Grammar.toplevel Lexer.read_token lexbuf with 
+    | result -> Ok result
+    | exception SyntaxError msg -> Error msg
+    | exception Grammar.Error -> Error "parse error i guess"
 
 let a = Ast.Fn ([], Ast.TODO)
 
