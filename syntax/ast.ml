@@ -8,7 +8,7 @@ type ty =
     | TyFloat 
     | TyUnit
     | TyArrow of ty list * ty 
-    (* Record type *)
+    (* Record type/Variant type? *)
 
 type const = 
     | CBool of bool 
@@ -18,7 +18,9 @@ type const =
     | CString of string 
 
 type pattern = 
-    | PVariable of PVarName.t 
+    | PVariable of PVarName.t
+
+type identifier = V of VarName.t | D of DefName.t | F of FieldName.t
 
     (* we need a variable type which enacpsulates 
       VarName.t DefName.t ... *)
@@ -35,16 +37,12 @@ type expression =
     | Sequence of Loc.t * expression list
     | Match of Loc.t * expression * (pattern * expression) list 
     | Record of Loc.t * (FieldName.t * expression) list 
+    | RecordIndex of Loc.t * expression * FieldName.t
+    | Variant of Loc.t * VariantName.t * expression list
     | TODO of Loc.t 
 
-(* also data decls and abilities *)
+(* also data decls (variant/records) and abilities *)
 type toplevel = 
     | Claim of Loc.t * DefName.t * ty
     | Def of Loc.t * DefName.t * expression
     | Expression of expression
-
-let f x b = 
-    let x = 34 in 
-
-
-fun () -> ()
