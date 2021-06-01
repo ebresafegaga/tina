@@ -1,0 +1,36 @@
+
+34
+
+
+claim A Nat
+def A = (341)
+
+fn (x, y) x
+
+fn ()  34
+
+fn (var) "something" 
+
+(fn (x, y)  "nope") (34, 5)
+
+(34)
+
+("wewe")
+
+claim B String 
+def B = "something"
+
+if true then "de" else "ther"
+
+claim F (Nat, Nat -> Nat)
+def F (a, b) = 
+    b
+
+def car () = 
+    let a = F (1, fn (v) v); 
+    a ()
+
+def T (a, y) = 
+    let b = 23; 
+
+(fn () 34)

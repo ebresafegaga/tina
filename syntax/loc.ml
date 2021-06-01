@@ -13,12 +13,15 @@ assuming each character is one column wide).
 
 *)
 
-type t = Lexing.position
+type t = Lexing.position * Lexing.position
 
-let dummy = 
-    Lexing.{ pos_fname = "DUMMY"; 
-             pos_lnum = 0; 
-             pos_bol = 0; 
-             pos_cnum = 0 }
+let pp_pos loc =
+    Format.sprintf "Line:%d Position:%d" loc.Lexing.pos_lnum
+      (loc.Lexing.pos_cnum - loc.Lexing.pos_bol + 1)
+
+let pp ((s, e): t) = 
+    Format.sprintf "(%s, %s)" (pp_pos s) (pp_pos e)
+
+let dummy : t = (Lexing.dummy_pos, Lexing.dummy_pos)
 
 (* other utilities go here *)

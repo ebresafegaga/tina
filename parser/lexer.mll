@@ -45,6 +45,7 @@ rule read_token = parse
     | "has" { HAS }
     | "match" { MATCH }
     | "with" { WITH }
+    | "end" { END }
     | "_" { UNDERSCORE }
     | "->" { ARROW }
     | "let" { LET }

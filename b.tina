@@ -1,0 +1,11 @@
+
+claim A (Nat, String -> Nat)
+def A = (fn () 34) (2, 3)
+
+def B = (fn (x, y)  "nope") (34, 5)
+
+
+f (3, 4) 
+
+
+fn () 23
