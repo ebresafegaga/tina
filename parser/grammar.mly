@@ -13,7 +13,7 @@
 
 %token LBRACE RBRACE LPAREN RPAREN LBRACK RBRACK
 %token COMMA
-%token COLON SEMICOLON
+%token COLON SEMICOLON DOT
 %token EQUALS
 
 %token CLAIM DEF
@@ -73,8 +73,11 @@ record_claim:
     | CLAIM; id = ID; t = ty; { (FieldName.of_string id, t) }
 
 record_decl: 
-    | DATA; id = ID; EQUALS; LBRACE; claims = separated_nonempty_list(COMMA, record_claim) RBRACE
+    | DATA; id = ID; EQUALS; LBRACE; claims = separated_nonempty_list(COMMA, record_claim); RBRACE
       { RecordDef ($loc, DataName.of_string id, claims) }
+
+record_expr_body: 
+    | field = ID; COLON; e = expression; { (FieldName.of_string field, e) }
 
 ty: 
     | TY_NAT { TyNat }
@@ -108,8 +111,16 @@ expression:
       { Let ($loc, VarName.of_string id, value, body) } 
     | FN; args = arg_list; body = expression;
       { Fn ($loc, args, body) }
+    | THE; t = ty; e = expression; 
+      { Annotated ($loc, e, t) }
     | operand = expression; operator = expr_list;
      { Application ($loc, operand, operator) }
+    | e1 = expression; SEMICOLON; e2 = expression 
+      { Sequence ($loc, e1, e2) }
+    | record = expression; DOT; field = ID;
+      { RecordIndex ($loc, record, FieldName.of_string field) }
+    | name = ID; LBRACE; body = separated_nonempty_list(COMMA, record_expr_body); RBRACE 
+      { Record ($loc, DataName.of_string name, body)}
     | pe = paren_expression { pe }
 
 

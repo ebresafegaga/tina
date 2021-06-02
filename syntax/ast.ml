@@ -36,10 +36,10 @@ type expression =
     | Let of Loc.t * VarName.t * expression * expression
     (* LetMut maybe? *)
     | Fn of Loc.t * VarName.t list * expression
-    | Annotated of Loc.t * expression * ty (* tbi *)
-    | Sequence of Loc.t * expression list (* tbi *)
+    | Annotated of Loc.t * expression * ty 
+    | Sequence of Loc.t * expression * expression
     | Match of Loc.t * expression * (pattern * expression) list (* tbi *)
-    | Record of Loc.t * DataName.t * (FieldName.t * expression) list 
+    | Record of Loc.t * DataName.t * (FieldName.t * expression) list
     | RecordIndex of Loc.t * expression * FieldName.t
     (* | Variant of Loc.t * DataName.t * expression list *)
     | TODO of Loc.t 
@@ -53,6 +53,7 @@ type toplevel =
     | Expression of expression
 
 
+
 (*
 
     
@@ -60,6 +61,8 @@ type toplevel =
     data People = gaga | Someone (String, String) | ... 
 
     a = Name { A: 2, B: 45 }
+
+    a.A
   
     match a with 
     | Name { a: <pat>, b: <pat> } -> 

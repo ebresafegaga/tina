@@ -36,6 +36,7 @@ rule read_token = parse
     | "," { COMMA }
     | ":" { COLON }
     | ";" { SEMICOLON }
+    | "." { DOT }
     | "=" { EQUALS }
     | "claim" { CLAIM }
     | "def" { DEF }

@@ -34,3 +34,22 @@ def T (a, y) =
     let b = 23; 
 
 (fn () 34)
+
+
+data Name = 
+    { claim A Nat, 
+      claim B (String, Nat -> Nat) }
+
+(the Nat 24)
+
+def B = 
+    let a = 10; 
+    23; 
+    54;
+    "stringer"
+
+a.A 
+
+b.c.D
+
+Person { name: "ogaga", age: 10 }
