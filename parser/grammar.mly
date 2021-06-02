@@ -42,9 +42,10 @@
 %type <Ast.ty> ty
 %type <toplevel> claim 
 %type <toplevel> def
+%type <toplevel> record_decl
 %type <expression> expression
 %type <expression> maybe_empty_expr
-%type <const> constant
+%type <constexpr> constant
 
 %%
 
@@ -54,6 +55,7 @@ toplevel:
 top: 
     | c = claim { c }
     | d = def { d }
+    | r = record_decl { r }
     | e = expression { Expression e }
 
 
@@ -66,6 +68,13 @@ def:
       { Def ($loc, DefName.of_string id, body) }
     | DEF; id = ID; args = arg_list; EQUALS; body = expression; 
       { Def ($loc, DefName.of_string id, Fn ($loc, args, body)) } 
+
+record_claim: 
+    | CLAIM; id = ID; t = ty; { (FieldName.of_string id, t) }
+
+record_decl: 
+    | DATA; id = ID; EQUALS; LBRACE; claims = separated_nonempty_list(COMMA, record_claim) RBRACE
+      { RecordDef ($loc, DataName.of_string id, claims) }
 
 ty: 
     | TY_NAT { TyNat }

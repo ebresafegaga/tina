@@ -13,4 +13,4 @@ let p () =
     let l = Lexing.from_channel file in 
     match parse l with 
     | Ok x -> x
-    | Error msg -> []
+    | Error msg -> failwith (Format.sprintf "%s" msg)

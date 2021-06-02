@@ -19,4 +19,5 @@ module VarName : ID = StringID
 module PVarName : ID = StringID
 module DefName : ID = StringID
 module FieldName : ID = StringID
-module VariantName : ID = StringID
+module DataName : ID = StringID
+module CtorName : ID = StringID
