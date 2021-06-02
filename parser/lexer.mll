@@ -43,9 +43,7 @@ rule read_token = parse
     | "the" { THE }
     | "data" { DATA } 
     | "ability" { ABILITY }
-    | "has" { HAS }
-    | "match" { MATCH }
-    | "with" { WITH }
+    | "case" { CASE }
     | "end" { END }
     | "_" { UNDERSCORE }
     | "->" { ARROW }

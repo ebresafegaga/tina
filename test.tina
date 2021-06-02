@@ -53,3 +53,21 @@ a.A
 b.c.D
 
 Person { name: "ogaga", age: 10 }
+
+
+claim plus (Nat, Nat -> Nat) 
+def plus (x, y) = x + y 
+
+def create_pos (x, y) =  Loc { start: x, end_: y }
+
+Other { a: Person {v: 10, b: 3.4}, 
+        c: fn (x, y) x }
+
+    case ( case 23 { x ->  x} ) {
+        Name { a: b} -> 23, 
+        x ->  x
+    }
+
+def a = 34
+
+a

@@ -10,27 +10,29 @@ type ty =
     | TyRecord of (FieldName.t * ty) list
     (* Variant type? *)
 
-type constexpr = 
-    | CBool of bool 
-    (* | CNat of int  *)
-    | CInt of int
-    | CFloat of float 
-    | CString of string 
-
-(* tbi *)
 type pattern = 
+    | PInteger of int 
+    | PString of string 
+    | PBool of bool
+    (* | Pfloat of float  
+       | PUnit *)
     | PVariable of VarName.t
     | PRecord of DataName.t * (FieldName.t * pattern) list 
     (* | PVariant of DataName.t * pattern list  *)
 
 (* we need a variable type which enacpsulates 
     VarName.t DefName.t ... *)
-type identifier = V of VarName.t | D of DefName.t | F of FieldName.t
+(* type identifier = V of VarName.t | D of DefName.t | F of FieldName.t *)
 
 type expression = 
-    | Unit of Loc.t 
+    | LitTodo of Loc.t 
+    | LitUnit of Loc.t 
+    | LitBool of Loc.t * bool 
+    | LitInteger of Loc.t * int 
+    | LitFloat of Loc.t * float 
+    | LitString of Loc.t * string 
+
     | Variable of Loc.t * VarName.t
-    | Constant of Loc.t * constexpr
     | If of Loc.t * expression * expression * expression
     | Application of Loc.t * expression * expression list 
     | Let of Loc.t * VarName.t * expression * expression
@@ -38,11 +40,10 @@ type expression =
     | Fn of Loc.t * VarName.t list * expression
     | Annotated of Loc.t * expression * ty 
     | Sequence of Loc.t * expression * expression
-    | Match of Loc.t * expression * (pattern * expression) list (* tbi *)
+    | Case of Loc.t * expression * (pattern * expression) list (* tbi *)
     | Record of Loc.t * DataName.t * (FieldName.t * expression) list
     | RecordIndex of Loc.t * expression * FieldName.t
     (* | Variant of Loc.t * DataName.t * expression list *)
-    | TODO of Loc.t 
     (* list? tuples? *)
 
 type toplevel = 
@@ -53,10 +54,7 @@ type toplevel =
     | Expression of expression
 
 
-
-(*
-
-    
+(*  
 
     data People = gaga | Someone (String, String) | ... 
 

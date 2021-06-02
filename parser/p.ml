@@ -8,7 +8,7 @@ let parse lexbuf =
     | exception SyntaxError msg -> Error msg
     | exception Grammar.Error -> Error "parse error i guess"
 
-let a = Ast.Fn (Loc.dummy, [], Ast.TODO Loc.dummy)
+let a = Ast.Fn (Loc.dummy, [], Ast.LitTodo Loc.dummy)
 
 (*
     claim sum (claim x Nat, Eq (x, 10) -> Nat)

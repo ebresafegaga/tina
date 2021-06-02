@@ -1,7 +1,5 @@
 
 
-
-def create_pos (x, y) = Loc { start: x, end_: y }
-
-Other { a: Person {v: 10, b: 3.4}, 
-        c: fn (x, y) x }
+    case rt {
+        x ->  x
+    }
