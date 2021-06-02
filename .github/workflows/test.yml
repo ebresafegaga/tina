@@ -28,9 +28,9 @@ jobs:
         with:
           ocaml-version: ${{ matrix.ocaml-version }}
 
-      - run: opam pin add tina.dev . --n
+      - run: opam pin add tina . --n
 
-      - run: opam depext tina --yes --with-doc --with-test
+      - run: opam depext tina --yes --with-doc
 
       - run: opam install . --deps-only --with-doc --with-test
 
