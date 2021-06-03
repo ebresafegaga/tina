@@ -59,13 +59,13 @@ top:
 
 claim: 
     | CLAIM; id = ID; t = ty; 
-    { Claim ($loc, DefName.of_string id, t) }
+    { Claim ($loc, VarName.of_string id, t) }
 
 def: 
     | DEF; id = ID; EQUALS; body = expression 
-      { Def ($loc, DefName.of_string id, body) }
+      { Def ($loc, VarName.of_string id, body) }
     | DEF; id = ID; args = arg_list; EQUALS; body = expression; 
-      { Def ($loc, DefName.of_string id, Fn ($loc, args, body)) } 
+      { Def ($loc, VarName.of_string id, Fn ($loc, args, body)) } 
 
 record_claim: 
     | CLAIM; id = ID; t = ty; { (FieldName.of_string id, t) }
@@ -113,15 +113,16 @@ pattern:
       { PRecord (DataName.of_string rec_name, body) }
 
 expression: 
+    | name = ID { Variable ($loc, VarName.of_string name) }
     | LPAREN; RPAREN { LitUnit ($loc) }
+
     | value = INT { LitInteger ($loc, value) }
     | value = FLOAT { LitFloat ($loc, value) }
     | value = STRING { LitString ($loc, value) }
     | TRUE { LitBool ($loc, true) }
     | FALSE { LitBool ($loc, false) }
     | TK_TODO { LitTodo ($loc) }
-
-    | name = ID { Variable ($loc, VarName.of_string name) }
+    
     | IF; pred = expression; THEN pred_true = expression; ELSE pred_false = expression
      { If ($loc, pred, pred_true, pred_false) }
     | LET; id = ID; EQUALS; value = expression; SEMICOLON; body = maybe_empty_expr

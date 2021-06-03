@@ -24,6 +24,10 @@ type pattern =
     VarName.t DefName.t ... *)
 (* type identifier = V of VarName.t | D of DefName.t | F of FieldName.t *)
 
+(* module Identifier = struct 
+    type t = Global of DefName.t | Local of VarName.t  
+end *)
+
 type expression = 
     | LitTodo of Loc.t 
     | LitUnit of Loc.t 
@@ -47,8 +51,8 @@ type expression =
     (* list? tuples? *)
 
 type toplevel = 
-    | Claim of Loc.t * DefName.t * ty
-    | Def of Loc.t * DefName.t * expression
+    | Claim of Loc.t * VarName.t * ty
+    | Def of Loc.t * VarName.t * expression
     (* | VariantDef of Loc.t * DataName.t * (CtorName.t * ty list) list *)
     | RecordDef of Loc.t * DataName.t * (FieldName.t * ty) list 
     | Expression of expression

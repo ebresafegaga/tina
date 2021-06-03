@@ -1,17 +1,12 @@
+open Syntax
+open Naming
 
 
-
-type t = 
+type value = 
     | VUnit 
     | VInteger of int 
     | VString of string 
     | VFloat of float
     | VBool of bool 
-    | VClosure  (* env *)
-    | VRecord 
-
-type builtin = t list -> t
-
-let plus : builtin = function 
-    | [VInteger x; VInteger y] -> VInteger (x + y) 
-    | _ -> failwith ""
+    | VClosure of (value list -> (value, string) result)
+    | VRecord of DataName.t * (FieldName.t * value) list 
