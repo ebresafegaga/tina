@@ -10,3 +10,6 @@ type value =
     | VBool of bool 
     | VClosure of (value list -> (value, string) result)
     | VRecord of DataName.t * (FieldName.t * value) list 
+
+let pp_value ppf v = 
+    failwith ""

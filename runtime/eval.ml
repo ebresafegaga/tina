@@ -66,6 +66,7 @@ let rec eval env expr =
         Ok (V.VClosure clo)
 
     | A.Application (loc, operator, operands) -> 
+        (* TODO check that number of arguments are equal *)
         let open Result in
         let* operands = 
             operands 
@@ -98,7 +99,7 @@ let rec eval env expr =
         let open Result in
         let* value = eval env expr in
         let rec eval_cases = function 
-            | [] -> Error ""
+            | [] -> Error "Pattern match failure"
             | x :: xs -> 
                 let p, e = x in
                 match pattern_binder p value env with 
@@ -109,3 +110,14 @@ let rec eval env expr =
     | A.Sequence (loc, e1, e2) -> 
         Error ""
     | A.LitTodo loc -> Error "Not yet supported" 
+
+
+let process_toplevel = function  
+    | [] -> []
+    | A.Claim (loc, _, _) :: rest -> failwith ""
+    | A.Def (loc, name, body) :: rest -> 
+        (* Add def to conetext *)
+        failwith "" 
+    | A.Expression e :: rest -> 
+        failwith ""
+    | A.RecordDef (loc, _, _) :: rest -> failwith ""
