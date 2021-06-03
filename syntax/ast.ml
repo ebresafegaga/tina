@@ -10,6 +10,7 @@ type ty =
     | TyRecord of (FieldName.t * ty) list
     (* Variant type? *)
 
+(* TODO: add locations to pattern *)
 type pattern = 
     | PInteger of int 
     | PString of string 

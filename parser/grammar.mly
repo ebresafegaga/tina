@@ -36,6 +36,9 @@
 
 %token EOF
 
+%left PLUS MINUS
+%left MULT DIV
+
 %start toplevel
 
 %type <Ast.toplevel list> toplevel
@@ -108,6 +111,7 @@ case_expr_body:
       { (pat, e) }
 
 pattern:
+    | LPAREN; p = pattern; RPAREN; { p }
     | var = ID { PVariable (VarName.of_string var) }
     | rec_name = ID; LBRACE; body = separated_nonempty_list(COMMA, record_pattern_expr); RBRACE; 
       { PRecord (DataName.of_string rec_name, body) }
@@ -141,4 +145,13 @@ expression:
       { Record ($loc, DataName.of_string name, body) }
     | CASE; e = expression; LBRACE; body = separated_nonempty_list(COMMA, case_expr_body); RBRACE
       { Case ($loc, e, body) } 
+    | e1 = expression; op = operator; e2 = expression 
+      { let o = Variable ($loc, VarName.of_string op) in 
+         Application ($loc, o, [e1; e2]) }
     | LPAREN; e = expression; RPAREN  { e }
+  
+%inline operator: 
+    | PLUS {  "+" }
+    | MINUS { "-" }
+    | STAR { "*" } 
+    | DIV { "/" }

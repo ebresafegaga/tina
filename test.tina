@@ -71,3 +71,9 @@ Other { a: Person {v: 10, b: 3.4},
 def a = 34
 
 a
+
+case Person { name: "ogaga", age: Number { value: 20 } } {
+    Person { name: x, age: Number { value: v} } -> v
+}
+
+(((fn (x) fn (y) x) (23)) (67))

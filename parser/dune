@@ -6,4 +6,5 @@
 (ocamllex lexer)
 
 (menhir 
-   (modules grammar))
+   (modules grammar)
+   (flags --explain --dump))
