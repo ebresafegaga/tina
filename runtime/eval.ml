@@ -22,12 +22,12 @@ let rec pattern_binder pattern value env =
     | A.PString s, V.VString s' when s = s' -> env
     | A.PBool b, V.VBool b' when b = b' -> env
     | A.PRecord (name, body), V.VRecord (name', body') when name = name' -> 
-        let f (n, p) env = 
+        let extender (n, p) env = 
             match List.assoc_opt n body' with 
             | Some v -> pattern_binder p v env
             | None -> failwith "Field does not exist" (* TODO: use Result monad *)
         in 
-        List.fold_right f body env
+        List.fold_right extender body env
     | _ -> raise PatternFailure
 
 let rec eval env expr = 
@@ -48,8 +48,8 @@ let rec eval env expr =
         let open Result in 
         let* e = eval env e in 
         (match e with 
-         | V.VBool (true) -> eval env pt
-         | V.VBool (false) -> eval env pf
+         | V.VBool true -> eval env pt
+         | V.VBool false -> eval env pf
          | _ -> Error "expected a bool type at an if expression ")
 
     | A.Let (loc, name, expr, body) ->
