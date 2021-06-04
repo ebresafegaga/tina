@@ -27,12 +27,16 @@ jobs:
         with:
           ocaml-version: ${{ matrix.ocaml-version }}
 
-      - run: opam pin add tina . --n
+      - run: opam pin add tina.dev --n .
 
-      - run: opam depext tina --yes --with-doc
+      - name: Packages
+        run: opam depext -yt tina
 
-      - run: opam install . --deps-only --with-doc --with-test
+      - name: Dependecies
+        run: opam install -t . --deps-only
+      
+      - name: Build
+        run: opam exec -- dune build --profile release
 
-      - run: opam exec -- dune build --profile release
-
-      - run: opam exec -- dune runtest --profile release
+      - name: Test
+        run: opam exec -- dune runtest --profile release
