@@ -1,6 +1,8 @@
-name: Tina
+name: Tina 
 
-on: [push]
+on:
+  - pull_request
+  - push
 
 jobs:
   build:
@@ -12,25 +14,28 @@ jobs:
           - ubuntu-latest
           - windows-latest
         ocaml-version:
-          - 4.11.1
+          - 4.11.0
           - 4.10.1
+          - 4.09.1
           - 4.08.1
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
+
       - name: Use OCaml ${{ matrix.ocaml-version }}
         uses: avsm/setup-ocaml@v1
         with:
           ocaml-version: ${{ matrix.ocaml-version }}
-      - run: opam pin add tina.dev --n .
-      - name: Packages
-        run: opam depext -yt tina
-      - name: Dependecies
-        run: opam install -t . --deps-only
-      - name: Build
-        run: opam exec -- dune build --profile release
-      - name: Test
-        run: opam exec -- dune runtest --profile release
+
+      - run: opam pin add tina.dev . --no-action
+
+      - run: opam depext hello --yes --with-doc --with-test
+
+      - run: opam install . --deps-only --with-doc --with-test
+
+      - run: opam exec -- dune build --profile release
+
+      - run: opam exec -- dune runtest --profile release
