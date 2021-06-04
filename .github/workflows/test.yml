@@ -30,11 +30,11 @@ jobs:
         with:
           ocaml-version: ${{ matrix.ocaml-version }}
 
-      - run: opam pin add tina.dev . --no-action
+      - run: opam pin add tina.dev -n .
 
-      - run: opam depext hello --yes --with-doc --with-test
+      - run: opam depext -yt tina
 
-      - run: opam install . --deps-only --with-doc --with-test
+      - run: opam install -t . --deps-only
 
       - run: opam exec -- dune build --profile release
 
