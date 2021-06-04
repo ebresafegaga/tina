@@ -21,22 +21,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
-
       - name: Use OCaml ${{ matrix.ocaml-version }}
         uses: avsm/setup-ocaml@v1
         with:
           ocaml-version: ${{ matrix.ocaml-version }}
-
       - run: opam pin add tina.dev --n .
-
       - name: Packages
         run: opam depext -yt tina
-
       - name: Dependecies
         run: opam install -t . --deps-only
-      
       - name: Build
         run: opam exec -- dune build --profile release
-
       - name: Test
         run: opam exec -- dune runtest --profile release
