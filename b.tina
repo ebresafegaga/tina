@@ -25,6 +25,8 @@ case (ogaga) {
     Name { a: f, b: idc, other: g } -> f (idc, "this must be returned")
 }
 
+def safe = Name { a: func, b : 29, rest: Oga { safe: 45} }
+
 ogaga.a 
 
 ogaga.other

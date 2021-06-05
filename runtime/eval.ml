@@ -60,14 +60,17 @@ let rec eval env expr =
 
     | A.Fn (loc, names, body) -> 
         let clo values = 
-            (* check if applied with the right number of arguments *)
-            let env = List.fold_right2 Env.add names values env in
-            eval env body
+            (* This check might not be valid if I change 
+               the representation of closures to use frames. *)
+            if List.length values <> List.length names then 
+                Error (Printf.sprintf "Invalid Number of arguments" )
+            else
+                let env = List.fold_right2 Env.add names values env in
+                eval env body
         in
         Ok (V.VClosure clo)
 
-    | A.Application (loc, operator, operands) -> 
-        (* TODO check that number of arguments are equal *)
+    | A.Application (loc, operator, operands) ->
         let open Result in
         let* operands = 
             operands 
@@ -75,9 +78,9 @@ let rec eval env expr =
             |> Result.sequenceA 
         in
         (match eval env operator with 
-         | Ok (V.VClosure f) -> f operands
-         | Ok _ -> Error "This expression is not a function, so it cannot be invoked"
-         | Error s -> Error s)
+        | Ok (V.VClosure f) -> f operands
+        | Ok _ -> Error "This expression is not a function, so it cannot be invoked"
+        | Error s -> Error s)
 
     | A.Record (loc, name, body) -> 
         let open Result in
@@ -127,5 +130,13 @@ let rec process_toplevel env = function
         | Ok value -> (V.pp_value value) :: process_toplevel env rest
         | Error s -> Printf.sprintf "Error: %s" s :: process_toplevel env rest)
     | A.RecordDef (loc, _, _) :: rest -> process_toplevel env rest 
+    | A.VariantDef (loc, name, body) :: rest ->
+        let variant_extend name env =
+            let clo values = Ok (V.VVariant (name, values)) in 
+            Env.add name (V.VClosure clo) env
+        in
+        let body = List.map fst body in  
+        let env = List.fold_right variant_extend body env in
+        process_toplevel env rest  
 
 let process_toplevel = process_toplevel Env.empty

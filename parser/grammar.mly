@@ -14,7 +14,7 @@
 %token LBRACE RBRACE LPAREN RPAREN LBRACK RBRACK
 %token COMMA
 %token COLON SEMICOLON DOT
-%token EQUALS
+%token EQUALS BAR 
 
 %token CLAIM DEF
 %token THE
@@ -76,6 +76,17 @@ record_claim:
 record_decl: 
     | DATA; id = ID; EQUALS; LBRACE; claims = separated_nonempty_list(COMMA, record_claim); RBRACE
       { RecordDef ($loc, DataName.of_string id, claims) }
+
+
+single_variant:
+    | name = ID { (VarName.of_string name, []) } 
+    | name = ID; LPAREN; tys = separated_nonempty_list(COMMA, ty); RPAREN 
+      { (VarName.of_string name, tys) }
+
+variant_decl: 
+    | DATA; name = ID; EQUALS; body = separated_nonempty_list(BAR, single_variant);
+      { VariantDef ($loc, DataName.of_string name, body) }
+
 
 record_expr_body: 
     | field = ID; COLON; e = expression; { (FieldName.of_string field, e) }

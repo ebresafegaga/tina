@@ -54,7 +54,7 @@ type expression =
 type toplevel = 
     | Claim of Loc.t * VarName.t * ty
     | Def of Loc.t * VarName.t * expression
-    (* | VariantDef of Loc.t * DataName.t * (CtorName.t * ty list) list *)
+    | VariantDef of Loc.t * DataName.t * (VarName.t * ty list) list
     | RecordDef of Loc.t * DataName.t * (FieldName.t * ty) list 
     | Expression of expression
 
