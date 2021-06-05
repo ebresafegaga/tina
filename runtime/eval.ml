@@ -112,12 +112,18 @@ let rec eval env expr =
     | A.LitTodo loc -> Error "Not yet supported" 
 
 
-let process_toplevel = function  
+let rec process_toplevel env = function  
     | [] -> []
-    | A.Claim (loc, _, _) :: rest -> failwith ""
+    | A.Claim (loc, _, _) :: rest -> process_toplevel env rest 
     | A.Def (loc, name, body) :: rest -> 
-        (* Add def to conetext *)
-        failwith "" 
+        let body_value = eval env body in 
+        (match body_value with 
+        | Ok value -> 
+            let env = Env.add name value env in 
+            process_toplevel env rest
+        | Error s -> Error s :: process_toplevel env rest)
     | A.Expression e :: rest -> 
-        failwith ""
-    | A.RecordDef (loc, _, _) :: rest -> failwith ""
+        (match eval env e with 
+        | Ok value -> Ok (V.pp_value value) :: process_toplevel env rest
+        | Error s -> Error s :: process_toplevel env rest)
+    | A.RecordDef (loc, _, _) :: rest -> process_toplevel env rest 
