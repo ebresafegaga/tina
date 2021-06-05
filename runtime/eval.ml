@@ -60,6 +60,7 @@ let rec eval env expr =
 
     | A.Fn (loc, names, body) -> 
         let clo values = 
+            (* check if applied with the right number of arguments *)
             let env = List.fold_right2 Env.add names values env in
             eval env body
         in

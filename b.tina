@@ -2,3 +2,33 @@
 
 
 (((fn (x) fn (y) x) (23)) (67))
+
+45 
+
+67
+
+"34"
+
+def name = 35
+
+name
+
+def func (x, y) = 34
+
+func (1, 2)
+
+fn (x) x
+
+def ogaga = Name { a: func, b : 29, other: (fn (c) c) }
+
+case (ogaga) {
+    Name { a: f, b: idc, other: g } -> f (idc, "this must be returned")
+}
+
+ogaga.a 
+
+ogaga.other
+
+true 
+
+false 

@@ -9,7 +9,7 @@ let parse lexbuf =
     | exception SyntaxError msg -> Error msg
     | exception Grammar.Error -> Error "parse error i guess"
 
-let p () = 
+let () = 
     let file = Sys.argv.(1) in
     let file = open_in file in
     let l = Lexing.from_channel file in 
@@ -18,5 +18,5 @@ let p () =
         xs 
         |> Eval.process_toplevel 
         |> String.concat "\n"
-        |> Printf.sprintf "%s"
+        |> Printf.printf "%s\n"
     | Error msg -> failwith (Format.sprintf "%s" msg)
