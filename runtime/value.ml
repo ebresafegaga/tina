@@ -19,7 +19,8 @@ let rec pp_value v =
     | VString s -> Printf.sprintf "%s%s%s" {|"|} s {|"|} 
     | VFloat f -> Float.to_string f 
     | VBool b -> Bool.to_string b
-    | VClosure clo -> "<fun>"
+    | VClosure clo -> "<fun>" (* unfortunately, we can't inspect clo *)
+    
     | VRecord (name, fields) ->
         let fields_pp = 
             fields  
@@ -28,7 +29,7 @@ let rec pp_value v =
             |> String.concat ","
         in
         Printf.sprintf "%s {%s }" (DataName.to_string name) fields_pp 
-        
+
     | VVariant (name, []) -> VarName.to_string name
     | VVariant (name, values) -> 
         let values_pp = values |> List.map pp_value |> String.concat ", " in
