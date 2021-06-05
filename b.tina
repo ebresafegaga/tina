@@ -35,4 +35,6 @@ true
 
 false 
 
-data roomate 
+data roomate = Anderson(Nat, Nat) | Ogaga | Ifeoluwa 
+
+Ifeoluwa 

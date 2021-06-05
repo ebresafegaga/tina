@@ -58,6 +58,7 @@ top:
     | c = claim { c }
     | d = def { d }
     | r = record_decl { r }
+    | v = variant_decl { v }
     | e = expression { Expression e }
 
 claim: 
