@@ -16,7 +16,7 @@ let p () =
     match parse l with 
     | Ok (xs) ->
         xs 
-        |> Eval.process_toplevel
+        |> Eval.process_toplevel 
         |> String.concat "\n"
         |> Printf.sprintf "%s"
     | Error msg -> failwith (Format.sprintf "%s" msg)

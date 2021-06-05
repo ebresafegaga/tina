@@ -109,8 +109,7 @@ let rec eval env expr =
         eval_cases cases 
     | A.Sequence (loc, e1, e2) -> 
         Error ""
-    | A.LitTodo loc -> Error "Not yet supported" 
-
+    | A.LitTodo loc -> Error "Not yet supported"
 
 let rec process_toplevel env = function  
     | [] -> []
@@ -127,3 +126,5 @@ let rec process_toplevel env = function
         | Ok value -> Ok (V.pp_value value) :: process_toplevel env rest
         | Error s -> Error s :: process_toplevel env rest)
     | A.RecordDef (loc, _, _) :: rest -> process_toplevel env rest 
+
+let process_toplevel = process_toplevel Env.empty
