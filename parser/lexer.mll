@@ -42,7 +42,7 @@ rule read_token = parse
     | "claim" { CLAIM }
     | "def" { DEF }
     | "the" { THE }
-    | "data" { DATA } 
+    | "datatype" { DATA } 
     | "ability" { ABILITY }
     | "case" { CASE }
     | "end" { END }

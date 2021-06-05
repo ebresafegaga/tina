@@ -35,8 +35,11 @@ true
 
 false 
 
-data roomate = Anderson(Nat, Nat) | Ogaga | Ifeoluwa 
+datatype roomate = Anderson(Nat, Nat) | Ogaga | Ifeoluwa 
 
 Ifeoluwa 
 
-Anderson (12, 34, 56)
+def a = Anderson ("something", 34)
+
+a
+
