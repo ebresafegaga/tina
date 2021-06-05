@@ -10,8 +10,13 @@ let parse lexbuf =
     | exception Grammar.Error -> Error "parse error i guess"
 
 let p () = 
-    let file = open_in "b.tina" in
+    let file = Sys.argv.(1) in
+    let file = open_in file in
     let l = Lexing.from_channel file in 
     match parse l with 
-    | Ok (xs) -> xs |> List.map (fun (Ast.Expression e )-> e |> Eval.eval Eval.empty_env)
+    | Ok (xs) ->
+        xs 
+        |> Eval.process_toplevel
+        |> String.concat "\n"
+        |> Printf.sprintf "%s"
     | Error msg -> failwith (Format.sprintf "%s" msg)
