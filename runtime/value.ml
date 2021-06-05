@@ -28,6 +28,8 @@ let rec pp_value v =
             |> String.concat ","
         in
         Printf.sprintf "%s {%s }" (DataName.to_string name) fields_pp 
+        
+    | VVariant (name, []) -> VarName.to_string name
     | VVariant (name, values) -> 
         let values_pp = values |> List.map pp_value |> String.concat ", " in
         Printf.sprintf "%s (%s)" (VarName.to_string name) values_pp

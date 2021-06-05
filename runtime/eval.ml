@@ -131,11 +131,13 @@ let rec process_toplevel env = function
         | Error s -> Printf.sprintf "Error: %s" s :: process_toplevel env rest)
     | A.RecordDef (loc, _, _) :: rest -> process_toplevel env rest 
     | A.VariantDef (loc, name, body) :: rest ->
-        let variant_extend name env =
-            let clo values = Ok (V.VVariant (name, values)) in 
-            Env.add name (V.VClosure clo) env
+        let variant_extend (name, l) env =
+            match l with 
+            | [] -> Env.add name (V.VVariant (name, [])) env
+            | _ :: _ -> 
+                let clo values = Ok (V.VVariant (name, values)) in 
+                Env.add name (V.VClosure clo) env
         in
-        let body = List.map fst body in  
         let env = List.fold_right variant_extend body env in
         process_toplevel env rest  
 
