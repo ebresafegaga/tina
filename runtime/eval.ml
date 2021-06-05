@@ -120,11 +120,11 @@ let rec process_toplevel env = function
         | Ok value -> 
             let env = Env.add name value env in 
             process_toplevel env rest
-        | Error s -> Error s :: process_toplevel env rest)
+        | Error s -> Printf.sprintf "Error: %s" s :: process_toplevel env rest)
     | A.Expression e :: rest -> 
         (match eval env e with 
-        | Ok value -> Ok (V.pp_value value) :: process_toplevel env rest
-        | Error s -> Error s :: process_toplevel env rest)
+        | Ok value -> (V.pp_value value) :: process_toplevel env rest
+        | Error s -> Printf.sprintf "Error: %s" s :: process_toplevel env rest)
     | A.RecordDef (loc, _, _) :: rest -> process_toplevel env rest 
 
 let process_toplevel = process_toplevel Env.empty

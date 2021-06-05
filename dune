@@ -1,3 +1,7 @@
 (executable
  (name testRepl)
  (libraries utility syntax parser runtime))
+
+(env
+  (dev
+    (flags (:standard -warn-error -A))))
