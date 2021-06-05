@@ -115,6 +115,13 @@ let rec eval env expr =
         Error ""
     | A.LitTodo loc -> Error "Not yet supported"
 
+let guard_values_by_len n f values = 
+    let arg_len = List.length values in 
+    if n <> arg_len then 
+        Error "Invalid number of arguments"
+    else 
+        Ok (f values)  
+
 let rec process_toplevel env = function  
     | [] -> []
     | A.Claim (loc, _, _) :: rest -> process_toplevel env rest 
@@ -135,7 +142,7 @@ let rec process_toplevel env = function
             match l with 
             | [] -> Env.add name (V.VVariant (name, [])) env
             | _ :: _ -> 
-                let clo values = Ok (V.VVariant (name, values)) in 
+                let clo = guard_values_by_len (List.length l) (fun values -> V.VVariant (name, values)) in
                 Env.add name (V.VClosure clo) env
         in
         let env = List.fold_right variant_extend body env in
