@@ -146,7 +146,7 @@ pattern:
         }
     | rec_name = ID; LBRACE; body = separated_nonempty_list(COMMA, record_pattern_expr); RBRACE; 
       { PRecord (DataName.of_string rec_name, body) }
-    | variant_name = ID; LBRACE; body = separated_nonempty_list(COMMA, pattern); RBRACE; 
+    | variant_name = ID; LPAREN; body = separated_nonempty_list(COMMA, pattern); RPAREN; 
       { PVariant (VarName.of_string variant_name, body) }
 
 expression: 

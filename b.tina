@@ -43,3 +43,7 @@ def a = Anderson ("something", 34)
 
 a
 
+case (a) {
+    Anderson (s, other) -> s 
+}
+
