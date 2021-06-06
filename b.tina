@@ -41,9 +41,12 @@ Ifeoluwa
 
 def a = Anderson ("something", 34)
 
-a
+def b = Ogaga 
 
 case (a) {
+    Ogaga -> "ogagaaa",
     Anderson (s, other) -> s 
 }
 
+
+6 + 5 - 7 * 7
