@@ -1,5 +1,5 @@
 (executable
- (name testRepl)
+ (name test)
  (libraries utility syntax parser runtime))
 
 (env
