@@ -163,8 +163,7 @@ let rec process_toplevel env = function
                 Env.add name (V.VClosure clo) env
         in
         let env = List.fold_right variant_extend body env in
-        process_toplevel env rest  
-
+        process_toplevel env rest
 
 let operator op = 
     let clo = function  
