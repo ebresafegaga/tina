@@ -136,6 +136,10 @@ case_expr_body:
       { (pat, e) }
 
 pattern:
+    | i = INT { PInteger (i) }
+    | TRUE { PBool (true) }
+    | FALSE { PBool (false) }
+    | s = STRING { PString (s) }
     | LPAREN; p = pattern; RPAREN; { p }
     | id = ID 
         {   let name = VarName.of_string id in

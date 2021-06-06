@@ -60,7 +60,9 @@ type toplevel =
 
 (*  
 
-    data People = gaga | Someone (String, String) | ... 
+    def rec just (c ...) = ...
+
+    datatype People = gaga | Someone (String, String) | ... 
 
     a = Name { A: 2, B: 45 }
 

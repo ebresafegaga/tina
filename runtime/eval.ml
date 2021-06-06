@@ -129,12 +129,13 @@ let guard_values_by_len n f values =
 let rec process_toplevel env = function  
     | [] -> []
     | A.Claim (loc, _, _) :: rest -> process_toplevel env rest 
-    | A.Def (loc, name, body) :: rest -> 
-        let body_value = eval env body in 
+    | A.Def (loc, name, body) :: rest ->
+        let env' = ref env in 
+        let body_value = eval !env' body in 
         (match body_value with 
         | Ok value -> 
-            let env = Env.add name value env in 
-            process_toplevel env rest
+            env' := Env.add name value !env';
+            process_toplevel !env' rest
         | Error s -> Printf.sprintf "Error: %s" s :: process_toplevel env rest)
     | A.Expression e :: rest -> 
         (match eval env e with 
@@ -152,4 +153,27 @@ let rec process_toplevel env = function
         let env = List.fold_right variant_extend body env in
         process_toplevel env rest  
 
-let process_toplevel = process_toplevel Env.empty
+let addition = 
+    let clo = function  
+        | [V.VInteger x; V.VInteger y] -> Ok (V.VInteger (x + y))
+        | [_; _] -> Error "Expected integers"
+        | _ -> Error "Invalid Number of arguemnts"
+    in
+    V.VClosure clo
+
+let minus = 
+    let clo = function  
+        | [V.VInteger x; V.VInteger y] -> Ok (V.VInteger (x - y))
+        | [_; _] -> Error "Expected integers"
+        | _ -> Error "Invalid Number of arguemnts"
+    in
+    V.VClosure clo
+    
+let global_env = 
+    [ "+", addition; 
+      "-", minus ]
+    |> List.map (fun (name, value) -> (VarName.of_string name, value))
+    |> List.to_seq
+    |> Env.of_seq
+
+let process_toplevel = process_toplevel global_env
