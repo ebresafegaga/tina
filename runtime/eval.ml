@@ -125,17 +125,29 @@ let guard_values_by_len n f values =
         Error "Invalid number of arguments"
     else 
         Ok (f values)  
+    
+let is_fn = function A.Fn _ -> true | _ -> false 
 
 let rec process_toplevel env = function  
     | [] -> []
     | A.Claim (loc, _, _) :: rest -> process_toplevel env rest 
-    | A.Def (loc, name, body) :: rest ->
+    | A.Def (loc, name, body) :: rest when is_fn body ->
         let env' = ref env in 
-        let body_value = eval !env' body in 
+        let body_value = 
+            V.VClosure (fun values -> 
+                match eval !env' body with 
+                | Ok (V.VClosure f) -> f values
+                | Ok _ -> Error "This value is not a function so it can't be applied"
+                | Error s -> Error s) 
+        in 
+        env' := Env.add name body_value !env';
+        process_toplevel !env' rest
+    | A.Def (loc, name, body) :: rest -> 
+        let body_value = eval env body in 
         (match body_value with 
         | Ok value -> 
-            env' := Env.add name value !env';
-            process_toplevel !env' rest
+            let env = Env.add name value env in 
+            process_toplevel env rest
         | Error s -> Printf.sprintf "Error: %s" s :: process_toplevel env rest)
     | A.Expression e :: rest -> 
         (match eval env e with 
@@ -153,25 +165,25 @@ let rec process_toplevel env = function
         let env = List.fold_right variant_extend body env in
         process_toplevel env rest  
 
-let addition = 
+
+let operator op = 
     let clo = function  
-        | [V.VInteger x; V.VInteger y] -> Ok (V.VInteger (x + y))
+        | [V.VInteger x; V.VInteger y] -> Ok (V.VInteger (op x y))
         | [_; _] -> Error "Expected integers"
         | _ -> Error "Invalid Number of arguemnts"
     in
     V.VClosure clo
 
-let minus = 
-    let clo = function  
-        | [V.VInteger x; V.VInteger y] -> Ok (V.VInteger (x - y))
-        | [_; _] -> Error "Expected integers"
-        | _ -> Error "Invalid Number of arguemnts"
-    in
-    V.VClosure clo
+let addition = operator (+)
+let minus = operator (-)
+let times = operator ( * )
+let div = operator (/)
     
 let global_env = 
     [ "+", addition; 
-      "-", minus ]
+      "-", minus;
+      "*", times;
+      "/", div; ]
     |> List.map (fun (name, value) -> (VarName.of_string name, value))
     |> List.to_seq
     |> Env.of_seq

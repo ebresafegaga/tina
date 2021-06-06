@@ -43,22 +43,30 @@ def a = Anderson ("something", 34)
 
 def b = Ogaga 
 
+b 
+
+
 case (a) {
     Ogaga -> "ogagaaa",
     Anderson (s, other) -> s 
 }
 
 
-6 + 5 
-
+6 + 5
 
 30 + 45 
 
 def fib (n) =
     case (n) {
-        0 -> 1, 
-        1 -> 1, 
+        1 -> 0, 
+        2 -> 1, 
         n -> fib (n - 1) + fib (n - 2)
     }
 
+"Fib numbers"
+fib (1)
+fib (2)
+fib (3)
+fib (4)
 fib (5)
+fib (10)
