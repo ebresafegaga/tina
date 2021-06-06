@@ -2,6 +2,17 @@
     open Syntax
     open Ast
     open Naming 
+
+    let empty_variants : VarName.t list ref = ref []
+    let collect_empty_variants = function 
+        | VariantDef (_loc, _name, body) -> 
+            let result = 
+                body 
+                |> List.filter_map (function (name, []) -> Some name | _ -> None)
+            in 
+            empty_variants := result @ !empty_variants
+        | _ -> ()
+    let is_empty_variant x = List.mem x !empty_variants
 %}
 
 %token <int> INT
@@ -76,7 +87,7 @@ record_claim:
 
 record_decl: 
     | DATA; id = ID; EQUALS; LBRACE; claims = separated_nonempty_list(COMMA, record_claim); RBRACE
-      { RecordDef ($loc, DataName.of_string id, claims) }
+      { RecordDef ($loc, DataName.of_string id, claims)  }
 
 
 single_variant:
@@ -86,7 +97,9 @@ single_variant:
 
 variant_decl: 
     | DATA; name = ID; EQUALS; body = separated_nonempty_list(BAR, single_variant);
-      { VariantDef ($loc, DataName.of_string name, body) }
+      { let variant_def = VariantDef ($loc, DataName.of_string name, body) in 
+        collect_empty_variants variant_def;
+        variant_def }
 
 
 record_expr_body: 
@@ -124,9 +137,17 @@ case_expr_body:
 
 pattern:
     | LPAREN; p = pattern; RPAREN; { p }
-    | var = ID { PVariable (VarName.of_string var) }
+    | id = ID 
+        {   let name = VarName.of_string id in
+            if is_empty_variant name then 
+                PVariant (name, [])
+            else 
+                PVariable (name) 
+        }
     | rec_name = ID; LBRACE; body = separated_nonempty_list(COMMA, record_pattern_expr); RBRACE; 
       { PRecord (DataName.of_string rec_name, body) }
+    | variant_name = ID; LBRACE; body = separated_nonempty_list(COMMA, pattern); RBRACE; 
+      { PVariant (VarName.of_string variant_name, body) }
 
 expression: 
     | name = ID { Variable ($loc, VarName.of_string name) }

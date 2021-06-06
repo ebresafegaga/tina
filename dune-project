@@ -14,4 +14,7 @@
  (synopsis "Tina, an educational programming language with first-class types and abilities.")
  (depends
   menhir
+  js_of_ocaml
+  js_of_ocaml-ppx 
+  js_of_ocaml-compiler
   (ocaml (>= 4.08.1))))

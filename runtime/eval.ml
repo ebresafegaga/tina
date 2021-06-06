@@ -28,6 +28,10 @@ let rec pattern_binder pattern value env =
             | None -> failwith "Field does not exist" (* TODO: use Result monad *)
         in 
         List.fold_right extender body env
+    | A.PVariant (name, body), V.VVariant (name', body') when name = name' -> 
+        if List.length body <> List.length body' 
+            then failwith "Invalid number of arguments for pattern match" ; (* TODO use Result Monad *)
+        List.fold_right2 (fun p v env -> pattern_binder p v env) body body' env
     | _ -> raise PatternFailure
 
 let rec eval env expr = 

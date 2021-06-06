@@ -1,6 +1,6 @@
 (executable
  (name main)
  (modes js)
- ; (preprocess (pps js_of_ocaml-ppx))
-;  (libraries brr)
+ (preprocess (pps js_of_ocaml-ppx))
+ (libraries brr js_of_ocaml js_of_ocaml-compiler)
  )

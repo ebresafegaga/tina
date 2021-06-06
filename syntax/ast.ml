@@ -19,7 +19,7 @@ type pattern =
        | PUnit *)
     | PVariable of VarName.t
     | PRecord of DataName.t * (FieldName.t * pattern) list 
-    (* | PVariant of DataName.t * pattern list  *)
+    | PVariant of VarName.t * pattern list
 
 (* we need a variable type which enacpsulates 
     VarName.t DefName.t ... *)
@@ -57,7 +57,6 @@ type toplevel =
     | VariantDef of Loc.t * DataName.t * (VarName.t * ty list) list
     | RecordDef of Loc.t * DataName.t * (FieldName.t * ty) list 
     | Expression of expression
-
 
 (*  
 

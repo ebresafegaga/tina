@@ -10,6 +10,9 @@ bug-reports: "https://github.com/ebresafegaga/tina/issues"
 depends: [
   "dune" {>= "2.8"}
   "menhir"
+  "js_of_ocaml"
+  "js_of_ocaml-ppx"
+  "js_of_ocaml-compiler"
   "ocaml" {>= "4.08.1"}
   "odoc" {with-doc}
 ]
