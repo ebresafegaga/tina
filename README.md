@@ -6,3 +6,9 @@
 Abilities are just *algebric effects*
 
 First-class types are just *dependent types*
+
+### Things to fix
+
+- Remove ambiguities in parser 
+- Add error messages 
+- Remove unsued tokens in grammmar.mly 
