@@ -46,7 +46,6 @@ rule read_token = parse
     | "ability" { ABILITY }
     | "case" { CASE }
     | "end" { END }
-    | "_" { UNDERSCORE }
     | "->" { ARROW }
     | "let" { LET }
     | "mut" { MUT }

@@ -31,7 +31,7 @@
 %token THE
 %token DATA ABILITY HAS
 
-%token CASE UNDERSCORE ARROW
+%token CASE ARROW
 %token LET MUT FN END
 %token COLONEQUALS
 

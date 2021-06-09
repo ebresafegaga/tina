@@ -1,4 +1,4 @@
-toplevel: CASE TRUE LBRACE ID LBRACE ID COLON FALSE COMMA UNDERSCORE
+toplevel: CASE TRUE LBRACE ID LBRACE ID COLON FALSE COMMA TY_STRING
 ##
 ## Ends in an error in state: 84.
 ##
@@ -10,7 +10,7 @@ toplevel: CASE TRUE LBRACE ID LBRACE ID COLON FALSE COMMA UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE LBRACE ID LBRACE ID COLON FALSE UNDERSCORE
+toplevel: CASE TRUE LBRACE ID LBRACE ID COLON FALSE TY_STRING
 ##
 ## Ends in an error in state: 83.
 ##
@@ -23,7 +23,7 @@ toplevel: CASE TRUE LBRACE ID LBRACE ID COLON FALSE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE LBRACE ID LBRACE ID COLON UNDERSCORE
+toplevel: CASE TRUE LBRACE ID LBRACE ID COLON TY_STRING
 ##
 ## Ends in an error in state: 79.
 ##
@@ -35,7 +35,7 @@ toplevel: CASE TRUE LBRACE ID LBRACE ID COLON UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE LBRACE ID LBRACE ID UNDERSCORE
+toplevel: CASE TRUE LBRACE ID LBRACE ID TY_STRING
 ##
 ## Ends in an error in state: 78.
 ##
@@ -47,7 +47,7 @@ toplevel: CASE TRUE LBRACE ID LBRACE ID UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE LBRACE ID LBRACE UNDERSCORE
+toplevel: CASE TRUE LBRACE ID LBRACE TY_STRING
 ##
 ## Ends in an error in state: 77.
 ##
@@ -59,7 +59,7 @@ toplevel: CASE TRUE LBRACE ID LBRACE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE LBRACE ID LPAREN TRUE COMMA UNDERSCORE
+toplevel: CASE TRUE LBRACE ID LPAREN TRUE COMMA TY_STRING
 ##
 ## Ends in an error in state: 75.
 ##
@@ -71,7 +71,7 @@ toplevel: CASE TRUE LBRACE ID LPAREN TRUE COMMA UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE LBRACE ID LPAREN TRUE UNDERSCORE
+toplevel: CASE TRUE LBRACE ID LPAREN TRUE TY_STRING
 ##
 ## Ends in an error in state: 74.
 ##
@@ -84,7 +84,7 @@ toplevel: CASE TRUE LBRACE ID LPAREN TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE LBRACE ID LPAREN UNDERSCORE
+toplevel: CASE TRUE LBRACE ID LPAREN TY_STRING
 ##
 ## Ends in an error in state: 70.
 ##
@@ -96,7 +96,7 @@ toplevel: CASE TRUE LBRACE ID LPAREN UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE LBRACE ID UNDERSCORE
+toplevel: CASE TRUE LBRACE ID TY_STRING
 ##
 ## Ends in an error in state: 69.
 ##
@@ -110,7 +110,7 @@ toplevel: CASE TRUE LBRACE ID UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE LBRACE LPAREN TRUE UNDERSCORE
+toplevel: CASE TRUE LBRACE LPAREN TRUE TY_STRING
 ##
 ## Ends in an error in state: 86.
 ##
@@ -122,7 +122,7 @@ toplevel: CASE TRUE LBRACE LPAREN TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE LBRACE LPAREN UNDERSCORE
+toplevel: CASE TRUE LBRACE LPAREN TY_STRING
 ##
 ## Ends in an error in state: 67.
 ##
@@ -134,7 +134,7 @@ toplevel: CASE TRUE LBRACE LPAREN UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE LBRACE TRUE ARROW FALSE COMMA UNDERSCORE
+toplevel: CASE TRUE LBRACE TRUE ARROW FALSE COMMA TY_STRING
 ##
 ## Ends in an error in state: 94.
 ##
@@ -146,7 +146,7 @@ toplevel: CASE TRUE LBRACE TRUE ARROW FALSE COMMA UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE LBRACE TRUE ARROW TRUE UNDERSCORE
+toplevel: CASE TRUE LBRACE TRUE ARROW TRUE TY_STRING
 ##
 ## Ends in an error in state: 92.
 ##
@@ -165,7 +165,7 @@ toplevel: CASE TRUE LBRACE TRUE ARROW TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE LBRACE TRUE ARROW UNDERSCORE
+toplevel: CASE TRUE LBRACE TRUE ARROW TY_STRING
 ##
 ## Ends in an error in state: 91.
 ##
@@ -177,7 +177,7 @@ toplevel: CASE TRUE LBRACE TRUE ARROW UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE LBRACE TRUE UNDERSCORE
+toplevel: CASE TRUE LBRACE TRUE TY_STRING
 ##
 ## Ends in an error in state: 90.
 ##
@@ -189,7 +189,7 @@ toplevel: CASE TRUE LBRACE TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE LBRACE UNDERSCORE
+toplevel: CASE TRUE LBRACE TY_STRING
 ##
 ## Ends in an error in state: 64.
 ##
@@ -201,7 +201,7 @@ toplevel: CASE TRUE LBRACE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE TRUE UNDERSCORE
+toplevel: CASE TRUE TY_STRING
 ##
 ## Ends in an error in state: 43.
 ##
@@ -220,7 +220,7 @@ toplevel: CASE TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CASE UNDERSCORE
+toplevel: CASE TY_STRING
 ##
 ## Ends in an error in state: 42.
 ##
@@ -232,19 +232,7 @@ toplevel: CASE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CLAIM ID TY_FLOAT UNDERSCORE
-##
-## Ends in an error in state: 147.
-##
-## list(top) -> top . list(top) [ EOF ]
-##
-## The known suffix of the stack is as follows:
-## top
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CLAIM ID UNDERSCORE
+toplevel: CLAIM ID TRUE
 ##
 ## Ends in an error in state: 143.
 ##
@@ -256,7 +244,19 @@ toplevel: CLAIM ID UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CLAIM UNDERSCORE
+toplevel: CLAIM ID TY_FLOAT TY_STRING
+##
+## Ends in an error in state: 147.
+##
+## list(top) -> top . list(top) [ EOF ]
+##
+## The known suffix of the stack is as follows:
+## top
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+toplevel: CLAIM TY_STRING
 ##
 ## Ends in an error in state: 142.
 ##
@@ -268,7 +268,7 @@ toplevel: CLAIM UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DATA ID EQUALS ID BAR UNDERSCORE
+toplevel: DATA ID EQUALS ID BAR TY_STRING
 ##
 ## Ends in an error in state: 139.
 ##
@@ -280,7 +280,19 @@ toplevel: DATA ID EQUALS ID BAR UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DATA ID EQUALS ID LPAREN TY_FLOAT RPAREN UNDERSCORE
+toplevel: DATA ID EQUALS ID LPAREN TRUE
+##
+## Ends in an error in state: 135.
+##
+## single_variant -> ID LPAREN . separated_nonempty_list(COMMA,ty) RPAREN [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE BAR ]
+##
+## The known suffix of the stack is as follows:
+## ID LPAREN
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+toplevel: DATA ID EQUALS ID LPAREN TY_FLOAT RPAREN TY_STRING
 ##
 ## Ends in an error in state: 138.
 ##
@@ -311,19 +323,7 @@ toplevel: DATA ID EQUALS ID LPAREN TY_STRING ARROW
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DATA ID EQUALS ID LPAREN UNDERSCORE
-##
-## Ends in an error in state: 135.
-##
-## single_variant -> ID LPAREN . separated_nonempty_list(COMMA,ty) RPAREN [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE BAR ]
-##
-## The known suffix of the stack is as follows:
-## ID LPAREN
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID EQUALS ID UNDERSCORE
+toplevel: DATA ID EQUALS ID TY_STRING
 ##
 ## Ends in an error in state: 134.
 ##
@@ -336,7 +336,19 @@ toplevel: DATA ID EQUALS ID UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT COMMA UNDERSCORE
+toplevel: DATA ID EQUALS LBRACE CLAIM ID TRUE
+##
+## Ends in an error in state: 127.
+##
+## record_claim -> CLAIM ID . ty [ RBRACE COMMA ]
+##
+## The known suffix of the stack is as follows:
+## CLAIM ID
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT COMMA TY_STRING
 ##
 ## Ends in an error in state: 132.
 ##
@@ -348,7 +360,7 @@ toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT COMMA UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT UNDERSCORE
+toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT TY_STRING
 ##
 ## Ends in an error in state: 131.
 ##
@@ -361,19 +373,7 @@ toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DATA ID EQUALS LBRACE CLAIM ID UNDERSCORE
-##
-## Ends in an error in state: 127.
-##
-## record_claim -> CLAIM ID . ty [ RBRACE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## CLAIM ID
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID EQUALS LBRACE CLAIM UNDERSCORE
+toplevel: DATA ID EQUALS LBRACE CLAIM TY_STRING
 ##
 ## Ends in an error in state: 126.
 ##
@@ -385,7 +385,7 @@ toplevel: DATA ID EQUALS LBRACE CLAIM UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DATA ID EQUALS LBRACE UNDERSCORE
+toplevel: DATA ID EQUALS LBRACE TY_STRING
 ##
 ## Ends in an error in state: 125.
 ##
@@ -397,7 +397,7 @@ toplevel: DATA ID EQUALS LBRACE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DATA ID EQUALS UNDERSCORE
+toplevel: DATA ID EQUALS TY_STRING
 ##
 ## Ends in an error in state: 124.
 ##
@@ -410,7 +410,7 @@ toplevel: DATA ID EQUALS UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DATA ID UNDERSCORE
+toplevel: DATA ID TY_STRING
 ##
 ## Ends in an error in state: 123.
 ##
@@ -423,7 +423,7 @@ toplevel: DATA ID UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DATA UNDERSCORE
+toplevel: DATA TY_STRING
 ##
 ## Ends in an error in state: 122.
 ##
@@ -436,7 +436,7 @@ toplevel: DATA UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DEF ID EQUALS TRUE UNDERSCORE
+toplevel: DEF ID EQUALS TRUE TY_STRING
 ##
 ## Ends in an error in state: 118.
 ##
@@ -455,7 +455,7 @@ toplevel: DEF ID EQUALS TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DEF ID EQUALS UNDERSCORE
+toplevel: DEF ID EQUALS TY_STRING
 ##
 ## Ends in an error in state: 117.
 ##
@@ -467,7 +467,7 @@ toplevel: DEF ID EQUALS UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DEF ID LPAREN RPAREN EQUALS TRUE UNDERSCORE
+toplevel: DEF ID LPAREN RPAREN EQUALS TRUE TY_STRING
 ##
 ## Ends in an error in state: 121.
 ##
@@ -486,7 +486,7 @@ toplevel: DEF ID LPAREN RPAREN EQUALS TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DEF ID LPAREN RPAREN EQUALS UNDERSCORE
+toplevel: DEF ID LPAREN RPAREN EQUALS TY_STRING
 ##
 ## Ends in an error in state: 120.
 ##
@@ -498,7 +498,7 @@ toplevel: DEF ID LPAREN RPAREN EQUALS UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DEF ID LPAREN RPAREN UNDERSCORE
+toplevel: DEF ID LPAREN RPAREN TY_STRING
 ##
 ## Ends in an error in state: 119.
 ##
@@ -510,7 +510,7 @@ toplevel: DEF ID LPAREN RPAREN UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DEF ID UNDERSCORE
+toplevel: DEF ID TY_STRING
 ##
 ## Ends in an error in state: 116.
 ##
@@ -523,7 +523,7 @@ toplevel: DEF ID UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DEF UNDERSCORE
+toplevel: DEF TY_STRING
 ##
 ## Ends in an error in state: 115.
 ##
@@ -536,7 +536,7 @@ toplevel: DEF UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: FN LPAREN ID COMMA UNDERSCORE
+toplevel: FN LPAREN ID COMMA TY_STRING
 ##
 ## Ends in an error in state: 35.
 ##
@@ -548,7 +548,7 @@ toplevel: FN LPAREN ID COMMA UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: FN LPAREN ID UNDERSCORE
+toplevel: FN LPAREN ID TY_STRING
 ##
 ## Ends in an error in state: 34.
 ##
@@ -561,7 +561,7 @@ toplevel: FN LPAREN ID UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: FN LPAREN RPAREN TRUE UNDERSCORE
+toplevel: FN LPAREN RPAREN TRUE TY_STRING
 ##
 ## Ends in an error in state: 96.
 ##
@@ -580,7 +580,7 @@ toplevel: FN LPAREN RPAREN TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: FN LPAREN RPAREN UNDERSCORE
+toplevel: FN LPAREN RPAREN TY_STRING
 ##
 ## Ends in an error in state: 39.
 ##
@@ -592,7 +592,7 @@ toplevel: FN LPAREN RPAREN UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: FN LPAREN UNDERSCORE
+toplevel: FN LPAREN TY_STRING
 ##
 ## Ends in an error in state: 31.
 ##
@@ -604,7 +604,7 @@ toplevel: FN LPAREN UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: FN UNDERSCORE
+toplevel: FN TY_STRING
 ##
 ## Ends in an error in state: 30.
 ##
@@ -616,7 +616,7 @@ toplevel: FN UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: ID LBRACE ID COLON FALSE COMMA UNDERSCORE
+toplevel: ID LBRACE ID COLON FALSE COMMA TY_STRING
 ##
 ## Ends in an error in state: 101.
 ##
@@ -628,7 +628,7 @@ toplevel: ID LBRACE ID COLON FALSE COMMA UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: ID LBRACE ID COLON TRUE UNDERSCORE
+toplevel: ID LBRACE ID COLON TRUE TY_STRING
 ##
 ## Ends in an error in state: 97.
 ##
@@ -647,7 +647,7 @@ toplevel: ID LBRACE ID COLON TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: ID LBRACE ID COLON UNDERSCORE
+toplevel: ID LBRACE ID COLON TY_STRING
 ##
 ## Ends in an error in state: 29.
 ##
@@ -659,7 +659,7 @@ toplevel: ID LBRACE ID COLON UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: ID LBRACE ID UNDERSCORE
+toplevel: ID LBRACE ID TY_STRING
 ##
 ## Ends in an error in state: 28.
 ##
@@ -671,7 +671,7 @@ toplevel: ID LBRACE ID UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: ID LBRACE UNDERSCORE
+toplevel: ID LBRACE TY_STRING
 ##
 ## Ends in an error in state: 27.
 ##
@@ -683,7 +683,7 @@ toplevel: ID LBRACE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: ID UNDERSCORE
+toplevel: ID TY_STRING
 ##
 ## Ends in an error in state: 26.
 ##
@@ -696,7 +696,7 @@ toplevel: ID UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: IF TRUE THEN TRUE ELSE TRUE UNDERSCORE
+toplevel: IF TRUE THEN TRUE ELSE TRUE TY_STRING
 ##
 ## Ends in an error in state: 107.
 ##
@@ -715,7 +715,7 @@ toplevel: IF TRUE THEN TRUE ELSE TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: IF TRUE THEN TRUE ELSE UNDERSCORE
+toplevel: IF TRUE THEN TRUE ELSE TY_STRING
 ##
 ## Ends in an error in state: 106.
 ##
@@ -727,7 +727,7 @@ toplevel: IF TRUE THEN TRUE ELSE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: IF TRUE THEN TRUE UNDERSCORE
+toplevel: IF TRUE THEN TRUE TY_STRING
 ##
 ## Ends in an error in state: 105.
 ##
@@ -746,7 +746,7 @@ toplevel: IF TRUE THEN TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: IF TRUE THEN UNDERSCORE
+toplevel: IF TRUE THEN TY_STRING
 ##
 ## Ends in an error in state: 104.
 ##
@@ -758,7 +758,7 @@ toplevel: IF TRUE THEN UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: IF TRUE UNDERSCORE
+toplevel: IF TRUE TY_STRING
 ##
 ## Ends in an error in state: 103.
 ##
@@ -777,7 +777,7 @@ toplevel: IF TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: IF UNDERSCORE
+toplevel: IF TY_STRING
 ##
 ## Ends in an error in state: 25.
 ##
@@ -789,7 +789,7 @@ toplevel: IF UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: LET ID EQUALS TRUE SEMICOLON TRUE UNDERSCORE
+toplevel: LET ID EQUALS TRUE SEMICOLON TRUE TY_STRING
 ##
 ## Ends in an error in state: 111.
 ##
@@ -809,7 +809,7 @@ toplevel: LET ID EQUALS TRUE SEMICOLON TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: LET ID EQUALS TRUE SEMICOLON UNDERSCORE
+toplevel: LET ID EQUALS TRUE SEMICOLON TY_STRING
 ##
 ## Ends in an error in state: 109.
 ##
@@ -822,7 +822,7 @@ toplevel: LET ID EQUALS TRUE SEMICOLON UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: LET ID EQUALS TRUE UNDERSCORE
+toplevel: LET ID EQUALS TRUE TY_STRING
 ##
 ## Ends in an error in state: 108.
 ##
@@ -841,7 +841,7 @@ toplevel: LET ID EQUALS TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: LET ID EQUALS UNDERSCORE
+toplevel: LET ID EQUALS TY_STRING
 ##
 ## Ends in an error in state: 23.
 ##
@@ -853,7 +853,7 @@ toplevel: LET ID EQUALS UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: LET ID UNDERSCORE
+toplevel: LET ID TY_STRING
 ##
 ## Ends in an error in state: 22.
 ##
@@ -865,7 +865,7 @@ toplevel: LET ID UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: LET UNDERSCORE
+toplevel: LET TY_STRING
 ##
 ## Ends in an error in state: 21.
 ##
@@ -877,7 +877,7 @@ toplevel: LET UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: LPAREN TRUE UNDERSCORE
+toplevel: LPAREN TRUE TY_STRING
 ##
 ## Ends in an error in state: 112.
 ##
@@ -896,7 +896,7 @@ toplevel: LPAREN TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: LPAREN UNDERSCORE
+toplevel: LPAREN TY_STRING
 ##
 ## Ends in an error in state: 19.
 ##
@@ -909,19 +909,7 @@ toplevel: LPAREN UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: THE LPAREN ARROW TY_STRING UNDERSCORE
-##
-## Ends in an error in state: 15.
-##
-## ty -> LPAREN loption(separated_nonempty_list(COMMA,ty)) ARROW ty . RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA COMMA CLAIM CASE ARROW ]
-##
-## The known suffix of the stack is as follows:
-## LPAREN loption(separated_nonempty_list(COMMA,ty)) ARROW ty
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: THE LPAREN ARROW UNDERSCORE
+toplevel: THE LPAREN ARROW TRUE
 ##
 ## Ends in an error in state: 14.
 ##
@@ -933,7 +921,31 @@ toplevel: THE LPAREN ARROW UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: THE LPAREN TY_STRING COMMA UNDERSCORE
+toplevel: THE LPAREN ARROW TY_STRING TY_STRING
+##
+## Ends in an error in state: 15.
+##
+## ty -> LPAREN loption(separated_nonempty_list(COMMA,ty)) ARROW ty . RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA COMMA CLAIM CASE ARROW ]
+##
+## The known suffix of the stack is as follows:
+## LPAREN loption(separated_nonempty_list(COMMA,ty)) ARROW ty
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+toplevel: THE LPAREN TRUE
+##
+## Ends in an error in state: 8.
+##
+## ty -> LPAREN . loption(separated_nonempty_list(COMMA,ty)) ARROW ty RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA COMMA CLAIM CASE ARROW ]
+##
+## The known suffix of the stack is as follows:
+## LPAREN
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+toplevel: THE LPAREN TY_STRING COMMA TRUE
 ##
 ## Ends in an error in state: 10.
 ##
@@ -964,7 +976,7 @@ toplevel: THE LPAREN TY_STRING RPAREN
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: THE LPAREN TY_STRING UNDERSCORE
+toplevel: THE LPAREN TY_STRING TY_STRING
 ##
 ## Ends in an error in state: 9.
 ##
@@ -977,19 +989,19 @@ toplevel: THE LPAREN TY_STRING UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: THE LPAREN UNDERSCORE
+toplevel: THE TRUE
 ##
-## Ends in an error in state: 8.
+## Ends in an error in state: 3.
 ##
-## ty -> LPAREN . loption(separated_nonempty_list(COMMA,ty)) ARROW ty RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA COMMA CLAIM CASE ARROW ]
+## expression -> THE . ty expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
 ##
 ## The known suffix of the stack is as follows:
-## LPAREN
+## THE
 ##
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: THE TY_STRING TRUE UNDERSCORE
+toplevel: THE TY_STRING TRUE TY_STRING
 ##
 ## Ends in an error in state: 114.
 ##
@@ -1008,7 +1020,7 @@ toplevel: THE TY_STRING TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: THE TY_STRING UNDERSCORE
+toplevel: THE TY_STRING TY_STRING
 ##
 ## Ends in an error in state: 17.
 ##
@@ -1020,19 +1032,7 @@ toplevel: THE TY_STRING UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: THE UNDERSCORE
-##
-## Ends in an error in state: 3.
-##
-## expression -> THE . ty expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## THE
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE DIV TRUE UNDERSCORE
+toplevel: TRUE DIV TRUE TY_STRING
 ##
 ## Ends in an error in state: 60.
 ##
@@ -1051,7 +1051,7 @@ toplevel: TRUE DIV TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: TRUE DIV UNDERSCORE
+toplevel: TRUE DIV TY_STRING
 ##
 ## Ends in an error in state: 59.
 ##
@@ -1063,7 +1063,7 @@ toplevel: TRUE DIV UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: TRUE DOT UNDERSCORE
+toplevel: TRUE DOT TY_STRING
 ##
 ## Ends in an error in state: 57.
 ##
@@ -1075,7 +1075,7 @@ toplevel: TRUE DOT UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: TRUE LPAREN TRUE COMMA UNDERSCORE
+toplevel: TRUE LPAREN TRUE COMMA TY_STRING
 ##
 ## Ends in an error in state: 62.
 ##
@@ -1087,7 +1087,7 @@ toplevel: TRUE LPAREN TRUE COMMA UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: TRUE LPAREN TRUE UNDERSCORE
+toplevel: TRUE LPAREN TRUE TY_STRING
 ##
 ## Ends in an error in state: 54.
 ##
@@ -1107,7 +1107,7 @@ toplevel: TRUE LPAREN TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: TRUE LPAREN UNDERSCORE
+toplevel: TRUE LPAREN TY_STRING
 ##
 ## Ends in an error in state: 50.
 ##
@@ -1119,7 +1119,7 @@ toplevel: TRUE LPAREN UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: TRUE MINUS TRUE UNDERSCORE
+toplevel: TRUE MINUS TRUE TY_STRING
 ##
 ## Ends in an error in state: 56.
 ##
@@ -1138,7 +1138,7 @@ toplevel: TRUE MINUS TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: TRUE MINUS UNDERSCORE
+toplevel: TRUE MINUS TY_STRING
 ##
 ## Ends in an error in state: 55.
 ##
@@ -1150,7 +1150,7 @@ toplevel: TRUE MINUS UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: TRUE PLUS TRUE UNDERSCORE
+toplevel: TRUE PLUS TRUE TY_STRING
 ##
 ## Ends in an error in state: 49.
 ##
@@ -1169,7 +1169,7 @@ toplevel: TRUE PLUS TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: TRUE PLUS UNDERSCORE
+toplevel: TRUE PLUS TY_STRING
 ##
 ## Ends in an error in state: 48.
 ##
@@ -1181,7 +1181,7 @@ toplevel: TRUE PLUS UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: TRUE SEMICOLON TRUE UNDERSCORE
+toplevel: TRUE SEMICOLON TRUE TY_STRING
 ##
 ## Ends in an error in state: 47.
 ##
@@ -1200,7 +1200,7 @@ toplevel: TRUE SEMICOLON TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: TRUE SEMICOLON UNDERSCORE
+toplevel: TRUE SEMICOLON TY_STRING
 ##
 ## Ends in an error in state: 46.
 ##
@@ -1212,7 +1212,7 @@ toplevel: TRUE SEMICOLON UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: TRUE STAR TRUE UNDERSCORE
+toplevel: TRUE STAR TRUE TY_STRING
 ##
 ## Ends in an error in state: 45.
 ##
@@ -1231,7 +1231,7 @@ toplevel: TRUE STAR TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: TRUE STAR UNDERSCORE
+toplevel: TRUE STAR TY_STRING
 ##
 ## Ends in an error in state: 44.
 ##
@@ -1243,7 +1243,7 @@ toplevel: TRUE STAR UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: TRUE UNDERSCORE
+toplevel: TRUE TY_STRING
 ##
 ## Ends in an error in state: 150.
 ##
@@ -1262,1283 +1262,7 @@ toplevel: TRUE UNDERSCORE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: UNDERSCORE
-##
-## Ends in an error in state: 0.
-##
-## toplevel' -> . toplevel [ # ]
-##
-## The known suffix of the stack is as follows:
-##
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE ID LBRACE ID COLON FALSE COMMA UNDERSCORE
-##
-## Ends in an error in state: 84.
-##
-## separated_nonempty_list(COMMA,record_pattern_expr) -> record_pattern_expr COMMA . separated_nonempty_list(COMMA,record_pattern_expr) [ RBRACE ]
-##
-## The known suffix of the stack is as follows:
-## record_pattern_expr COMMA
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE ID LBRACE ID COLON FALSE UNDERSCORE
-##
-## Ends in an error in state: 83.
-##
-## separated_nonempty_list(COMMA,record_pattern_expr) -> record_pattern_expr . [ RBRACE ]
-## separated_nonempty_list(COMMA,record_pattern_expr) -> record_pattern_expr . COMMA separated_nonempty_list(COMMA,record_pattern_expr) [ RBRACE ]
-##
-## The known suffix of the stack is as follows:
-## record_pattern_expr
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE ID LBRACE ID COLON UNDERSCORE
-##
-## Ends in an error in state: 79.
-##
-## record_pattern_expr -> ID COLON . pattern [ RBRACE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## ID COLON
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE ID LBRACE ID UNDERSCORE
-##
-## Ends in an error in state: 78.
-##
-## record_pattern_expr -> ID . COLON pattern [ RBRACE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## ID
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE ID LBRACE UNDERSCORE
-##
-## Ends in an error in state: 77.
-##
-## pattern -> ID LBRACE . separated_nonempty_list(COMMA,record_pattern_expr) RBRACE [ RPAREN RBRACE COMMA ARROW ]
-##
-## The known suffix of the stack is as follows:
-## ID LBRACE
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE ID LPAREN TRUE COMMA UNDERSCORE
-##
-## Ends in an error in state: 75.
-##
-## separated_nonempty_list(COMMA,pattern) -> pattern COMMA . separated_nonempty_list(COMMA,pattern) [ RPAREN ]
-##
-## The known suffix of the stack is as follows:
-## pattern COMMA
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE ID LPAREN TRUE UNDERSCORE
-##
-## Ends in an error in state: 74.
-##
-## separated_nonempty_list(COMMA,pattern) -> pattern . [ RPAREN ]
-## separated_nonempty_list(COMMA,pattern) -> pattern . COMMA separated_nonempty_list(COMMA,pattern) [ RPAREN ]
-##
-## The known suffix of the stack is as follows:
-## pattern
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE ID LPAREN UNDERSCORE
-##
-## Ends in an error in state: 70.
-##
-## pattern -> ID LPAREN . separated_nonempty_list(COMMA,pattern) RPAREN [ RPAREN RBRACE COMMA ARROW ]
-##
-## The known suffix of the stack is as follows:
-## ID LPAREN
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE ID UNDERSCORE
-##
-## Ends in an error in state: 69.
-##
-## pattern -> ID . [ RPAREN RBRACE COMMA ARROW ]
-## pattern -> ID . LBRACE separated_nonempty_list(COMMA,record_pattern_expr) RBRACE [ RPAREN RBRACE COMMA ARROW ]
-## pattern -> ID . LPAREN separated_nonempty_list(COMMA,pattern) RPAREN [ RPAREN RBRACE COMMA ARROW ]
-##
-## The known suffix of the stack is as follows:
-## ID
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE LPAREN TRUE UNDERSCORE
-##
-## Ends in an error in state: 86.
-##
-## pattern -> LPAREN pattern . RPAREN [ RPAREN RBRACE COMMA ARROW ]
-##
-## The known suffix of the stack is as follows:
-## LPAREN pattern
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE LPAREN UNDERSCORE
-##
-## Ends in an error in state: 67.
-##
-## pattern -> LPAREN . pattern RPAREN [ RPAREN RBRACE COMMA ARROW ]
-##
-## The known suffix of the stack is as follows:
-## LPAREN
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE TRUE ARROW FALSE COMMA UNDERSCORE
-##
-## Ends in an error in state: 94.
-##
-## separated_nonempty_list(COMMA,case_expr_body) -> case_expr_body COMMA . separated_nonempty_list(COMMA,case_expr_body) [ RBRACE ]
-##
-## The known suffix of the stack is as follows:
-## case_expr_body COMMA
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE TRUE ARROW TRUE UNDERSCORE
-##
-## Ends in an error in state: 92.
-##
-## case_expr_body -> pattern ARROW expression . [ RBRACE COMMA ]
-## expression -> expression . expr_list [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . SEMICOLON expression [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . DOT ID [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . PLUS expression [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . MINUS expression [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . STAR expression [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . DIV expression [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
-##
-## The known suffix of the stack is as follows:
-## pattern ARROW expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE TRUE ARROW UNDERSCORE
-##
-## Ends in an error in state: 91.
-##
-## case_expr_body -> pattern ARROW . expression [ RBRACE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## pattern ARROW
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE TRUE UNDERSCORE
-##
-## Ends in an error in state: 90.
-##
-## case_expr_body -> pattern . ARROW expression [ RBRACE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## pattern
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE LBRACE UNDERSCORE
-##
-## Ends in an error in state: 64.
-##
-## expression -> CASE expression LBRACE . separated_nonempty_list(COMMA,case_expr_body) RBRACE [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## CASE expression LBRACE
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE TRUE UNDERSCORE
-##
-## Ends in an error in state: 43.
-##
-## expression -> expression . expr_list [ STAR SEMICOLON PLUS MINUS LPAREN LBRACE DOT DIV ]
-## expression -> expression . SEMICOLON expression [ STAR SEMICOLON PLUS MINUS LPAREN LBRACE DOT DIV ]
-## expression -> expression . DOT ID [ STAR SEMICOLON PLUS MINUS LPAREN LBRACE DOT DIV ]
-## expression -> CASE expression . LBRACE separated_nonempty_list(COMMA,case_expr_body) RBRACE [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . PLUS expression [ STAR SEMICOLON PLUS MINUS LPAREN LBRACE DOT DIV ]
-## expression -> expression . MINUS expression [ STAR SEMICOLON PLUS MINUS LPAREN LBRACE DOT DIV ]
-## expression -> expression . STAR expression [ STAR SEMICOLON PLUS MINUS LPAREN LBRACE DOT DIV ]
-## expression -> expression . DIV expression [ STAR SEMICOLON PLUS MINUS LPAREN LBRACE DOT DIV ]
-##
-## The known suffix of the stack is as follows:
-## CASE expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CASE UNDERSCORE
-##
-## Ends in an error in state: 42.
-##
-## expression -> CASE . expression LBRACE separated_nonempty_list(COMMA,case_expr_body) RBRACE [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## CASE
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CLAIM ID TY_FLOAT UNDERSCORE
-##
-## Ends in an error in state: 147.
-##
-## list(top) -> top . list(top) [ EOF ]
-##
-## The known suffix of the stack is as follows:
-## top
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CLAIM ID UNDERSCORE
-##
-## Ends in an error in state: 143.
-##
-## claim -> CLAIM ID . ty [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## CLAIM ID
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CLAIM UNDERSCORE
-##
-## Ends in an error in state: 142.
-##
-## claim -> CLAIM . ID ty [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## CLAIM
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID EQUALS ID BAR UNDERSCORE
-##
-## Ends in an error in state: 139.
-##
-## separated_nonempty_list(BAR,single_variant) -> single_variant BAR . separated_nonempty_list(BAR,single_variant) [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## single_variant BAR
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID EQUALS ID LPAREN TY_FLOAT RPAREN UNDERSCORE
-##
-## Ends in an error in state: 138.
-##
-## separated_nonempty_list(BAR,single_variant) -> single_variant . [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-## separated_nonempty_list(BAR,single_variant) -> single_variant . BAR separated_nonempty_list(BAR,single_variant) [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## single_variant
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID EQUALS ID LPAREN TY_STRING ARROW
-##
-## Ends in an error in state: 136.
-##
-## single_variant -> ID LPAREN separated_nonempty_list(COMMA,ty) . RPAREN [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE BAR ]
-##
-## The known suffix of the stack is as follows:
-## ID LPAREN separated_nonempty_list(COMMA,ty)
-##
-## WARNING: This example involves spurious reductions.
-## This implies that, although the LR(1) items shown above provide an
-## accurate view of the past (what has been recognized so far), they
-## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 9, spurious reduction of production separated_nonempty_list(COMMA,ty) -> ty
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID EQUALS ID LPAREN UNDERSCORE
-##
-## Ends in an error in state: 135.
-##
-## single_variant -> ID LPAREN . separated_nonempty_list(COMMA,ty) RPAREN [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE BAR ]
-##
-## The known suffix of the stack is as follows:
-## ID LPAREN
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID EQUALS ID UNDERSCORE
-##
-## Ends in an error in state: 134.
-##
-## single_variant -> ID . [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE BAR ]
-## single_variant -> ID . LPAREN separated_nonempty_list(COMMA,ty) RPAREN [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE BAR ]
-##
-## The known suffix of the stack is as follows:
-## ID
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT COMMA UNDERSCORE
-##
-## Ends in an error in state: 132.
-##
-## separated_nonempty_list(COMMA,record_claim) -> record_claim COMMA . separated_nonempty_list(COMMA,record_claim) [ RBRACE ]
-##
-## The known suffix of the stack is as follows:
-## record_claim COMMA
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT UNDERSCORE
-##
-## Ends in an error in state: 131.
-##
-## separated_nonempty_list(COMMA,record_claim) -> record_claim . [ RBRACE ]
-## separated_nonempty_list(COMMA,record_claim) -> record_claim . COMMA separated_nonempty_list(COMMA,record_claim) [ RBRACE ]
-##
-## The known suffix of the stack is as follows:
-## record_claim
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID EQUALS LBRACE CLAIM ID UNDERSCORE
-##
-## Ends in an error in state: 127.
-##
-## record_claim -> CLAIM ID . ty [ RBRACE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## CLAIM ID
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID EQUALS LBRACE CLAIM UNDERSCORE
-##
-## Ends in an error in state: 126.
-##
-## record_claim -> CLAIM . ID ty [ RBRACE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## CLAIM
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID EQUALS LBRACE UNDERSCORE
-##
-## Ends in an error in state: 125.
-##
-## record_decl -> DATA ID EQUALS LBRACE . separated_nonempty_list(COMMA,record_claim) RBRACE [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## DATA ID EQUALS LBRACE
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID EQUALS UNDERSCORE
-##
-## Ends in an error in state: 124.
-##
-## record_decl -> DATA ID EQUALS . LBRACE separated_nonempty_list(COMMA,record_claim) RBRACE [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-## variant_decl -> DATA ID EQUALS . separated_nonempty_list(BAR,single_variant) [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## DATA ID EQUALS
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID UNDERSCORE
-##
-## Ends in an error in state: 123.
-##
-## record_decl -> DATA ID . EQUALS LBRACE separated_nonempty_list(COMMA,record_claim) RBRACE [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-## variant_decl -> DATA ID . EQUALS separated_nonempty_list(BAR,single_variant) [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## DATA ID
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA UNDERSCORE
-##
-## Ends in an error in state: 122.
-##
-## record_decl -> DATA . ID EQUALS LBRACE separated_nonempty_list(COMMA,record_claim) RBRACE [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-## variant_decl -> DATA . ID EQUALS separated_nonempty_list(BAR,single_variant) [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## DATA
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DEF ID EQUALS TRUE UNDERSCORE
-##
-## Ends in an error in state: 118.
-##
-## def -> DEF ID EQUALS expression . [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-## expression -> expression . expr_list [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . DOT ID [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . PLUS expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . MINUS expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . STAR expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . DIV expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## DEF ID EQUALS expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DEF ID EQUALS UNDERSCORE
-##
-## Ends in an error in state: 117.
-##
-## def -> DEF ID EQUALS . expression [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## DEF ID EQUALS
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DEF ID LPAREN RPAREN EQUALS TRUE UNDERSCORE
-##
-## Ends in an error in state: 121.
-##
-## def -> DEF ID arg_list EQUALS expression . [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-## expression -> expression . expr_list [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . DOT ID [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . PLUS expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . MINUS expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . STAR expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . DIV expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## DEF ID arg_list EQUALS expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DEF ID LPAREN RPAREN EQUALS UNDERSCORE
-##
-## Ends in an error in state: 120.
-##
-## def -> DEF ID arg_list EQUALS . expression [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## DEF ID arg_list EQUALS
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DEF ID LPAREN RPAREN UNDERSCORE
-##
-## Ends in an error in state: 119.
-##
-## def -> DEF ID arg_list . EQUALS expression [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## DEF ID arg_list
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DEF ID UNDERSCORE
-##
-## Ends in an error in state: 116.
-##
-## def -> DEF ID . EQUALS expression [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-## def -> DEF ID . arg_list EQUALS expression [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## DEF ID
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DEF UNDERSCORE
-##
-## Ends in an error in state: 115.
-##
-## def -> DEF . ID EQUALS expression [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-## def -> DEF . ID arg_list EQUALS expression [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## DEF
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: FN LPAREN ID COMMA UNDERSCORE
-##
-## Ends in an error in state: 35.
-##
-## separated_nonempty_list(COMMA,param) -> param COMMA . separated_nonempty_list(COMMA,param) [ RPAREN ]
-##
-## The known suffix of the stack is as follows:
-## param COMMA
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: FN LPAREN ID UNDERSCORE
-##
-## Ends in an error in state: 34.
-##
-## separated_nonempty_list(COMMA,param) -> param . [ RPAREN ]
-## separated_nonempty_list(COMMA,param) -> param . COMMA separated_nonempty_list(COMMA,param) [ RPAREN ]
-##
-## The known suffix of the stack is as follows:
-## param
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: FN LPAREN RPAREN TRUE UNDERSCORE
-##
-## Ends in an error in state: 96.
-##
-## expression -> FN arg_list expression . [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DOT ID [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . PLUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . MINUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . STAR expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DIV expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## FN arg_list expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: FN LPAREN RPAREN UNDERSCORE
-##
-## Ends in an error in state: 39.
-##
-## expression -> FN arg_list . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## FN arg_list
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: FN LPAREN UNDERSCORE
-##
-## Ends in an error in state: 31.
-##
-## arg_list -> LPAREN . loption(separated_nonempty_list(COMMA,param)) RPAREN [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EQUALS CASE ]
-##
-## The known suffix of the stack is as follows:
-## LPAREN
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: FN UNDERSCORE
-##
-## Ends in an error in state: 30.
-##
-## expression -> FN . arg_list expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## FN
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: ID LBRACE ID COLON FALSE COMMA UNDERSCORE
-##
-## Ends in an error in state: 101.
-##
-## separated_nonempty_list(COMMA,record_expr_body) -> record_expr_body COMMA . separated_nonempty_list(COMMA,record_expr_body) [ RBRACE ]
-##
-## The known suffix of the stack is as follows:
-## record_expr_body COMMA
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: ID LBRACE ID COLON TRUE UNDERSCORE
-##
-## Ends in an error in state: 97.
-##
-## expression -> expression . expr_list [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . SEMICOLON expression [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . DOT ID [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . PLUS expression [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . MINUS expression [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . STAR expression [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . DIV expression [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
-## record_expr_body -> ID COLON expression . [ RBRACE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## ID COLON expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: ID LBRACE ID COLON UNDERSCORE
-##
-## Ends in an error in state: 29.
-##
-## record_expr_body -> ID COLON . expression [ RBRACE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## ID COLON
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: ID LBRACE ID UNDERSCORE
-##
-## Ends in an error in state: 28.
-##
-## record_expr_body -> ID . COLON expression [ RBRACE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## ID
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: ID LBRACE UNDERSCORE
-##
-## Ends in an error in state: 27.
-##
-## expression -> ID LBRACE . separated_nonempty_list(COMMA,record_expr_body) RBRACE [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## ID LBRACE
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: ID UNDERSCORE
-##
-## Ends in an error in state: 26.
-##
-## expression -> ID . [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> ID . LBRACE separated_nonempty_list(COMMA,record_expr_body) RBRACE [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## ID
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: IF TRUE THEN TRUE ELSE TRUE UNDERSCORE
-##
-## Ends in an error in state: 107.
-##
-## expression -> IF expression THEN expression ELSE expression . [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DOT ID [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . PLUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . MINUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . STAR expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DIV expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## IF expression THEN expression ELSE expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: IF TRUE THEN TRUE ELSE UNDERSCORE
-##
-## Ends in an error in state: 106.
-##
-## expression -> IF expression THEN expression ELSE . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## IF expression THEN expression ELSE
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: IF TRUE THEN TRUE UNDERSCORE
-##
-## Ends in an error in state: 105.
-##
-## expression -> IF expression THEN expression . ELSE expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . expr_list [ STAR SEMICOLON PLUS MINUS LPAREN ELSE DOT DIV ]
-## expression -> expression . SEMICOLON expression [ STAR SEMICOLON PLUS MINUS LPAREN ELSE DOT DIV ]
-## expression -> expression . DOT ID [ STAR SEMICOLON PLUS MINUS LPAREN ELSE DOT DIV ]
-## expression -> expression . PLUS expression [ STAR SEMICOLON PLUS MINUS LPAREN ELSE DOT DIV ]
-## expression -> expression . MINUS expression [ STAR SEMICOLON PLUS MINUS LPAREN ELSE DOT DIV ]
-## expression -> expression . STAR expression [ STAR SEMICOLON PLUS MINUS LPAREN ELSE DOT DIV ]
-## expression -> expression . DIV expression [ STAR SEMICOLON PLUS MINUS LPAREN ELSE DOT DIV ]
-##
-## The known suffix of the stack is as follows:
-## IF expression THEN expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: IF TRUE THEN UNDERSCORE
-##
-## Ends in an error in state: 104.
-##
-## expression -> IF expression THEN . expression ELSE expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## IF expression THEN
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: IF TRUE UNDERSCORE
-##
-## Ends in an error in state: 103.
-##
-## expression -> IF expression . THEN expression ELSE expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . expr_list [ THEN STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . SEMICOLON expression [ THEN STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . DOT ID [ THEN STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . PLUS expression [ THEN STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . MINUS expression [ THEN STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . STAR expression [ THEN STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . DIV expression [ THEN STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-##
-## The known suffix of the stack is as follows:
-## IF expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: IF UNDERSCORE
-##
-## Ends in an error in state: 25.
-##
-## expression -> IF . expression THEN expression ELSE expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## IF
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: LET ID EQUALS TRUE SEMICOLON TRUE UNDERSCORE
-##
-## Ends in an error in state: 111.
-##
-## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression SEMICOLON expression . [ STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . DOT ID [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . PLUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . MINUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . STAR expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DIV expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## maybe_empty_expr -> expression . [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## expression SEMICOLON expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: LET ID EQUALS TRUE SEMICOLON UNDERSCORE
-##
-## Ends in an error in state: 109.
-##
-## expression -> LET ID EQUALS expression SEMICOLON . maybe_empty_expr [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression SEMICOLON . expression [ STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-##
-## The known suffix of the stack is as follows:
-## LET ID EQUALS expression SEMICOLON
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: LET ID EQUALS TRUE UNDERSCORE
-##
-## Ends in an error in state: 108.
-##
-## expression -> LET ID EQUALS expression . SEMICOLON maybe_empty_expr [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . expr_list [ STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . SEMICOLON expression [ STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . DOT ID [ STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . PLUS expression [ STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . MINUS expression [ STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . STAR expression [ STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . DIV expression [ STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
-##
-## The known suffix of the stack is as follows:
-## LET ID EQUALS expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: LET ID EQUALS UNDERSCORE
-##
-## Ends in an error in state: 23.
-##
-## expression -> LET ID EQUALS . expression SEMICOLON maybe_empty_expr [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## LET ID EQUALS
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: LET ID UNDERSCORE
-##
-## Ends in an error in state: 22.
-##
-## expression -> LET ID . EQUALS expression SEMICOLON maybe_empty_expr [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## LET ID
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: LET UNDERSCORE
-##
-## Ends in an error in state: 21.
-##
-## expression -> LET . ID EQUALS expression SEMICOLON maybe_empty_expr [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## LET
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: LPAREN TRUE UNDERSCORE
-##
-## Ends in an error in state: 112.
-##
-## expression -> expression . expr_list [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . SEMICOLON expression [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . DOT ID [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . PLUS expression [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . MINUS expression [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . STAR expression [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV ]
-## expression -> expression . DIV expression [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV ]
-## expression -> LPAREN expression . RPAREN [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## LPAREN expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: LPAREN UNDERSCORE
-##
-## Ends in an error in state: 19.
-##
-## expression -> LPAREN . RPAREN [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> LPAREN . expression RPAREN [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## LPAREN
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: THE LPAREN ARROW TY_STRING UNDERSCORE
-##
-## Ends in an error in state: 15.
-##
-## ty -> LPAREN loption(separated_nonempty_list(COMMA,ty)) ARROW ty . RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA COMMA CLAIM CASE ARROW ]
-##
-## The known suffix of the stack is as follows:
-## LPAREN loption(separated_nonempty_list(COMMA,ty)) ARROW ty
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: THE LPAREN ARROW UNDERSCORE
-##
-## Ends in an error in state: 14.
-##
-## ty -> LPAREN loption(separated_nonempty_list(COMMA,ty)) ARROW . ty RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA COMMA CLAIM CASE ARROW ]
-##
-## The known suffix of the stack is as follows:
-## LPAREN loption(separated_nonempty_list(COMMA,ty)) ARROW
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: THE LPAREN TY_STRING COMMA UNDERSCORE
-##
-## Ends in an error in state: 10.
-##
-## separated_nonempty_list(COMMA,ty) -> ty COMMA . separated_nonempty_list(COMMA,ty) [ RPAREN ARROW ]
-##
-## The known suffix of the stack is as follows:
-## ty COMMA
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: THE LPAREN TY_STRING RPAREN
-##
-## Ends in an error in state: 13.
-##
-## ty -> LPAREN loption(separated_nonempty_list(COMMA,ty)) . ARROW ty RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA COMMA CLAIM CASE ARROW ]
-##
-## The known suffix of the stack is as follows:
-## LPAREN loption(separated_nonempty_list(COMMA,ty))
-##
-## WARNING: This example involves spurious reductions.
-## This implies that, although the LR(1) items shown above provide an
-## accurate view of the past (what has been recognized so far), they
-## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 9, spurious reduction of production separated_nonempty_list(COMMA,ty) -> ty
-## In state 12, spurious reduction of production loption(separated_nonempty_list(COMMA,ty)) -> separated_nonempty_list(COMMA,ty)
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: THE LPAREN TY_STRING UNDERSCORE
-##
-## Ends in an error in state: 9.
-##
-## separated_nonempty_list(COMMA,ty) -> ty . [ RPAREN ARROW ]
-## separated_nonempty_list(COMMA,ty) -> ty . COMMA separated_nonempty_list(COMMA,ty) [ RPAREN ARROW ]
-##
-## The known suffix of the stack is as follows:
-## ty
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: THE LPAREN UNDERSCORE
-##
-## Ends in an error in state: 8.
-##
-## ty -> LPAREN . loption(separated_nonempty_list(COMMA,ty)) ARROW ty RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA COMMA CLAIM CASE ARROW ]
-##
-## The known suffix of the stack is as follows:
-## LPAREN
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: THE TY_STRING TRUE UNDERSCORE
-##
-## Ends in an error in state: 114.
-##
-## expression -> THE ty expression . [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DOT ID [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . PLUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . MINUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . STAR expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DIV expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## THE ty expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: THE TY_STRING UNDERSCORE
-##
-## Ends in an error in state: 17.
-##
-## expression -> THE ty . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## THE ty
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: THE UNDERSCORE
-##
-## Ends in an error in state: 3.
-##
-## expression -> THE . ty expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## THE
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE DIV TRUE UNDERSCORE
-##
-## Ends in an error in state: 60.
-##
-## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DOT ID [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . PLUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . MINUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . STAR expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DIV expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression DIV expression . [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## expression DIV expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE DIV UNDERSCORE
-##
-## Ends in an error in state: 59.
-##
-## expression -> expression DIV . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## expression DIV
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE DOT UNDERSCORE
-##
-## Ends in an error in state: 57.
-##
-## expression -> expression DOT . ID [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## expression DOT
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE LPAREN TRUE COMMA UNDERSCORE
-##
-## Ends in an error in state: 62.
-##
-## separated_nonempty_list(COMMA,expression) -> expression COMMA . separated_nonempty_list(COMMA,expression) [ RPAREN ]
-##
-## The known suffix of the stack is as follows:
-## expression COMMA
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE LPAREN TRUE UNDERSCORE
-##
-## Ends in an error in state: 54.
-##
-## expression -> expression . expr_list [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . SEMICOLON expression [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . DOT ID [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . PLUS expression [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . MINUS expression [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . STAR expression [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV COMMA ]
-## expression -> expression . DIV expression [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV COMMA ]
-## separated_nonempty_list(COMMA,expression) -> expression . [ RPAREN ]
-## separated_nonempty_list(COMMA,expression) -> expression . COMMA separated_nonempty_list(COMMA,expression) [ RPAREN ]
-##
-## The known suffix of the stack is as follows:
-## expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE LPAREN UNDERSCORE
-##
-## Ends in an error in state: 50.
-##
-## expr_list -> LPAREN . loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## LPAREN
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE MINUS TRUE UNDERSCORE
-##
-## Ends in an error in state: 56.
-##
-## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DOT ID [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . PLUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . MINUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression MINUS expression . [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . STAR expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DIV expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## expression MINUS expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE MINUS UNDERSCORE
-##
-## Ends in an error in state: 55.
-##
-## expression -> expression MINUS . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## expression MINUS
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE PLUS TRUE UNDERSCORE
-##
-## Ends in an error in state: 49.
-##
-## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DOT ID [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . PLUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression PLUS expression . [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . MINUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . STAR expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DIV expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## expression PLUS expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE PLUS UNDERSCORE
-##
-## Ends in an error in state: 48.
-##
-## expression -> expression PLUS . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## expression PLUS
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE SEMICOLON TRUE UNDERSCORE
-##
-## Ends in an error in state: 47.
-##
-## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression SEMICOLON expression . [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DOT ID [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . PLUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . MINUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . STAR expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DIV expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## expression SEMICOLON expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE SEMICOLON UNDERSCORE
-##
-## Ends in an error in state: 46.
-##
-## expression -> expression SEMICOLON . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## expression SEMICOLON
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE STAR TRUE UNDERSCORE
-##
-## Ends in an error in state: 45.
-##
-## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DOT ID [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . PLUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . MINUS expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . STAR expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression STAR expression . [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-## expression -> expression . DIV expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## expression STAR expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE STAR UNDERSCORE
-##
-## Ends in an error in state: 44.
-##
-## expression -> expression STAR . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID FN FLOAT FALSE EOF ELSE DOT DIV DEF DATA COMMA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## expression STAR
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: TRUE UNDERSCORE
-##
-## Ends in an error in state: 150.
-##
-## expression -> expression . expr_list [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . DOT ID [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . PLUS expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . MINUS expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . STAR expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## expression -> expression . DIV expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID FN FLOAT FALSE EOF DOT DIV DEF DATA CLAIM CASE ]
-## top -> expression . [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID FN FLOAT FALSE EOF DEF DATA CLAIM CASE ]
-##
-## The known suffix of the stack is as follows:
-## expression
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: UNDERSCORE
+toplevel: TY_STRING
 ##
 ## Ends in an error in state: 0.
 ##
