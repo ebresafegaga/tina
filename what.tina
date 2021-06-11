@@ -1,0 +1,22 @@
+
+
+
+define caser (a, b, c) = 
+    case 23
+        34 -> kkk, 
+        Some (1, 3) -> 3333
+    end    
+end
+
+fun (x, c) -> "something" 
+
+define name = 23
+
+f(1, 2)
+
+(10)
+
+datatype name = {
+    claim name String 
+    claim age Nat 
+}
