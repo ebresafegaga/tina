@@ -113,7 +113,12 @@ ty:
     | TY_STRING { TyString }
     | TY_FLOAT { TyFloat }
     | TY_INT { TyInt }
-    | LPAREN a = separated_list(COMMA, ty); ARROW; b = ty; RPAREN { TyArrow (a, b) }
+    | LPAREN;  t = ty; RPAREN { t }
+    | LPAREN; body = separated_nonempty_list(COMMA, ty); RPAREN 
+      { TyTuple (body) }
+    | LPAREN a = separated_nonempty_list(COMMA, ty); ARROW; b = ty; RPAREN 
+      { TyArrow (a, b) }
+    
 
 arg_list: 
     | LPAREN; params=separated_list(COMMA,param); RPAREN 
@@ -141,6 +146,8 @@ pattern:
     | FALSE { PBool (false) }
     | s = STRING { PString (s) }
     | LPAREN; p = pattern; RPAREN; { p }
+    | LPAREN; body = separated_nonempty_list(COMMA, pattern); RPAREN
+      { PTuple (body) }
     | id = ID 
         {   let name = VarName.of_string id in
             if is_empty_variant name then 
@@ -186,6 +193,8 @@ expression:
       { let o = Variable ($loc, VarName.of_string op) in 
          Application ($loc, o, [e1; e2]) }
     | LPAREN; e = expression; RPAREN  { e }
+    | LPAREN; body = separated_nonempty_list(COMMA, expression); RPAREN
+      { Tuple ($loc, body) }
   
 %inline operator: 
     | PLUS {  "+" }

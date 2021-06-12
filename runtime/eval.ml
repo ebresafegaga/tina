@@ -115,6 +115,10 @@ let rec eval env expr =
                 | exception PatternFailure -> eval_cases xs
         in 
         eval_cases cases 
+    | A.Tuple (loc, exprs) -> 
+        let open Result in
+        let* result = exprs |> List.map (eval env) |> Result.sequenceA in
+        Ok (V.VTuple result)
     | A.Sequence (loc, e1, e2) -> 
         Error ""
     | A.LitTodo loc -> Error "Not yet supported"

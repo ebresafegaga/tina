@@ -8,6 +8,7 @@ type ty =
     | TyUnit
     | TyArrow of ty list * ty
     | TyRecord of (FieldName.t * ty) list
+    | TyTuple of ty list 
     (* Variant type? *)
 
 
@@ -21,6 +22,7 @@ type pattern =
     | PVariable of VarName.t
     | PRecord of DataName.t * (FieldName.t * pattern) list 
     | PVariant of VarName.t * pattern list
+    | PTuple of pattern list 
 
 (* we need a variable type which enacpsulates 
     VarName.t DefName.t ... *)
@@ -49,6 +51,7 @@ type expression =
     | Case of Loc.t * expression * (pattern * expression) list (* tbi *)
     | Record of Loc.t * DataName.t * (FieldName.t * expression) list
     | RecordIndex of Loc.t * expression * FieldName.t
+    | Tuple of Loc.t * expression list 
     (* | Variant of Loc.t * DataName.t * expression list *)
     (* list? tuples? *)
 

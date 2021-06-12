@@ -8,11 +8,13 @@ type value =
     | VString of string 
     | VFloat of float
     | VBool of bool 
+    | VTuple of value list 
     | VClosure of (value list -> (value, string) result)
     | VRecord of DataName.t * (FieldName.t * value) list 
     | VVariant of VarName.t * value list 
 
 let rec pp_value v = 
+    let pp_value_list values sep = values |> List.map pp_value |> String.concat sep in
     match v with 
     | VUnit -> "(void)"
     | VInteger i -> Int.to_string i
@@ -32,5 +34,6 @@ let rec pp_value v =
 
     | VVariant (name, []) -> VarName.to_string name
     | VVariant (name, values) -> 
-        let values_pp = values |> List.map pp_value |> String.concat ", " in
-        Printf.sprintf "%s (%s)" (VarName.to_string name) values_pp
+        Printf.sprintf "%s (%s)" (VarName.to_string name) (pp_value_list values ", ")
+    | VTuple (values) ->
+        Printf.sprintf "(%s)" (pp_value_list values ", ")
