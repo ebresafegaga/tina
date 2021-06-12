@@ -123,9 +123,9 @@ let rec eval env expr =
         let* result = exprs |> List.map (eval env) |> Result.sequenceA in
         Ok (V.VTuple result)
 
-    | A.Sequence (loc, e1, e2) -> 
+    | A.Sequence (_loc, _e1, _e2) -> 
         Error "Sequence expressions not yet implemented"
-    | A.LitTodo loc -> Error "Not yet supported"
+    | A.LitTodo _loc -> Error "Not yet supported"
 
 let guard_values_by_len n f values = 
     let arg_len = List.length values in 
@@ -138,8 +138,8 @@ let is_fn = function A.Fn _ -> true | _ -> false
 
 let rec process_toplevel env = function  
     | [] -> []
-    | A.Claim (loc, _, _) :: rest -> process_toplevel env rest 
-    | A.Def (loc, name, body) :: rest when is_fn body ->
+    | A.Claim (_loc, _, _) :: rest -> process_toplevel env rest 
+    | A.Def (_loc, name, body) :: rest when is_fn body ->
         let env' = ref env in 
         let body_value = 
             V.VClosure (fun values -> 
@@ -150,7 +150,7 @@ let rec process_toplevel env = function
         in 
         env' := Env.add name body_value !env';
         process_toplevel !env' rest
-    | A.Def (loc, name, body) :: rest -> 
+    | A.Def (_loc, name, body) :: rest -> 
         let body_value = eval env body in 
         (match body_value with 
         | Ok value -> 
@@ -161,8 +161,8 @@ let rec process_toplevel env = function
         (match eval env e with 
         | Ok value -> (V.pp_value value) :: process_toplevel env rest
         | Error s -> Printf.sprintf "Error: %s" s :: process_toplevel env rest)
-    | A.RecordDef (loc, _, _) :: rest -> process_toplevel env rest 
-    | A.VariantDef (loc, name, body) :: rest ->
+    | A.RecordDef (_loc, _, _) :: rest -> process_toplevel env rest 
+    | A.VariantDef (_loc, _name, body) :: rest ->
         let variant_extend (name, l) env =
             match l with 
             | [] -> Env.add name (V.VVariant (name, [])) env
