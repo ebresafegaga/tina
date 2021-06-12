@@ -77,3 +77,76 @@ case Person { name: "ogaga", age: Number { value: 20 } } {
 }
 
 (((fn (x) fn (y) x) (23)) (67))
+
+
+
+
+(((fn (x) fn (y) x) (23)) (67))
+
+45 
+
+67
+
+"34"
+
+def name = 35
+
+name
+
+def func (x, y) = 34
+
+func (1, 2)
+
+fn (x) x
+
+def ogaga = Name { a: func, b : 29, other: (fn (c) c) }
+
+case (ogaga) {
+    Name { a: f, b: idc, other: g } -> f (idc, "this must be returned")
+}
+
+def safe = Name { a: func, b : 29, rest: Oga { safe: 45} }
+
+ogaga.a 
+
+ogaga.other
+
+true 
+
+false 
+
+datatype roomate = Anderson(Nat, Nat) | Ogaga | Ifeoluwa 
+
+Ifeoluwa 
+
+def a = Anderson ("something", 34)
+
+def b = Ogaga 
+
+b 
+
+
+case (a) {
+    Ogaga -> "ogagaaa",
+    Anderson (s, other) -> s 
+}
+
+
+6 + 5
+
+30 + 45 
+
+def fib (n) =
+    case (n) {
+        1 -> 0, 
+        2 -> 1, 
+        n -> fib (n - 1) + fib (n - 2)
+    }
+
+"Fib numbers"
+fib (1)
+fib (2)
+fib (3)
+fib (4)
+fib (5)
+fib (10)

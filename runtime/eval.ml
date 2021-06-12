@@ -40,19 +40,19 @@ let rec pattern_binder pattern value env =
 
 let rec eval env expr = 
     match expr with
-    | A.Variable (loc, name) -> 
+    | A.Variable (_loc, name) -> 
         (match lookup name env with 
          | Some x -> Ok x 
          | None -> Error (Printf.sprintf "Unbound Variable %s" (VarName.to_string name)))
 
-    | A.LitUnit loc -> Ok V.VUnit 
-    | A.LitInteger (loc, i) -> Ok (V.VInteger i)
-    | A.LitBool (loc, b) -> Ok (V.VBool b)
-    | A.LitFloat (loc, f) -> Ok (V.VFloat f)
-    | A.LitString (loc, s) -> Ok (V.VString s)
-    | A.Annotated (loc, e, _) -> eval env e
+    | A.LitUnit _loc -> Ok V.VUnit 
+    | A.LitInteger (_loc, i) -> Ok (V.VInteger i)
+    | A.LitBool (_loc, b) -> Ok (V.VBool b)
+    | A.LitFloat (_loc, f) -> Ok (V.VFloat f)
+    | A.LitString (_loc, s) -> Ok (V.VString s)
+    | A.Annotated (_loc, e, _) -> eval env e
 
-    | A.If (loc, e, pt, pf) -> 
+    | A.If (_loc, e, pt, pf) -> 
         let open Result in 
         let* e = eval env e in 
         (match e with 
@@ -60,13 +60,13 @@ let rec eval env expr =
          | V.VBool false -> eval env pf
          | _ -> Error "expected a bool type at an if expression ")
 
-    | A.Let (loc, name, expr, body) ->
+    | A.Let (_loc, name, expr, body) ->
         let open Result in 
         let* value = eval env expr in
         let env = Env.add name value env in
         eval env body
 
-    | A.Fn (loc, names, body) -> 
+    | A.Fn (_loc, names, body) -> 
         let clo values = 
             (* This check might not be valid if I change 
                the representation of closures to use frames. *)
@@ -78,7 +78,7 @@ let rec eval env expr =
         in
         Ok (V.VClosure clo)
 
-    | A.Application (loc, operator, operands) ->
+    | A.Application (_loc, operator, operands) ->
         let open Result in
         let* operands = 
             operands 
@@ -90,14 +90,14 @@ let rec eval env expr =
         | Ok _ -> Error "This expression is not a function, so it cannot be invoked"
         | Error s -> Error s)
 
-    | A.Record (loc, name, body) -> 
+    | A.Record (_loc, name, body) -> 
         let open Result in
         let names, exprs = List.split body in
         let* values = exprs |> List.map (eval env) |> Result.sequenceA in
         let body = List.combine names values in 
         Ok (V.VRecord (name, body))
 
-    | A.RecordIndex (loc, record, field) -> 
+    | A.RecordIndex (_loc, record, field) -> 
         let open Result in
         let* record = eval env record in
         (match record with 
@@ -107,7 +107,7 @@ let rec eval env expr =
             | None -> Error "That field is not defied on the record")
         | _ -> Error "Not a record")
 
-    | A.Case (loc, expr, cases) -> 
+    | A.Case (_loc, expr, cases) -> 
         let open Result in
         let* value = eval env expr in
         let rec eval_cases = function 
@@ -119,12 +119,13 @@ let rec eval env expr =
                 | exception PatternFailure -> eval_cases xs
         in 
         eval_cases cases 
-    | A.Tuple (loc, exprs) -> 
+    | A.Tuple (_loc, exprs) -> 
         let open Result in
         let* result = exprs |> List.map (eval env) |> Result.sequenceA in
         Ok (V.VTuple result)
+
     | A.Sequence (loc, e1, e2) -> 
-        Error ""
+        Error "Sequence expressions not yet implemented"
     | A.LitTodo loc -> Error "Not yet supported"
 
 let guard_values_by_len n f values = 

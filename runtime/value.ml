@@ -21,7 +21,7 @@ let rec pp_value v =
     | VString s -> Printf.sprintf "%s%s%s" {|"|} s {|"|} 
     | VFloat f -> Float.to_string f 
     | VBool b -> Bool.to_string b
-    | VClosure clo -> "<fun>" (* unfortunately, we can't inspect clo *)
+    | VClosure _clo -> "<fun>" (* unfortunately, we can't inspect _clo *)
     
     | VRecord (name, fields) ->
         let fields_pp = 
