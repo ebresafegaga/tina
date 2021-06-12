@@ -32,6 +32,10 @@ let rec pattern_binder pattern value env =
         if List.length body <> List.length body' 
             then failwith "Invalid number of arguments for pattern match" ; (* TODO use Result Monad *)
         List.fold_right2 (fun p v env -> pattern_binder p v env) body body' env
+    | A.PTuple (patterns), V.VTuple (values) -> 
+        if List.length patterns <> List.length values 
+            then failwith "Invalid number of arguments for pattern match" ; (* TODO use Result Monad *)
+        List.fold_right2 pattern_binder patterns values env
     | _ -> raise PatternFailure
 
 let rec eval env expr = 
