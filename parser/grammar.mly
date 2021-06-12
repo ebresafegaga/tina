@@ -173,8 +173,8 @@ expression:
     
     | IF; pred = expression; THEN pred_true = expression; ELSE pred_false = expression
      { If ($loc, pred, pred_true, pred_false) }
-    | LET; id = ID; EQUALS; value = expression; SEMICOLON; body = maybe_empty_expr
-      { Let ($loc, VarName.of_string id, value, body) } 
+    | LET; pat = pattern; EQUALS; value = expression; SEMICOLON; body = maybe_empty_expr
+      { Let ($loc, pat, value, body) } 
     | FN; args = arg_list; body = expression;
       { Fn ($loc, args, body) }
     | THE; t = ty; e = expression; 

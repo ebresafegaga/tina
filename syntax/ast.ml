@@ -43,7 +43,7 @@ type expression =
     | Variable of Loc.t * VarName.t
     | If of Loc.t * expression * expression * expression
     | Application of Loc.t * expression * expression list 
-    | Let of Loc.t * VarName.t * expression * expression
+    | Let of Loc.t * pattern * expression * expression
     (* LetMut maybe? *)
     | Fn of Loc.t * VarName.t list * expression
     | Annotated of Loc.t * expression * ty 

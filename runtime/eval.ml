@@ -59,10 +59,10 @@ let rec eval env expr =
          | V.VBool false -> eval env pf
          | _ -> Error "expected a bool type at an if expression ")
 
-    | A.Let (_loc, name, expr, body) ->
+    | A.Let (_loc, pat, expr, body) ->
         let open Result in 
         let* value = eval env expr in
-        let env = Env.add name value env in
+        let env = pattern_binder pat value env in
         eval env body
 
     | A.Fn (_loc, names, body) -> 
