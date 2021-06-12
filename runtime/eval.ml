@@ -16,6 +16,7 @@ let empty_env =  Env.empty
 exception PatternFailure 
 
 let rec pattern_binder pattern value env = 
+    let length_check l1 l2 =  if List.length l1 <> List.length l2 then raise PatternFailure in
     match pattern, value with 
     | A.PVariable name, value -> Env.add name value env
     | A.PInteger i, V.VInteger i' when i = i' -> env
@@ -29,12 +30,10 @@ let rec pattern_binder pattern value env =
         in 
         List.fold_right extender body env
     | A.PVariant (name, body), V.VVariant (name', body') when name = name' -> 
-        if List.length body <> List.length body' 
-            then failwith "Invalid number of arguments for pattern match" ; (* TODO use Result Monad *)
+        length_check body body';
         List.fold_right2 (fun p v env -> pattern_binder p v env) body body' env
-    | A.PTuple (patterns), V.VTuple (values) -> 
-        if List.length patterns <> List.length values 
-            then failwith "Invalid number of arguments for pattern match" ; (* TODO use Result Monad *)
+    | A.PTuple patterns, V.VTuple values -> 
+        length_check patterns values;
         List.fold_right2 pattern_binder patterns values env
     | _ -> raise PatternFailure
 
