@@ -12,3 +12,8 @@ First-class types are just *dependent types*
 - Remove ambiguities in parser 
 - Add error messages 
 - Remove unsued tokens in grammmar.mly 
+
+### Things to do 
+- Add a type system 
+- Add UI
+
