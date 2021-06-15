@@ -6,12 +6,15 @@ open Utility.Util
 module A = Ast
 module V = Value
 
-module Env : Map.S with type key := VarName.t = struct 
-    include Map.Make (VarName)
+module type S = sig 
+    include Map.S
+    val lookup : key -> 'a t -> 'a option
 end
-let lookup = Env.find_opt
 
-let empty_env =  Env.empty
+module Env : S with type key := VarName.t = struct 
+    include Map.Make (VarName)
+    let lookup = find_opt
+end
 
 exception PatternFailure 
 
@@ -40,7 +43,7 @@ let rec pattern_binder pattern value env =
 let rec eval env expr = 
     match expr with
     | A.Variable (_loc, name) -> 
-        (match lookup name env with 
+        (match Env.lookup name env with 
          | Some x -> Ok x 
          | None -> Error (Printf.sprintf "Unbound Variable %s" (VarName.to_string name)))
 
@@ -123,8 +126,7 @@ let rec eval env expr =
         let* result = exprs |> List.map (eval env) |> Result.sequenceA in
         Ok (V.VTuple result)
 
-    | A.Sequence (_loc, _e1, _e2) -> 
-        Error "Sequence expressions not yet implemented"
+    | A.Sequence (_loc, _e1, _e2) -> Error "Sequence expressions not yet implemented"
     | A.LitTodo _loc -> Error "Not yet supported"
 
 let guard_values_by_len n f values = 

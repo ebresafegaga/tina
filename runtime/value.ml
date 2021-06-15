@@ -37,3 +37,11 @@ let rec pp_value v =
         Printf.sprintf "%s (%s)" (VarName.to_string name) (pp_value_list values ", ")
     | VTuple (values) ->
         Printf.sprintf "(%s)" (pp_value_list values ", ")
+
+(* experemental stuff *)
+type value_result = 
+    | VOkay of value 
+    | VError of Loc.t * err 
+
+and err = 
+    | ApplicationError 

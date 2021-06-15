@@ -3,7 +3,7 @@ open Parser
 open Lexer
 open Runtime
 
-let parse lexbuf = 
+let  parse lexbuf = 
     match Grammar.toplevel Lexer.read_token lexbuf with 
     | result -> Ok result
     | exception SyntaxError msg -> Error msg
@@ -20,3 +20,6 @@ let () =
         |> String.concat "\n"
         |> Printf.printf "%s\n"
     | Error msg -> failwith (Format.sprintf "%s" msg)
+ 
+
+ 
