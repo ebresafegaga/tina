@@ -1,7 +1,6 @@
 open Syntax
 open Naming
 
-
 type value = 
     | VUnit 
     | VInteger of int 
@@ -26,8 +25,7 @@ let rec pp_value v =
     | VRecord (name, fields) ->
         let fields_pp = 
             fields  
-            |> List.map (fun (name, value) -> 
-                Printf.sprintf " %s: %s" (FieldName.to_string name) (pp_value value))
+            |> List.map (fun (name, value) -> Printf.sprintf " %s: %s" (FieldName.to_string name) (pp_value value))
             |> String.concat ","
         in
         Printf.sprintf "%s {%s }" (DataName.to_string name) fields_pp 
@@ -45,3 +43,5 @@ type value_result =
 
 and err = 
     | ApplicationError 
+
+let name = ""

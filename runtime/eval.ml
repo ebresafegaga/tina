@@ -6,6 +6,7 @@ open Utility.Util
 module A = Ast
 module V = Value
 
+(* Enviroment mangement *)
 module type S = sig 
     include Map.S
     val lookup : key -> 'a t -> 'a option
@@ -16,6 +17,8 @@ module Env : S with type key := VarName.t = struct
     let lookup = find_opt
 end
 
+
+(* Pattern matching handling *)
 exception PatternFailure 
 
 let rec pattern_binder pattern value env = 

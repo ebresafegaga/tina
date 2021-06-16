@@ -1,6 +1,7 @@
 open Naming
 
 type ty = 
+    | TyBool
     | TyString
     | TyNat
     | TyInt
