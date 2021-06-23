@@ -1,6 +1,6 @@
 (library
  (name parser)
- (libraries utility syntax))
+ (libraries menhirLib utility syntax))
 
 
 (ocamllex lexer)

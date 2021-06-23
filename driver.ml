@@ -3,7 +3,7 @@ open Parser
 open Lexer
 open Runtime
 
-let  parse lexbuf = 
+let parse lexbuf =
     match Grammar.toplevel Lexer.read_token lexbuf with 
     | result -> Ok result
     | exception SyntaxError msg -> Error msg
@@ -14,12 +14,14 @@ let () =
     let file = open_in file in
     let l = Lexing.from_channel file in 
     match parse l with 
-    | Ok (xs) ->
+    | Ok xs ->
         xs 
         |> Eval.process_toplevel 
         |> String.concat "\n"
         |> Printf.printf "%s\n"
     | Error msg -> failwith (Format.sprintf "%s" msg)
- 
 
- 
+let b str =
+  str
+  |> String.concat ","
+  |> Fun.flip String.contains 'o'

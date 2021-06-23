@@ -1,9 +1,18 @@
 
 
-def a = (10, 23, "ogaga", fn (x) x)
+
+def fib (n) =
+    case (n) {
+        1 -> 0, 
+        2 -> 1, 
+        n -> fib (n - 1) + fib (n - 2)
+    }
+
+"chidera"
 
 
-case (a) {
-    (10, 23, o, f) -> f (o)
-}
+fib (2)
 
+fib (1)
+
+fib (23)

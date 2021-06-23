@@ -31,10 +31,8 @@ let rec pp_value v =
         Printf.sprintf "%s {%s }" (DataName.to_string name) fields_pp 
 
     | VVariant (name, []) -> VarName.to_string name
-    | VVariant (name, values) -> 
-        Printf.sprintf "%s (%s)" (VarName.to_string name) (pp_value_list values ", ")
-    | VTuple (values) ->
-        Printf.sprintf "(%s)" (pp_value_list values ", ")
+    | VVariant (name, values) -> Printf.sprintf "%s (%s)" (VarName.to_string name) (pp_value_list values ", ")
+    | VTuple (values) -> Printf.sprintf "(%s)" (pp_value_list values ", ")
 
 (* experemental stuff *)
 type value_result = 
@@ -44,4 +42,3 @@ type value_result =
 and err = 
     | ApplicationError 
 
-let name = ""

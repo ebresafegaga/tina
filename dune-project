@@ -18,4 +18,5 @@
   js_of_ocaml-ppx 
   js_of_ocaml-compiler
   brr
+  alcotest
   (ocaml (>= 4.08.1))))

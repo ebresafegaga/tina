@@ -1,4 +1,5 @@
 
+
 open Syntax
 open Naming 
 open Utility.Util
@@ -43,9 +44,8 @@ let rec pattern_binder pattern value env =
         List.fold_right2 pattern_binder patterns values env
     | _ -> raise PatternFailure
 
-let rec eval env expr = 
-    match expr with
-    | A.Variable (_loc, name) -> 
+let rec eval env = function
+    | Ast.Variable (_loc, name) -> 
         (match Env.lookup name env with 
          | Some x -> Ok x 
          | None -> Error (Printf.sprintf "Unbound Variable %s" (VarName.to_string name)))
@@ -76,7 +76,7 @@ let rec eval env expr =
             (* This check might not be valid if I change 
                the representation of closures to use frames. *)
             if List.length values <> List.length names then 
-                Error (Printf.sprintf "Invalid Number of arguments" )
+                Error (Printf.sprintf "Invalid Number of arguments")
             else
                 let env = List.fold_right2 Env.add names values env in
                 eval env body
@@ -144,6 +144,7 @@ let is_fn = function A.Fn _ -> true | _ -> false
 let rec process_toplevel env = function  
     | [] -> []
     | A.Claim (_loc, _, _) :: rest -> process_toplevel env rest 
+
     | A.Def (_loc, name, body) :: rest when is_fn body ->
         let env' = ref env in 
         let body_value = 
@@ -155,6 +156,7 @@ let rec process_toplevel env = function
         in 
         env' := Env.add name body_value !env';
         process_toplevel !env' rest
+
     | A.Def (_loc, name, body) :: rest -> 
         let body_value = eval env body in 
         (match body_value with 
@@ -162,6 +164,7 @@ let rec process_toplevel env = function
             let env = Env.add name value env in 
             process_toplevel env rest
         | Error s -> Printf.sprintf "Error: %s" s :: process_toplevel env rest)
+        
     | A.Expression e :: rest -> 
         (match eval env e with 
         | Ok value -> (V.pp_value value) :: process_toplevel env rest
@@ -201,3 +204,5 @@ let global_env =
     |> Env.of_seq
 
 let process_toplevel = process_toplevel global_env
+
+
