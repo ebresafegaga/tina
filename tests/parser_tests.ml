@@ -27,5 +27,5 @@ let lex_claim_test () =
 let lex_claim_text_case =
   "claim-case", [Alcotest.test_case "lex claim only" `Quick lex_claim_test]
 
-let test_cases =
+let all_test_cases =
   [lex_claim_text_case]
