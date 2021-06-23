@@ -14,6 +14,7 @@ First-class types are just *dependent types*
 - Remove unsued tokens in grammmar.mly 
 
 ### Things to do 
-- Add a type system 
-- Add UI
+- Set up structure for a type system
+- Set up UI structure
+- Write _a lot_ of tests
 
