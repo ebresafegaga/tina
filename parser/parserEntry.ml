@@ -1,16 +1,15 @@
 open Lexing
-open Printf
 (* open Syntax for using Loc.t maybe? *)
 module E = MenhirLib.ErrorReports
 module L = MenhirLib.LexerUtil
 module I = Grammar.MenhirInterpreter
 
+type message = string
 (* TODO: replace Lexing.position with Loc.t from 
    Syntax  *)
 type parse_error =
   | LexingError of string * Lexing.position
   | SyntaxError of message option * Lexing.position * Lexing.position
-and message = string
 
 exception Error of parse_error
 
@@ -45,13 +44,13 @@ let show text positions =
 let get text checkpoint i =
   match I.get i (env checkpoint) with
   | Some (I.Element (_, _, pos1, pos2)) ->
-      show text (pos1, pos2)
+    show text (pos1, pos2)
   | None ->
-      (* The index is out of range. This should not happen if [$i]
-         keywords are correctly inside the syntax error message
-         database. The integer [i] should always be a valid offset
-         into the known suffix of the stack. *)
-      "???"
+    (* The index is out of range. This should not happen if [$i]
+       keywords are correctly inside the syntax error message
+       database. The integer [i] should always be a valid offset
+       into the known suffix of the stack. *)
+    "???"
 
 (* [succeed v] is invoked when the parser has succeeded and produced a
    semantic value [v]. *)
@@ -61,12 +60,12 @@ let succeed v = v
    syntax error. *)
 let fail text buffer checkpoint =
   (* the format for this string: File \%s\, line %d, characters %d-%d:\n *)
-  let location = L.range (E.last buffer) in
+  let _location = L.range (E.last buffer) in
   (* Fetch an error message from the database. *)
   let message = ParserMessages.message (state checkpoint) in
   let message = E.expand (get text checkpoint) message in
-  []
-    
+  failwith message
+  
 let parse lexbuf =
   let text = lexbuf.lex_buffer |> Bytes.to_string in
   (* Wrap the lexer and lexbuf together into a supplier, that is, a

@@ -82,7 +82,7 @@ toplevel: CASE TRUE TY_STRING
 ## CASE expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+An expression should be followed after a case statement
 
 toplevel: CASE TY_STRING
 ##
@@ -94,7 +94,7 @@ toplevel: CASE TY_STRING
 ## CASE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+An expression should be followed after a case statement
 
 toplevel: CLAIM ID TRUE
 ##
@@ -106,7 +106,7 @@ toplevel: CLAIM ID TRUE
 ## CLAIM ID
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+An expression should be followed after a case statement
 
 toplevel: CLAIM ID TY_FLOAT TY_STRING
 ##
@@ -130,7 +130,7 @@ toplevel: CLAIM TY_STRING
 ## CLAIM
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+An expression should be followed after a case statement
 
 toplevel: DATA ID EQUALS ID BAR TY_STRING
 ##
@@ -1275,5 +1275,5 @@ toplevel: TY_STRING
 ##
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
+Expected a toplevel item. A top level item can either be an
+expression, type defination, claim, or a defination
