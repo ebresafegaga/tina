@@ -17,4 +17,5 @@ First-class types are just *dependent types*
 - Set up structure for a type system
 - Set up UI structure
 - Write _a lot_ of tests
+- Set up structure for a CPS based compiler backend
 
