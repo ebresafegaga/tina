@@ -2,7 +2,7 @@
 
 open Syntax
 open Naming 
-open Utility.Util
+open Utility
 
 module A = Ast
 module V = Value

@@ -20,8 +20,3 @@ let () =
         |> String.concat "\n"
         |> Printf.printf "%s\n"
     | Error msg -> failwith (Format.sprintf "%s" msg)
-
-let b str =
-  str
-  |> String.concat ","
-  |> Fun.flip String.contains 'o'
