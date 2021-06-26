@@ -60,11 +60,12 @@ let succeed v = v
    syntax error. *)
 let fail text buffer checkpoint =
   (* the format for this string: File \%s\, line %d, characters %d-%d:\n *)
-  let _location = L.range (E.last buffer) in
+  let location = L.range (E.last buffer) in
   (* Fetch an error message from the database. *)
   let message = ParserMessages.message (state checkpoint) in
   let message = E.expand (get text checkpoint) message in
-  failwith message
+  let msg = Printf.sprintf "%s at %s" message location in
+  failwith msg (* for now just failwith the message *)
   
 let parse lexbuf =
   let text = lexbuf.lex_buffer |> Bytes.to_string in

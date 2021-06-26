@@ -1,5 +1,3 @@
 
 
-def name = 10
-
-name
+(fn () 10)()
