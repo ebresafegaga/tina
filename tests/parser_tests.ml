@@ -18,18 +18,13 @@ let token_testable =
   Alcotest.testable pp (=)
 
 
-let x_claim_test claim token () =
-  
-  Alcotest.check (Alcotest.list token_testable) "claim should result in token claim"
+
+let token_test str token error () =  
+  Alcotest.check (Alcotest.list token_testable) error
     [token]
-    (tokenize claim)
+    (tokenize str)
 
-let claim = "claim"
-
-let lex_claim_test () =
-  Alcotest.check (Alcotest.list token_testable) "claim should result in token claim"
-    [Grammar.CLAIM]
-    (tokenize claim)
+let lex_claim_test = token_test "claim" Grammar.CLAIM "claim should result in token claim"
 
 let lex_claim_text_case =
   "claim-case", [Alcotest.test_case "lex claim only" `Quick lex_claim_test]
