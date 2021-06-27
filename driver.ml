@@ -14,6 +14,11 @@ let () =
   let file = open_in file in
   Lexing.from_channel file
   |> ParserEntry.parse
+  |> List.map (fun expr ->
+      expr
+      |> Ast.pp_toplevel
+      |> print_endline;
+      expr)
   |> Eval.process_toplevel 
   |> String.concat "\n"
   |> Printf.printf "%s\n"

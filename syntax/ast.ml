@@ -63,38 +63,35 @@ type toplevel =
     | RecordDef of Loc.t * DataName.t * (FieldName.t * ty) list 
     | Expression of expression
 
-let list_pp es f = es |> List.map f |> String.concat ", "
+(* pretty printing facilities for the the ast *)
 
-let rec pp_ty =
-  let ts_pp es f = es |> List.map f |> String.concat ", " in
-  function
+let pp_list es f = es |> List.map f |> String.concat ", "
+
+let rec pp_ty = function
   | TyNat -> "Nat"
   | TyString -> "String"
   | TyInt -> "Int"
   | TyFloat -> "Float"
   | TyBool -> "Bool"
   | TyUnit -> "Unit"
-  | TyTuple ts -> Printf.sprintf "(%s)" (ts_pp ts pp_ty)
+  | TyTuple ts -> Printf.sprintf "(%s)" (pp_list ts pp_ty)
   | TyRecord ts ->
     Printf.sprintf "{%s}" @@
-    ts_pp ts (fun (n, t) -> Printf.sprintf "claim %s %s" (FieldName.to_string n) (pp_ty t))
-  | TyArrow (ts, t) -> Printf.sprintf "(%s) -> %s" (ts_pp ts pp_ty) (pp_ty t)
+    pp_list ts (fun (n, t) -> Printf.sprintf "claim %s %s" (FieldName.to_string n) (pp_ty t))
+  | TyArrow (ts, t) -> Printf.sprintf "(%s) -> %s" (pp_list ts pp_ty) (pp_ty t)
   
-let rec pp_pattern =
-  let es_pp es f = es |> List.map f |> String.concat ", " in
-  function
+let rec pp_pattern = function
   | PInteger i -> Int.to_string i
   | PString s -> s
   | PVariable name -> VarName.to_string name
-  | PTuple es -> Printf.sprintf "(%s)" (es_pp es pp_pattern)
+  | PTuple es -> Printf.sprintf "(%s)" (pp_list es pp_pattern)
   | PBool b -> Bool.to_string b
-  | PVariant (name, es) -> Printf.sprintf "%s { %s }" (VarName.to_string name) (es_pp es pp_pattern)
+  | PVariant (name, es) -> Printf.sprintf "%s { %s }" (VarName.to_string name) (pp_list es pp_pattern)
   | PRecord (name, es) ->
-    Printf.sprintf "%s (%s)" (DataName.to_string name) @@
-    es_pp es (fun (name, pattern) -> Printf.sprintf "%s = %s" (FieldName.to_string name) (pp_pattern pattern))
+    Printf.sprintf "%s {%s}" (DataName.to_string name) @@
+    pp_list es (fun (name, pattern) -> Printf.sprintf "%s: %s" (FieldName.to_string name) (pp_pattern pattern))
 
-let rec pp_expression =
-  function 
+let rec pp_expression = function 
   | LitTodo _loc -> "TODO"
   | LitUnit _loc -> "()"
   | LitBool (_loc, b) -> Bool.to_string b
@@ -110,7 +107,7 @@ let rec pp_expression =
   | Application (_loc, rand, es) ->
     Printf.sprintf "%s (%s)"
       (pp_expression rand)
-      (list_pp es pp_expression)
+      (pp_list es pp_expression)
   | Let (_loc, var, value, body) ->
     Printf.sprintf "let %s = %s; %s"
       (pp_pattern var)
@@ -118,7 +115,7 @@ let rec pp_expression =
       (pp_expression body)
   | Fn (_loc, names, body) ->
     Printf.sprintf "fn (%s) %s"
-      (list_pp names VarName.to_string)
+      (pp_list names VarName.to_string)
       (pp_expression body)
   | Annotated (_loc, expr, ty) ->
     Printf.sprintf "(the %s %s)"
@@ -136,19 +133,32 @@ let rec pp_expression =
     in
     Printf.sprintf "case %s { %s }" 
       (pp_expression expr)
-      (list_pp pes f)
+      (pp_list pes f)
   | Tuple (_loc, es) ->
-    Printf.sprintf "(%s)" (list_pp es pp_expression)
+    Printf.sprintf "(%s)" (pp_list es pp_expression)
   | Record (_loc, name, fes) -> (* fes - field, expression S *)
     let f (field, expr) =
-      Printf.sprintf "%s = %s"
+      Printf.sprintf "%s: %s"
         (FieldName.to_string field)
         (pp_expression expr)
     in
     Printf.sprintf "%s {%s}"
       (DataName.to_string name)
-      (list_pp fes f)
+      (pp_list fes f)
   | RecordIndex (_loc, expr, name) ->
     Printf.sprintf "%s.%s"
       (pp_expression expr)
       (FieldName.to_string name)
+
+let pp_toplevel = function
+  | Claim (_loc, name, ty) ->
+    Printf.sprintf
+      "claim %s %s"
+      (VarName.to_string name)
+      (pp_ty ty)
+  | Def (_loc, name, expr) -> (* TODO: add a special case for fn *)
+    Printf.sprintf "def %s = %s"
+      (VarName.to_string name)
+      (pp_expression expr)
+  | Expression expr -> pp_expression expr
+  | VariantDef _ | RecordDef _ -> "<def>" (* for now *)
