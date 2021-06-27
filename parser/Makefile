@@ -4,7 +4,7 @@ automaton:
 	menhir grammar.mly --dump
 
 messages: grammar.mly
-	menhir --list-errors grammar.mly > parserMessages.messages
+	menhir --list-errors grammar.mly > messages
 
 conflicts: 
 	menhir grammar.mly --explain
