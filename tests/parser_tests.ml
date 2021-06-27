@@ -1,6 +1,6 @@
 
 open Parser
-
+open Syntax
 
 (* useful functions *)
 let tokenize str =
@@ -16,7 +16,14 @@ let tokenize str =
 let token_testable =
   let pp _formatter (_token : Grammar.token) = () in
   Alcotest.testable pp (=)
-    
+
+
+let x_claim_test claim token () =
+  
+  Alcotest.check (Alcotest.list token_testable) "claim should result in token claim"
+    [token]
+    (tokenize claim)
+
 let claim = "claim"
 
 let lex_claim_test () =

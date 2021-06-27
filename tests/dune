@@ -1,3 +1,4 @@
+
 (executable
  (name tests)
  (libraries parser syntax alcotest))

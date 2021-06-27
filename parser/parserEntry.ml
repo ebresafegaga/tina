@@ -26,9 +26,9 @@ let state checkpoint : int =
   match I.top (env checkpoint) with
   | Some (I.Element (s, _, _, _)) -> I.number s
   | None ->
-      (* The parser is in its initial state. The incremental API
-         currently lacks a way of finding out the number of the initial
-         state. It is usually 0, so we return 0. *)
+    (* The parser is in its initial state. The incremental API
+       currently lacks a way of finding out the number of the initial
+       state. It is usually 0, so we return 0. *)
     0
 
 (* [show text (pos1, pos2)] displays a range of the input text [text]
