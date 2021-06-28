@@ -94,6 +94,30 @@ let lex_datatype_test_case =
   "datatype-case", [Alcotest.test_case "lex datatype keyword" `Quick lex_datatype_test]
 
 
+let lex_case_test = token_test "case" G.CASE "case should result in token CASE"
+    
+let lex_case_test_case =
+  "case-tokens-case", [Alcotest.test_case "lex case token" `Quick lex_case_test]
+
+
+let lex_ability_test = token_test "ability" G.ABILITY "ability should result in token ABILITY"
+    
+let lex_ability_test_case =
+  "ability-case", [Alcotest.test_case "lex ability token" `Quick lex_ability_test]
+
+
+let lex_let_test = token_test "let" G.LET "let should result in token LET"
+    
+let lex_let_test_case =
+  "let-case", [Alcotest.test_case "lex let token" `Quick lex_let_test]
+
+
+let lex_fn_test = token_test "fn" G.FN "fn should result in token FN"
+    
+let lex_fn_test_case =
+  "fn-case", [Alcotest.test_case "lex fn token" `Quick lex_fn_test]
+
+
 let all_test_cases =
   [lex_claim_test_case;
    lex_int_test_case;
@@ -102,4 +126,8 @@ let all_test_cases =
    lex_string_test_case;
    lex_bool_test_case;
    lex_def_test_case;
-   lex_datatype_test_case]
+   lex_datatype_test_case;
+   lex_case_test_case;
+   lex_ability_test_case;
+   lex_let_test_case;
+   lex_fn_test_case]
