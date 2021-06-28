@@ -61,58 +61,6 @@
 %type <expression> expression
 %type <expression> maybe_empty_expr
 
-%{
-     
-let pp_token = function
-  | INT i -> Int.to_string i
-  | FLOAT f -> Float.to_string f
-  | ID id -> Printf.sprintf "ID %s" id
-  | STRING s -> Printf.sprintf "STRING %s" s
-  | TRUE -> "TRUE"
-  | FALSE -> "FALSE"
-  | LBRACE -> "{"
-  | RBRACE -> "}"
-  | LPAREN -> "("
-  | RPAREN -> ")"
-  | LBRACK -> "["
-  | RBRACK -> "]"
-  | COMMA -> ","
-  | COLON -> ":"
-  | SEMICOLON -> ";"
-  | EQUALS -> "="
-  | BAR -> "|"
-  | CLAIM -> "CLAIM"
-  | DEF -> "DEF"
-  | DATA -> "DATATYPE"
-  | ABILITY -> "ABILITY" (* to use *)
-  | CASE -> "CASE"
-  | ARROW -> "->"
-  | LET -> "LET"
-  | MUT -> "MUT" (* to use *)
-  | FN -> "FN"
-  | END -> "END" (* to use *)
-  | COLONEQUALS -> ":=" (* to use *)
-  | IF -> "IF"
-  | THEN -> "THEN"
-  | ELSE -> "ELSE"
-  | PLUS -> "+"
-  | STAR -> "*"
-  | MINUS -> "-"
-  | DIV -> "/"
-  | GT -> ">"
-  | LT -> "<"
-  | GTEQUALS -> ">="
-  | LTEQUALS -> "<="
-  | TY_NAT -> "TYNAT"
-  | TY_INT -> "TYINT"
-  | TY_FLOAT -> "TYFLOAT"
-  | TY_STRING -> "TYSTRING"
-  | TK_TODO -> "TKTODO"
-  | THE -> "THE"
-  | DOT -> "."
-  | EOF -> "EOF"
-%}
-
 %%
 
 toplevel: 

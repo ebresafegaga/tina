@@ -18,7 +18,7 @@ let alpha = ['a'-'z' 'A'-'Z']
 
 let int = '-'? digit+
 let frac = '.' digit*
-let float = digit* frac?
+let float = '-'? digit* frac?
 
 let whitespace = [' ' '\t']+
 let newline = '\r' | '\n' | "\r\n"

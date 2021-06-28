@@ -79,4 +79,31 @@ let parse lexbuf =
   let checkpoint = Grammar.Incremental.toplevel lexbuf.lex_curr_p in
   I.loop_handle succeed (fail text buffer) supplier checkpoint
 
-
+let pp_token =
+  let module G = Grammar in
+  function
+  | G.INT i -> Int.to_string i
+  | G.FLOAT f -> Float.to_string f
+  | G.ID id -> Printf.sprintf "ID %s" id
+  | G.STRING s -> Printf.sprintf "STRING %s" s
+  | G.TRUE -> "TRUE" | G.FALSE -> "FALSE"
+  | G.LBRACE -> "{" | G.RBRACE -> "}"
+  | G.LPAREN -> "(" | G.RPAREN -> ")"
+  | G.LBRACK -> "[" | G.RBRACK -> "]"
+  | G.COMMA -> "," | G.COLON -> ":" | G.SEMICOLON -> ";"
+  | G.EQUALS -> "=" | G.BAR -> "|" | G.CLAIM -> "CLAIM"
+  | G.DEF -> "DEF" | G.DATA -> "DATATYPE" | G.CASE -> "CASE"
+  | G.ABILITY -> "ABILITY" (* to use *)
+  | G.ARROW -> "->" | G.LET -> "LET" | G.FN -> "FN"
+  | G.MUT -> "MUT" (* to use *)
+  | G.END -> "END" (* to use *)
+  | G.COLONEQUALS -> ":=" (* to use *)
+  | G.IF -> "IF" | G.THEN -> "THEN"
+  | G.ELSE -> "ELSE" | G.PLUS -> "+"
+  | G.STAR -> "*" | G.MINUS -> "-"
+  | G.DIV -> "/" | G.GT -> ">"
+  | G.LT -> "<" | G.GTEQUALS -> ">="
+  | G.LTEQUALS -> "<=" | G.TY_NAT -> "TYNAT"
+  | G.TY_INT -> "TYINT" | G.TY_FLOAT -> "TYFLOAT"
+  | G.TY_STRING -> "TYSTRING" | G.TK_TODO -> "TKTODO"
+  | G.THE -> "THE" | G.DOT -> "." | G.EOF -> "EOF"
