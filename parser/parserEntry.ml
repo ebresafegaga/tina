@@ -87,23 +87,23 @@ let pp_token =
   | G.ID id -> Printf.sprintf "ID %s" id
   | G.STRING s -> Printf.sprintf "STRING %s" s
   | G.TRUE -> "TRUE" | G.FALSE -> "FALSE"
-  | G.LBRACE -> "{" | G.RBRACE -> "}"
-  | G.LPAREN -> "(" | G.RPAREN -> ")"
-  | G.LBRACK -> "[" | G.RBRACK -> "]"
-  | G.COMMA -> "," | G.COLON -> ":" | G.SEMICOLON -> ";"
-  | G.EQUALS -> "=" | G.BAR -> "|" | G.CLAIM -> "CLAIM"
+  | G.LBRACE -> "LBRACE" | G.RBRACE -> "RBRACE"
+  | G.LPAREN -> "LPAREN" | G.RPAREN -> "RPAREN"
+  | G.LBRACK -> "LBRACK" | G.RBRACK -> "RBRACK"
+  | G.COMMA -> "COMMA" | G.COLON -> "COLON" | G.SEMICOLON -> "SEMICOLON"
+  | G.EQUALS -> "EQUALS" | G.BAR -> "BAR" | G.CLAIM -> "CLAIM"
   | G.DEF -> "DEF" | G.DATA -> "DATATYPE" | G.CASE -> "CASE"
   | G.ABILITY -> "ABILITY" (* to use *)
-  | G.ARROW -> "->" | G.LET -> "LET" | G.FN -> "FN"
+  | G.ARROW -> "ARROW" | G.LET -> "LET" | G.FN -> "FN"
   | G.MUT -> "MUT" (* to use *)
   | G.END -> "END" (* to use *)
-  | G.COLONEQUALS -> ":=" (* to use *)
+  | G.COLONEQUALS -> "COLONEQUALS" (* to use *)
   | G.IF -> "IF" | G.THEN -> "THEN"
-  | G.ELSE -> "ELSE" | G.PLUS -> "+"
-  | G.STAR -> "*" | G.MINUS -> "-"
-  | G.DIV -> "/" | G.GT -> ">"
-  | G.LT -> "<" | G.GTEQUALS -> ">="
-  | G.LTEQUALS -> "<=" | G.TY_NAT -> "TYNAT"
+  | G.ELSE -> "ELSE" | G.PLUS -> "PLUS"
+  | G.STAR -> "STAR" | G.MINUS -> "MINUS"
+  | G.DIV -> "DIV" | G.GT -> "GT"
+  | G.LT -> "LT" | G.GTEQUALS -> "GTEQUALS"
+  | G.LTEQUALS -> "LTEQUALS" | G.TY_NAT -> "TYNAT"
   | G.TY_INT -> "TYINT" | G.TY_FLOAT -> "TYFLOAT"
   | G.TY_STRING -> "TYSTRING" | G.TK_TODO -> "TKTODO"
-  | G.THE -> "THE" | G.DOT -> "." | G.EOF -> "EOF"
+  | G.THE -> "THE" | G.DOT -> "DOT" | G.EOF -> "EOF"

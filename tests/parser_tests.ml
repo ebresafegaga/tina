@@ -1,6 +1,7 @@
 open Parser
 
 module G = Grammar
+module P = ParserEntry  
 
 (* useful functions *)
 let tokenize str =
@@ -22,97 +23,149 @@ let token_test str token error () =
     [token]
     (tokenize str)
 
-let lex_claim_test = token_test "claim" G.CLAIM "claim should result in token CLAIM"
-    
-let lex_claim_test_case =
-  "claim-case", [Alcotest.test_case "lex claim only" `Quick lex_claim_test]
+let token_test_case case_name test_list =
+  let tests =
+    test_list
+    |> List.map (fun (name, test) -> Alcotest.test_case name `Quick test)
+  in
+  case_name, tests
 
-let lex_int_test = token_test "234" (G.INT 234) "integer should result in INT 234"
+let token_test str token () =
+  let msg = Printf.sprintf "%s should result in token %s" str (P.pp_token token) in
+  Alcotest.check (Alcotest.list token_testable) msg
+    [token]
+    (tokenize str)
+
+let token_list_test str tokens () =
+  let msg tok = Printf.sprintf "%s should result in token %s" str (P.pp_token tok) in
+  let msg =
+    Format.pp_print_list
+      (fun fmt tok -> Format.fprintf fmt "%s" (msg tok))
+      Format.str_formatter tokens;
+    Format.flush_str_formatter ()
+  in
+  Alcotest.check (Alcotest.list token_testable) msg
+    tokens
+    (tokenize str)
+
+let lex_claim_test = token_test "claim" G.CLAIM 
     
-let lex_int_test2 = token_test "92333" (G.INT 92333) "integer should result in INT 92333"
+let lex_claim_test_case = token_test_case "claim-case" [("lex claim only", lex_claim_test)]
+
+let lex_int_test = token_test "234" (G.INT 234) 
+
+let lex_int_test2 = token_test "92333" (G.INT 92333) 
     
-let lex_int_test3 = token_test "-89" (G.INT (-89)) "integer should result in INT -89"
+let lex_int_test3 = token_test "-89" (G.INT (-89)) 
     
 let lex_int_test_case =
-  "int-token-case",
-  [Alcotest.test_case "lex int token 234" `Quick lex_int_test;
-   Alcotest.test_case "lex int token 92333" `Quick lex_int_test2;
-   Alcotest.test_case "lex int token -89" `Quick lex_int_test3 ]
+  token_test_case "int-token-case"
+    ["lex int token 234", lex_int_test;
+     "lex int token 92333", lex_int_test2;
+     "lex int token -89", lex_int_test3 ]
 
-let lex_float_test = token_test "2.18282" (G.FLOAT 2.18282) "float should result in FLOAT 2.18282"
+let lex_float_test = token_test "2.18282" (G.FLOAT 2.18282) 
     
-let lex_float_test2 = token_test "3.142" (G.FLOAT 3.142) "float should result in FLOAT 3.142"
+let lex_float_test2 = token_test "3.142" (G.FLOAT 3.142) 
     
-let lex_float_test3 = token_test "-17.29" (G.FLOAT (-17.29)) "float should result in FLOAT -17.29"
+let lex_float_test3 = token_test "-17.29" (G.FLOAT (-17.29))     
+let lex_float_test4 = token_test ".227" (G.FLOAT (0.227)) 
     
-let lex_float_test4 = token_test ".227" (G.FLOAT (0.227)) "float should result in FLOAT .227"
-    
-let lex_float_test5 = token_test "0.0023" (G.FLOAT 0.0023) "float should result in FLOAT 0.0023"
+let lex_float_test5 = token_test "0.0023" (G.FLOAT 0.0023)
     
 let lex_float_test_case =
-  "float-token-case",
-  [Alcotest.test_case "lex float token 2.18282" `Quick lex_float_test;
-   Alcotest.test_case "lex float token 18282" `Quick lex_float_test2;
-   Alcotest.test_case "lex float token -17.29" `Quick lex_float_test3;
-   Alcotest.test_case "lex float token .227" `Quick lex_float_test4;
-   Alcotest.test_case "lex float token 0.0023" `Quick lex_float_test5]
+  token_test_case "float-token-case"
+    [ "lex float token 2.18282",  lex_float_test;
+      "lex float token 18282", lex_float_test2;
+      "lex float token -17.29",  lex_float_test3;
+      "lex float token .227", lex_float_test4;
+      "lex float token 0.0023", lex_float_test5]
 
-let lex_id_test = token_test "simple" (G.ID "simple") "id should result in ID simple"
+let lex_id_test = token_test "simple" (G.ID "simple") 
 
-let lex_id_test2 = token_test "_bASic12" (G.ID "_bASic12") "id should result in ID _bASic12"
+let lex_id_test2 = token_test "_bASic12" (G.ID "_bASic12")
     
 let lex_id_test_case =
-  "id-token-case",
-  [Alcotest.test_case "lex id token simple" `Quick lex_id_test;
-   Alcotest.test_case "lex id token _bASic12" `Quick lex_id_test2]
+  token_test_case "id-token-case"
+  [ "lex id token simple", lex_id_test;
+    "lex id token _bASic12", lex_id_test2]
 
-let lex_string_test = token_test {|"fancy str"|} (G.STRING {|"fancy str"|}) "string should result in STRING \"fancy str\""
+let lex_string_test = token_test {|"fancy str"|} (G.STRING {|"fancy str"|})
 
 let lex_string_test_case =
-  "string-token-case",
-  [Alcotest.test_case "lex string token \"fancy str\"" `Quick lex_id_test]
+  token_test_case "string-token-case"
+    ["lex string token \"fancy str\"" , lex_id_test]
 
-let lex_bool_test = token_test {|true|} G.TRUE "bool true should result in the token TRUE"
+let lex_bool_test = token_test {|true|} G.TRUE 
 
-let lex_bool_test2 = token_test {|false|} G.FALSE "bool false should result in the token FALSE"
+let lex_bool_test2 = token_test {|false|} G.FALSE 
 
 let lex_bool_test_case =
-  "bool-token-case",
-  [Alcotest.test_case "lex true token" `Quick lex_bool_test;
-   Alcotest.test_case "lex false token" `Quick lex_bool_test2]
+  token_test_case "bool-token-case"
+    [ "lex true token", lex_bool_test;
+      "lex false token", lex_bool_test2]
 
 
-let lex_def_test = token_test "def" G.DEF "def should result in token DEF"
+let lex_def_test = token_test "def" G.DEF 
     
 let lex_def_test_case =
-  "def-case", [Alcotest.test_case "lex def token" `Quick lex_def_test]
+ token_test_case  "def-case" ["lex def token", lex_def_test]
 
 
-let lex_datatype_test = token_test "datatype" G.DATA "datatype should result in token DATA"
+let lex_datatype_test = token_test "datatype" G.DATA 
     
 let lex_datatype_test_case =
-  "datatype-case", [Alcotest.test_case "lex datatype keyword" `Quick lex_datatype_test]
+ token_test_case "datatype-case" ["lex datatype keyword", lex_datatype_test]
 
 
-let lex_case_test = token_test "case" G.CASE "case should result in token CASE"
+let lex_case_test = token_test "case" G.CASE
     
 let lex_case_test_case =
-  "case-tokens-case", [Alcotest.test_case "lex case token" `Quick lex_case_test]
+ token_test_case "case-tokens-case" ["lex case token", lex_case_test]
 
-let lex_ability_test = token_test "ability" G.ABILITY "ability should result in token ABILITY"
+let lex_ability_test = token_test "ability" G.ABILITY 
     
 let lex_ability_test_case =
-  "ability-case", [Alcotest.test_case "lex ability token" `Quick lex_ability_test]
+  token_test_case "ability-case" ["lex ability token", lex_ability_test]
 
-let lex_let_test = token_test "let" G.LET "let should result in token LET"
+let lex_let_test = token_test "let" G.LET
     
 let lex_let_test_case =
-  "let-case", [Alcotest.test_case "lex let token" `Quick lex_let_test]
+  token_test_case "let-case" ["lex let token", lex_let_test]
 
-let lex_fn_test = token_test "fn" G.FN "fn should result in token FN"
+let lex_fn_test = token_test "fn" G.FN 
     
 let lex_fn_test_case =
-  "fn-case", [Alcotest.test_case "lex fn token" `Quick lex_fn_test]
+  token_test_case "fn-case" ["lex fn token", lex_fn_test]
+
+let lex_mut_test = token_test "mut" G.MUT
+    
+let lex_mut_test_case =
+  token_test_case "mut-case" ["lex mut token", lex_mut_test]
+
+
+
+let lex_end_test = token_test "end" G.END
+    
+let lex_end_test_case =
+  token_test_case "end-case" ["lex end token", lex_end_test]
+
+
+let lex_if_test = token_test "if" G.IF
+    
+let lex_if_test_case =
+  token_test_case "if-case" ["lex if token", lex_if_test]
+
+
+let lex_else_test = token_test "else" G.ELSE
+    
+let lex_else_test_case =
+  token_test_case "else-case" ["lex else token", lex_else_test]              
+
+let lex_then_test = token_test "then" G.THEN
+    
+let lex_then_test_case =
+  token_test_case "then-case" ["lex then token", lex_then_test]
 
 let all_test_cases =
   [lex_claim_test_case;
@@ -126,4 +179,9 @@ let all_test_cases =
    lex_case_test_case;
    lex_ability_test_case;
    lex_let_test_case;
-   lex_fn_test_case]
+   lex_fn_test_case;
+   lex_mut_test_case;
+   lex_end_test_case;
+   lex_if_test_case;
+   lex_else_test_case;
+   lex_then_test_case]
