@@ -15,7 +15,7 @@ let tokenize str =
   loop ()
 
 let token_testable =
-  let pp formatter token = Format.fprintf formatter "%s" (ParserEntry.pp_token token) in
+  let pp formatter token = Format.fprintf formatter "%s" (P.pp_token token) in
   Alcotest.testable pp (=)
 
 let token_test str token error () =  
@@ -31,22 +31,21 @@ let token_test_case case_name test_list =
   case_name, tests
 
 let token_test str token () =
-  let msg = Printf.sprintf "%s should result in token %s" str (P.pp_token token) in
+  let msg = Printf.sprintf "input %s should result in token %s" str (P.pp_token token) in
   Alcotest.check (Alcotest.list token_testable) msg
     [token]
     (tokenize str)
 
 let token_list_test str tokens () =
-  let msg tok = Printf.sprintf "%s should result in token %s" str (P.pp_token tok) in
-  let msg =
-    Format.pp_print_list
-      (fun fmt tok -> Format.fprintf fmt "%s" (msg tok))
-      Format.str_formatter tokens;
-    Format.flush_str_formatter ()
-  in
-  Alcotest.check (Alcotest.list token_testable) msg
-    tokens
-    (tokenize str)
+  let recieved_tokens = tokenize str in
+  List.combine recieved_tokens tokens
+  |> List.iter (fun (recieved, actual) ->
+      let msg =
+        Printf.sprintf "Expected %s, but got %s"
+          (P.pp_token recieved)
+          (P.pp_token actual)
+      in
+      Alcotest.check token_testable msg recieved actual)
 
 let lex_claim_test = token_test "claim" G.CLAIM 
     
@@ -143,8 +142,6 @@ let lex_mut_test = token_test "mut" G.MUT
 let lex_mut_test_case =
   token_test_case "mut-case" ["lex mut token", lex_mut_test]
 
-
-
 let lex_end_test = token_test "end" G.END
     
 let lex_end_test_case =
@@ -156,16 +153,46 @@ let lex_if_test = token_test "if" G.IF
 let lex_if_test_case =
   token_test_case "if-case" ["lex if token", lex_if_test]
 
-
 let lex_else_test = token_test "else" G.ELSE
     
 let lex_else_test_case =
   token_test_case "else-case" ["lex else token", lex_else_test]              
 
 let lex_then_test = token_test "then" G.THEN
-    
 let lex_then_test_case =
   token_test_case "then-case" ["lex then token", lex_then_test]
+
+let program_test =
+  let sample = {| 
+    def test =
+    let Person {age:a, other:o } = gaga;
+    case (a) {
+    10 -> "no"
+    }
+   |}
+  in
+  token_list_test sample
+    [ G.DEF; G.ID "test"; G.EQUALS; G.LET; G.ID "Person";
+      G.LBRACE; G.ID "age"; G.COLON; G.ID "a" ; G.COMMA;
+      G.ID "other"; G.COLON; G.ID "o"; G.RBRACE;
+      G.EQUALS; G.ID "gaga" ; G.SEMICOLON;
+      G.CASE; G.LPAREN; G.ID "a"; G.RPAREN; G.LBRACE;
+      G.INT 10; G.ARROW; G.STRING "no" ; G.RBRACE]
+
+let program_test_case =
+  token_test_case "program-case"
+    ["test def, case, ids, string, int used in a program", program_test]
+
+let operators_test =
+  let sample = "><+>=<=-*/->{}[]()." in
+  token_list_test sample
+    [G.GT; G.LT; G.PLUS; G.GTEQUALS; G.LTEQUALS;
+     G.MINUS; G.STAR; G.DIV; G.ARROW; G.LBRACE; G.RBRACE;
+     G.LBRACK; G.RBRACK; G.LPAREN; G.RPAREN; G.DOT]
+
+let operators_test_case =
+  token_test_case "operators/symbol-case"
+    ["all operators and symbols", operators_test]
 
 let all_test_cases =
   [lex_claim_test_case;
@@ -184,4 +211,6 @@ let all_test_cases =
    lex_end_test_case;
    lex_if_test_case;
    lex_else_test_case;
-   lex_then_test_case]
+   lex_then_test_case;
+   program_test_case;
+   operators_test_case]
