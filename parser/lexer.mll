@@ -65,7 +65,7 @@ rule read_token = parse
     | "Nat" { TY_NAT }
     | "Float" { TY_FLOAT }
     | "String" { TY_STRING }
-    | "INT" { TY_INT }
+    | "Int" { TY_INT }
     | "TODO" { TK_TODO }
     | '"' { read_string (Buffer.create 17) lexbuf }
     | whitespace { read_token lexbuf }

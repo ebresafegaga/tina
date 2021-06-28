@@ -105,16 +105,16 @@ let lex_bool_test_case =
       "lex false token", lex_bool_test2]
 
 
-let lex_def_test = token_test "def" G.DEF 
+let lex_def_test = token_test "def" G.DEF
     
 let lex_def_test_case =
  token_test_case  "def-case" ["lex def token", lex_def_test]
 
 
-let lex_datatype_test = token_test "datatype" G.DATA 
+let lex_datatype_test = token_test "datatype" G.DATA
     
 let lex_datatype_test_case =
- token_test_case "datatype-case" ["lex datatype keyword", lex_datatype_test]
+  token_test_case "datatype-case" ["lex datatype keyword", lex_datatype_test]
 
 
 let lex_case_test = token_test "case" G.CASE
@@ -162,6 +162,10 @@ let lex_then_test = token_test "then" G.THEN
 let lex_then_test_case =
   token_test_case "then-case" ["lex then token", lex_then_test]
 
+let lex_the_test = token_test "the" G.THE
+
+let lex_the_test_case = token_test_case "the-case" ["lex the token", lex_the_test]
+
 let program_test =
   let sample = {| 
     def test =
@@ -179,20 +183,29 @@ let program_test =
       G.CASE; G.LPAREN; G.ID "a"; G.RPAREN; G.LBRACE;
       G.INT 10; G.ARROW; G.STRING "no" ; G.RBRACE]
 
-let program_test_case =
+let lex_program_test_case =
   token_test_case "program-case"
     ["test def, case, ids, string, int used in a program", program_test]
 
 let operators_test =
-  let sample = "><+>=<=-*/->{}[]()." in
+  let sample = "><+>=<=-*/->{}[]().:=" in
   token_list_test sample
     [G.GT; G.LT; G.PLUS; G.GTEQUALS; G.LTEQUALS;
      G.MINUS; G.STAR; G.DIV; G.ARROW; G.LBRACE; G.RBRACE;
-     G.LBRACK; G.RBRACK; G.LPAREN; G.RPAREN; G.DOT]
+     G.LBRACK; G.RBRACK; G.LPAREN; G.RPAREN; G.DOT; G.COLONEQUALS]
 
-let operators_test_case =
+let lex_operators_test_case =
   token_test_case "operators/symbol-case"
     ["all operators and symbols", operators_test]
+
+let lex_types_test =
+  let sample = "Nat String Int Float" in
+  token_list_test sample
+    [G.TY_NAT; G.TY_STRING; G.TY_INT; G.TY_FLOAT]
+
+let lex_types_test_case =
+  token_test_case "types-case"
+    ["base types", lex_types_test]
 
 let all_test_cases =
   [lex_claim_test_case;
@@ -212,5 +225,7 @@ let all_test_cases =
    lex_if_test_case;
    lex_else_test_case;
    lex_then_test_case;
-   program_test_case;
-   operators_test_case]
+   lex_program_test_case;
+   lex_operators_test_case;
+   lex_types_test_case;
+   lex_the_test_case]
