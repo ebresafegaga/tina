@@ -8,7 +8,7 @@ toplevel: CASE TRUE LBRACE TRUE ARROW FALSE COMMA TY_STRING
 ## case_expr_body COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+The final clause in a case expression should not end with a comma. 
 
 toplevel: CASE TRUE LBRACE TRUE ARROW TRUE TY_STRING
 ##
@@ -27,7 +27,7 @@ toplevel: CASE TRUE LBRACE TRUE ARROW TRUE TY_STRING
 ## pattern ARROW expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected a comma or a right brace after a pattern clause of the form <pat -> expr>
 
 toplevel: CASE TRUE LBRACE TRUE ARROW TY_STRING
 ##
@@ -39,7 +39,7 @@ toplevel: CASE TRUE LBRACE TRUE ARROW TY_STRING
 ## pattern ARROW
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected an expression after an arrow in a case expression
 
 toplevel: CASE TRUE LBRACE TRUE TY_STRING
 ##
@@ -51,7 +51,7 @@ toplevel: CASE TRUE LBRACE TRUE TY_STRING
 ## pattern
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected an arrow after a pattern clause in a case expression
 
 toplevel: CASE TRUE LBRACE TY_STRING
 ##
@@ -61,9 +61,9 @@ toplevel: CASE TRUE LBRACE TY_STRING
 ##
 ## The known suffix of the stack is as follows:
 ## CASE expression LBRACE
-##
+## Also possibly empty case expression
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected pattern clauses of the form <pattern -> expression> after a left brace for a case expression.
 
 toplevel: CASE TRUE TY_STRING
 ##
@@ -80,9 +80,9 @@ toplevel: CASE TRUE TY_STRING
 ##
 ## The known suffix of the stack is as follows:
 ## CASE expression
-##
+##  could also be an incomplete binary expression
 
-An expression should be followed after a case statement
+In a case expression, after an expression to match on is given, a left brace is expected.
 
 toplevel: CASE TY_STRING
 ##
@@ -94,7 +94,7 @@ toplevel: CASE TY_STRING
 ## CASE
 ##
 
-An expression should be followed after a case statement
+An expression should be followed after the case keyword
 
 toplevel: CLAIM ID TRUE
 ##
@@ -118,7 +118,7 @@ toplevel: CLAIM ID TY_FLOAT TY_STRING
 ## top
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+6
 
 toplevel: CLAIM TY_STRING
 ##
@@ -130,7 +130,7 @@ toplevel: CLAIM TY_STRING
 ## CLAIM
 ##
 
-An expression should be followed after a case statement
+7
 
 toplevel: DATA ID EQUALS ID BAR TY_STRING
 ##
@@ -142,7 +142,7 @@ toplevel: DATA ID EQUALS ID BAR TY_STRING
 ## single_variant BAR
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+8
 
 toplevel: DATA ID EQUALS ID LPAREN TRUE
 ##
@@ -154,7 +154,7 @@ toplevel: DATA ID EQUALS ID LPAREN TRUE
 ## ID LPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+9
 
 toplevel: DATA ID EQUALS ID LPAREN TY_FLOAT RPAREN TY_STRING
 ##
@@ -167,7 +167,7 @@ toplevel: DATA ID EQUALS ID LPAREN TY_FLOAT RPAREN TY_STRING
 ## single_variant
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+10
 
 toplevel: DATA ID EQUALS ID LPAREN TY_STRING ARROW
 ##
@@ -185,7 +185,7 @@ toplevel: DATA ID EQUALS ID LPAREN TY_STRING ARROW
 ## In state 12, spurious reduction of production separated_nonempty_list(COMMA,ty) -> ty
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+11
 
 toplevel: DATA ID EQUALS ID TY_STRING
 ##
@@ -198,7 +198,7 @@ toplevel: DATA ID EQUALS ID TY_STRING
 ## ID
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+12
 
 toplevel: DATA ID EQUALS LBRACE CLAIM ID TRUE
 ##
@@ -210,7 +210,7 @@ toplevel: DATA ID EQUALS LBRACE CLAIM ID TRUE
 ## CLAIM ID
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+13
 
 toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT COMMA TY_STRING
 ##
@@ -222,7 +222,7 @@ toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT COMMA TY_STRING
 ## record_claim COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+14
 
 toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT TY_STRING
 ##
@@ -235,7 +235,7 @@ toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT TY_STRING
 ## record_claim
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+15
 
 toplevel: DATA ID EQUALS LBRACE CLAIM TY_STRING
 ##
@@ -247,7 +247,7 @@ toplevel: DATA ID EQUALS LBRACE CLAIM TY_STRING
 ## CLAIM
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+16
 
 toplevel: DATA ID EQUALS LBRACE TY_STRING
 ##
@@ -259,7 +259,7 @@ toplevel: DATA ID EQUALS LBRACE TY_STRING
 ## DATA ID EQUALS LBRACE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+17
 
 toplevel: DATA ID EQUALS TY_STRING
 ##
@@ -272,7 +272,7 @@ toplevel: DATA ID EQUALS TY_STRING
 ## DATA ID EQUALS
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+18
 
 toplevel: DATA ID TY_STRING
 ##
@@ -285,7 +285,7 @@ toplevel: DATA ID TY_STRING
 ## DATA ID
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+19
 
 toplevel: DATA TY_STRING
 ##
@@ -298,7 +298,7 @@ toplevel: DATA TY_STRING
 ## DATA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+20
 
 toplevel: DEF ID EQUALS TRUE TY_STRING
 ##
@@ -317,7 +317,7 @@ toplevel: DEF ID EQUALS TRUE TY_STRING
 ## DEF ID EQUALS expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+21
 
 toplevel: DEF ID EQUALS TY_STRING
 ##
@@ -329,7 +329,7 @@ toplevel: DEF ID EQUALS TY_STRING
 ## DEF ID EQUALS
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+22
 
 toplevel: DEF ID LPAREN RPAREN EQUALS TRUE TY_STRING
 ##
@@ -348,7 +348,7 @@ toplevel: DEF ID LPAREN RPAREN EQUALS TRUE TY_STRING
 ## DEF ID arg_list EQUALS expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+23
 
 toplevel: DEF ID LPAREN RPAREN EQUALS TY_STRING
 ##
@@ -360,7 +360,7 @@ toplevel: DEF ID LPAREN RPAREN EQUALS TY_STRING
 ## DEF ID arg_list EQUALS
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+24
 
 toplevel: DEF ID LPAREN RPAREN TY_STRING
 ##
@@ -372,7 +372,7 @@ toplevel: DEF ID LPAREN RPAREN TY_STRING
 ## DEF ID arg_list
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+25
 
 toplevel: DEF ID TY_STRING
 ##
@@ -385,7 +385,7 @@ toplevel: DEF ID TY_STRING
 ## DEF ID
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+26
 
 toplevel: DEF TY_STRING
 ##
@@ -398,7 +398,7 @@ toplevel: DEF TY_STRING
 ## DEF
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+27
 
 toplevel: FN LPAREN ID COMMA TY_STRING
 ##
@@ -410,7 +410,7 @@ toplevel: FN LPAREN ID COMMA TY_STRING
 ## param COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+28
 
 toplevel: FN LPAREN ID TY_STRING
 ##
@@ -423,7 +423,7 @@ toplevel: FN LPAREN ID TY_STRING
 ## param
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+29
 
 toplevel: FN LPAREN RPAREN TRUE TY_STRING
 ##
@@ -442,7 +442,7 @@ toplevel: FN LPAREN RPAREN TRUE TY_STRING
 ## FN arg_list expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+30
 
 toplevel: FN LPAREN RPAREN TY_STRING
 ##
@@ -454,7 +454,7 @@ toplevel: FN LPAREN RPAREN TY_STRING
 ## FN arg_list
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+31
 
 toplevel: FN LPAREN TY_STRING
 ##
@@ -466,7 +466,7 @@ toplevel: FN LPAREN TY_STRING
 ## LPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+32
 
 toplevel: FN TY_STRING
 ##
@@ -478,7 +478,7 @@ toplevel: FN TY_STRING
 ## FN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+33
 
 toplevel: ID LBRACE ID COLON FALSE COMMA TY_STRING
 ##
@@ -490,7 +490,7 @@ toplevel: ID LBRACE ID COLON FALSE COMMA TY_STRING
 ## record_expr_body COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+34
 
 toplevel: ID LBRACE ID COLON TRUE TY_STRING
 ##
@@ -509,7 +509,7 @@ toplevel: ID LBRACE ID COLON TRUE TY_STRING
 ## ID COLON expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+35
 
 toplevel: ID LBRACE ID COLON TY_STRING
 ##
@@ -521,7 +521,7 @@ toplevel: ID LBRACE ID COLON TY_STRING
 ## ID COLON
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+36
 
 toplevel: ID LBRACE ID TY_STRING
 ##
@@ -533,7 +533,7 @@ toplevel: ID LBRACE ID TY_STRING
 ## ID
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+37
 
 toplevel: ID LBRACE TY_STRING
 ##
@@ -545,7 +545,7 @@ toplevel: ID LBRACE TY_STRING
 ## ID LBRACE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Error while parsing a record expression. After a left brace a non-empty list of `name: value` pair seperated by a comma is expected.
 
 toplevel: ID TY_STRING
 ##
@@ -558,7 +558,7 @@ toplevel: ID TY_STRING
 ## ID
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+39
 
 toplevel: IF TRUE THEN TRUE ELSE TRUE TY_STRING
 ##
@@ -577,7 +577,7 @@ toplevel: IF TRUE THEN TRUE ELSE TRUE TY_STRING
 ## IF expression THEN expression ELSE expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+40
 
 toplevel: IF TRUE THEN TRUE ELSE TY_STRING
 ##
@@ -589,7 +589,7 @@ toplevel: IF TRUE THEN TRUE ELSE TY_STRING
 ## IF expression THEN expression ELSE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+41
 
 toplevel: IF TRUE THEN TRUE TY_STRING
 ##
@@ -608,7 +608,7 @@ toplevel: IF TRUE THEN TRUE TY_STRING
 ## IF expression THEN expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+42
 
 toplevel: IF TRUE THEN TY_STRING
 ##
@@ -620,7 +620,7 @@ toplevel: IF TRUE THEN TY_STRING
 ## IF expression THEN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+43
 
 toplevel: IF TRUE TY_STRING
 ##
@@ -639,7 +639,7 @@ toplevel: IF TRUE TY_STRING
 ## IF expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+44
 
 toplevel: IF TY_STRING
 ##
@@ -651,7 +651,7 @@ toplevel: IF TY_STRING
 ## IF
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+45
 
 toplevel: LET ID LBRACE ID COLON FALSE COMMA TY_STRING
 ##
@@ -663,7 +663,7 @@ toplevel: LET ID LBRACE ID COLON FALSE COMMA TY_STRING
 ## record_pattern_expr COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+46
 
 toplevel: LET ID LBRACE ID COLON FALSE TY_STRING
 ##
@@ -676,7 +676,7 @@ toplevel: LET ID LBRACE ID COLON FALSE TY_STRING
 ## record_pattern_expr
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+47
 
 toplevel: LET ID LBRACE ID COLON TY_STRING
 ##

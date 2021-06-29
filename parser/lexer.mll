@@ -2,7 +2,7 @@
     open Lexing 
     open Grammar
 
-    exception SyntaxError of string
+    exception SyntaxError of Lexing.position * string
 
     let next_line lexbuf =
         let pos = lexbuf.lex_curr_p in
@@ -88,5 +88,5 @@ and read_string buf = parse
     { Buffer.add_string buf (Lexing.lexeme lexbuf);
         read_string buf lexbuf
     }
-    | _ { raise (SyntaxError ("Illegal string character: " ^ Lexing.lexeme lexbuf)) }
-    | eof { raise (SyntaxError ("String is not terminated")) }
+    | _ { raise (SyntaxError (lexbuf.lex_curr_p, "Illegal string character: " ^ Lexing.lexeme lexbuf)) }
+    | eof { raise (SyntaxError (lexbuf.lex_curr_p, "String is not terminated")) }

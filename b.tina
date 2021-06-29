@@ -1,19 +1,5 @@
 
 
+def name = 10
 
-datatype Person =
- { claim name String,
-   claim age Nat,
-   claim other String }
-
-def gaga = Person { name: "ogaga", age: 20, other: "likes programming" }
-
-def test =
-    let Person {name:n, age:a, other:o } = gaga;
-    case (a) {
-    	 10 -> "no", 
-	 20 -> "yes", 
-	 n -> "never"
-    }
-
--17.9
+name
