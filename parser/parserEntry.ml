@@ -1,8 +1,10 @@
 open Lexing
+
 (* open Syntax for using Loc.t maybe? *)
 module E = MenhirLib.ErrorReports
 module L = MenhirLib.LexerUtil
 module I = Grammar.MenhirInterpreter
+module A = Syntax.Ast
 
 type message = string
 (* TODO: replace Lexing.position with Loc.t from 
@@ -78,6 +80,63 @@ let parse lexbuf =
   let buffer, supplier = E.wrap_supplier supplier in
   let checkpoint = Grammar.Incremental.toplevel lexbuf.lex_curr_p in
   I.loop_handle succeed (fail text buffer) supplier checkpoint
+
+let rec sc =
+  let plain x = A.Plain x in
+  function
+  | A.Let (loc, name, expr, body) ->
+    A.Let (loc, name, sc expr, sc body)
+  | A.Do (loc, name, args) ->
+    A.Do (loc, name, List.map sc args)
+  | A.Handle (loc, expr, clauses) ->
+    A.Handle (loc, sc expr, List.map sc_clauses clauses)
+  | A.Plain e -> A.Plain e (* hmm *)
+  | A.LitTodo _ as t -> plain t
+  | A.LitUnit _ as u -> plain u
+  | A.LitBool _ as b -> plain b
+  | A.LitInteger _ as i -> plain i
+  | A.LitFloat _ as f -> plain f
+  | A.LitString _ as s -> plain s
+  | A.Variable  _ as v -> plain v
+  | A.If (loc, p, pt, pf) ->
+    let iff = A.If (loc, sc p, sc pt, sc pf) in
+    plain iff
+  | A.Application (loc, rator, rand) ->
+    let app = A.Application (loc, sc rator, List.map sc rand) in
+    plain app
+  | A.Fn (loc, args, body) ->
+    let fn = A.Fn (loc, args, sc body) in
+    plain fn
+  | A.Annotated (loc, e, ty) ->
+    let ann = A.Annotated (loc, sc e, ty) in
+    plain ann
+  | A.Sequence (loc, a, b) ->
+    let seq = A.Sequence (loc, sc a, sc b) in
+    plain seq
+  | A.Case (loc, expr, clauses) ->
+    let cases = A.Case (loc, sc expr, List.map (fun (p, e) -> (p, sc e)) clauses) in
+    plain cases
+  | A.Record (loc, name, body) ->
+    let record = A.Record (loc, name, List.map (fun (n, e) -> (n, sc e)) body) in
+    plain record
+  | A.RecordIndex (loc, e, name) ->
+    let record_index = A.RecordIndex (loc, sc e, name) in
+    plain record_index
+  | A.Tuple (loc, es) ->
+    let tuple = A.Tuple (loc, List.map sc es) in
+    plain tuple
+  
+and sc_clauses = function
+  | A.Return (name, expr) -> A.Return (name, sc expr)
+  | A.Operation (name, args, kvar, expr) -> A.Operation (name, args, kvar, expr)
+
+let sc_toplevel l =
+  let f = function
+    | A.Expression e -> A.Expression (sc e)
+    | A.Def (loc, name, e) -> A.Def (loc, name, sc e)
+    | x -> x
+  in
+  List.map f l
 
 let pp_token =
   let module G = Grammar in

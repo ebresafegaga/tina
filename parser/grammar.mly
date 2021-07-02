@@ -1,8 +1,7 @@
-
 %{
     open Syntax
     open Ast
-    open Naming 
+    open Naming
 
     let empty_variants : VarName.t list ref = ref []
     let collect_empty_variants = function 
@@ -30,7 +29,7 @@
 
 %token CLAIM DEF
 %token THE
-%token DATA ABILITY
+%token DATA
 
 %token CASE ARROW
 %token LET MUT FN END
@@ -45,6 +44,8 @@
 %token TY_NAT TY_STRING TY_FLOAT TY_INT
 
 %token TK_TODO
+
+%token DO HANDLE ABILITY RETURN
 
 %token EOF
 
@@ -71,16 +72,21 @@ top:
     | d = def { d }
     | r = record_decl { r }
     | v = variant_decl { v }
+    | a = ability { a }
     | e = expression { Expression e }
 
 claim: 
     | CLAIM; id = ID; t = ty; 
     { Claim ($loc, VarName.of_string id, t) }
 
+ability:
+  | ABILITY; id = ID; LPAREN; tys = separated_list(COMMA, ty); RPAREN
+    { AbilityDef ($loc, VarName.of_string id, tys) }
+
 def: 
     | DEF; id = ID; EQUALS; body = expression 
       { Def ($loc, VarName.of_string id, body) }
-    | DEF; id = ID; args = arg_list; EQUALS; body = expression; 
+    | DEF; id = ID; args = arg_list; EQUALS; body = expression;
       { Def ($loc, VarName.of_string id, Fn ($loc, args, body)) } 
 
 record_claim: 
@@ -194,8 +200,22 @@ expression:
       { let o = Variable ($loc, VarName.of_string op) in 
          Application ($loc, o, [e1; e2]) }
     | LPAREN; e = expression; RPAREN  { e }
-    | LPAREN; body = separated_nonempty_list(COMMA, expression); RPAREN
-      { Tuple ($loc, body) }
+  | LPAREN; body = separated_nonempty_list(COMMA, expression); RPAREN { Tuple ($loc, body) }
+  | DO; name = ID; LPAREN; body = separated_list(COMMA, expression); RPAREN
+    { Do ($loc, VarName.of_string name, body) }
+  | HANDLE; e = expression; LBRACE;
+           ret = return_clause; COMMA;
+           body=separated_list(COMMA, handler_clause) RBRACE 
+    { Handle ($loc, e, ret :: body) }
+
+return_clause:
+  | RETURN; id = ID; ARROW; e = expression; { Return (VarName.of_string id, e) } 
+
+handler_clause:
+  | name = ID; LPAREN; body = separated_list(COMMA, ID); RPAREN; kvar = ID; ARROW; e = expression
+    {   let body = List.map VarName.of_string body in
+	Operation (VarName.of_string name, body, VarName.of_string kvar, e) }
+   
   
 %inline operator: 
     | PLUS {  "+" }

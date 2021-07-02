@@ -1,3 +1,4 @@
+
 open Naming
 
 type ty = 
@@ -31,37 +32,45 @@ type pattern =
 
 (* module Identifier = struct 
     type t = Global of DefName.t | Local of VarName.t  
-end *)
+   end *)
 
 type expression = 
-    | LitTodo of Loc.t 
-    | LitUnit of Loc.t 
-    | LitBool of Loc.t * bool 
-    | LitInteger of Loc.t * int 
-    | LitFloat of Loc.t * float 
-    | LitString of Loc.t * string 
+  | LitTodo of Loc.t 
+  | LitUnit of Loc.t 
+  | LitBool of Loc.t * bool 
+  | LitInteger of Loc.t * int 
+  | LitFloat of Loc.t * float 
+  | LitString of Loc.t * string 
 
-    | Variable of Loc.t * VarName.t
-    | If of Loc.t * expression * expression * expression
-    | Application of Loc.t * expression * expression list 
-    | Let of Loc.t * pattern * expression * expression
-    (* LetMut maybe? *)
-    | Fn of Loc.t * VarName.t list * expression
-    | Annotated of Loc.t * expression * ty 
-    | Sequence of Loc.t * expression * expression
-    | Case of Loc.t * expression * (pattern * expression) list (* tbi *)
-    | Record of Loc.t * DataName.t * (FieldName.t * expression) list
-    | RecordIndex of Loc.t * expression * FieldName.t
-    | Tuple of Loc.t * expression list 
-    (* | Variant of Loc.t * DataName.t * expression list *)
-    (* list? tuples? *)
+  | Variable of Loc.t * VarName.t
+  | If of Loc.t * expression * expression * expression
+  | Application of Loc.t * expression * expression list 
+  | Let of Loc.t * pattern * expression * expression
+  (* LetMut maybe? *)
+  | Fn of Loc.t * VarName.t list * expression
+  | Annotated of Loc.t * expression * ty 
+  | Sequence of Loc.t * expression * expression
+  | Case of Loc.t * expression * (pattern * expression) list (* tbi *)
+  | Record of Loc.t * DataName.t * (FieldName.t * expression) list
+  | RecordIndex of Loc.t * expression * FieldName.t
+  | Tuple of Loc.t * expression list
+  (* | Variant of Loc.t * DataName.t * expression list *)
+(* list? tuples? *)
+  | Do of Loc.t * VarName.t * expression list
+  | Handle of Loc.t * expression * handler_clauses list (* must always have a return clause *)
+  | Plain of expression (* wraps a an expression to seperate expression from computations *)
 
-type toplevel = 
-    | Claim of Loc.t * VarName.t * ty
-    | Def of Loc.t * VarName.t * expression
-    | VariantDef of Loc.t * DataName.t * (VarName.t * ty list) list
-    | RecordDef of Loc.t * DataName.t * (FieldName.t * ty) list 
-    | Expression of expression
+and handler_clauses =
+  | Return of VarName.t * expression
+  | Operation of VarName.t * VarName.t list * VarName.t * expression (* ability name, values gotten, cont-var name*)
+
+type toplevel =
+  | Claim of Loc.t * VarName.t * ty
+  | Def of Loc.t * VarName.t * expression
+  | VariantDef of Loc.t * DataName.t * (VarName.t * ty list) list
+  | RecordDef of Loc.t * DataName.t * (FieldName.t * ty) list
+  | AbilityDef of Loc.t * VarName.t * ty list
+  | Expression of expression
 
 (* pretty printing facilities for the the ast *)
 
@@ -149,6 +158,8 @@ let rec pp_expression = function
     Printf.sprintf "%s.%s"
       (pp_expression expr)
       (FieldName.to_string name)
+  | Plain (e) -> Printf.sprintf "Plain (%s)" (pp_expression e)
+  | Do _ | Handle _ -> ""
 
 let pp_toplevel = function
   | Claim (_loc, name, ty) ->

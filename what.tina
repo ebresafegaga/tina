@@ -20,3 +20,13 @@ datatype name = {
     claim name String 
     claim age Nat 
 }
+
+ability Name (String, Nat)
+
+do Name ("ogaga", 23)
+
+let b = do Name ("ogaga", 34)
+handle comp {
+    Return k -> x
+    Name (a, b) k ->
+}

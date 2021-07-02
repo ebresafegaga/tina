@@ -1,5 +1,14 @@
 
+10 + 10
 
-def name = 10
+"ogaga"
 
-name
+def comp = do Name ()
+
+handle "afoke " {
+   return x -> x + 1000,
+}
+
+handle (comp) {
+    return y -> y,
+}

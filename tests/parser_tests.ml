@@ -1,7 +1,9 @@
 open Parser
+open Syntax
 
 module G = Grammar
-module P = ParserEntry  
+module P = ParserEntry
+module A = Ast
 
 (* useful functions *)
 let tokenize str =
@@ -14,8 +16,20 @@ let tokenize str =
   in
   loop ()
 
+let parse str =
+  let lexbuf = Lexing.from_string str in
+  G.toplevel Lexer.read_token lexbuf
+
 let token_testable =
   let pp formatter token = Format.fprintf formatter "%s" (P.pp_token token) in
+  Alcotest.testable pp (=)
+
+let expression_testable =
+  let pp fmt expr = Format.fprintf fmt "%s" (A.pp_expression expr) in
+  Alcotest.testable pp (=)
+
+let toplevel_testable =
+  let pp fmt tl = Format.fprintf fmt "%s" (A.pp_toplevel tl) in
   Alcotest.testable pp (=)
 
 let token_test str token error () =  
@@ -24,10 +38,7 @@ let token_test str token error () =
     (tokenize str)
 
 let token_test_case case_name test_list =
-  let tests =
-    test_list
-    |> List.map (fun (name, test) -> Alcotest.test_case name `Quick test)
-  in
+  let tests = test_list |> List.map (fun (name, test) -> Alcotest.test_case name `Quick test) in
   case_name, tests
 
 let token_test str token () =
@@ -206,6 +217,12 @@ let lex_types_test =
 let lex_types_test_case =
   token_test_case "types-case"
     ["base types", lex_types_test]
+
+
+let program = {| 
+  let x = 10; 
+  x 
+  |}
 
 let all_test_cases =
   [lex_claim_test_case;
