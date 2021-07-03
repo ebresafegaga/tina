@@ -1,5 +1,8 @@
 
+datatype Person =
+   { claim age Nat,
+     claim name String }
 
-def name = 10
+def p = Person { age:12, name:"moyo" }
 
-name
+p
