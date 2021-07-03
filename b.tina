@@ -1,3 +1,19 @@
+	
 
 
-10 + do Name ()
+handle (let y = do N ("ogaga", 20);
+        let b = do S ();
+	"hello " + y + " you are " + b + " years old ") {
+   return x -> x,
+   N (a, b) k -> "",
+   S () k -> 20
+}
+
+
+handle (let a = do Number ();
+        let b = do Number ();
+	a +b) {
+	return a -> a,
+	Number () k -> 1
+}
+

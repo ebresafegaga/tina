@@ -57,6 +57,22 @@ let rec get_operation_clauses l =
   | A.Operation (label, vars, kvar, body) :: rest ->
     `Operation (label, vars, kvar, body) :: get_operation_clauses rest
 
+(* rants:
+   - applications, if .. then .. else .. are *computations*!
+   - in this setting, whenever we get a "should not be evaluated by me" error 
+     from the interpreter, we are probably using a computation as a value
+   - turns out, returning from a handler clauses calls the continuation 
+     associated with that clause and calling the actual continuation does 
+     something *very* scary...
+   - also, a function body is a computation ... we might say we want to 
+     intercept every function call in the `g` function, but what about 
+     function application with variables?? (fucking first-class functions!)
+
+   solutions: 
+   - we need to re-write the evaluator to explicity its closures, and 
+     the evaluator should be aware of this `g` transform
+   - there is probably a bug with the handler case in this `g` transform
+*)
 let rec g term =
   (*  Printf.printf "%s" (A.pp_expression term); *)
   match term with
@@ -86,16 +102,19 @@ let rec g term =
                      A.Application (d, A.Variable (d, h), [A.Tuple (d, [tag; args;
                                                                         A.Fn
                                                                           (d,
-                                                                           [x;ks2], 
-                                                                           A.Application
+                                                                           [x], 
+                                                                           A.Fn (d, [ks2], A.Application
                                                                              (d, A.Variable (d, k), 
                                                                               [A.Variable (d, x);
                                                                                A.Application (d, cons,
                                                                                               [A.Variable (d, h);
-                                                                                               A.Variable (d, ks2)])]))]);
+                                                                                               A.Variable (d, ks2)])])))]);
                                                            A.Variable (d, ks)]))))
   | A.Let (_loc, pat, expr, body) ->
-    let get_variable = function A.PVariable x -> x | _ -> failwith "can only bind a variable with a let pattern" in
+    let get_variable = function
+      | A.PVariable x -> x
+      | _ -> failwith "can only bind a variable with a let pattern before g transform"
+    in
     let x = get_variable pat in
     let ks, k, ks', f, ks'' =
       fresh_var "ks", fresh_var "k",

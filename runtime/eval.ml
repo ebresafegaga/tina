@@ -43,7 +43,7 @@ let rec pattern_binder pattern value env =
   | _ -> raise PatternFailure
 
 let rec eval env = function
-  | Ast.Variable (_loc, name) -> (
+  | A.Variable (_loc, name) -> (
       match Env.lookup name env with 
       | Some x -> Ok x 
       | None -> Error (Printf.sprintf "Unbound Variable %s" (VarName.to_string name)))
@@ -53,39 +53,43 @@ let rec eval env = function
   | A.LitFloat (_loc, f) -> Ok (V.VFloat f)
   | A.LitString (_loc, s) -> Ok (V.VString s)
   | A.Annotated (_loc, e, _) -> eval env e
-  | A.If (_loc, e, pt, pf) -> 
+  | A.If (_loc, e', pt, pf) -> 
     let open Result in 
-    let* e = eval env e in 
+    let* e = eval env e' in 
     (match e with 
      | V.VBool true -> eval env pt
      | V.VBool false -> eval env pf
-     | _ -> Error "expected a bool type at an if expression ")
+     | v -> Error (Printf.sprintf "expected a bool type at an if expression, but got expression %s" (V.pp_value v)))
   | A.Let (_loc, pat, expr, body) ->
     let open Result in 
     let* value = eval env expr in
     let env = pattern_binder pat value env in
     eval env body
-  | A.Fn (_loc, names, body) -> 
-    let clo values = 
+  | A.Fn (_loc, names, body) as f -> 
+    let clo values =
+      let expected, got = List.length names, List.length values in
       (* This check might not be valid if I change 
          the representation of closures to use frames. *)
-      if List.length values <> List.length names then 
-        Error (Printf.sprintf "Invalid Number of arguments")
+      if expected <> got then
+        Error (Printf.sprintf "function %s: expected %d arguments, but got %d" (A.pp_expression f) expected got)
       else
         let env = List.fold_right2 Env.add names values env in
         eval env body
     in
     Ok (V.VClosure clo)
-  | A.Application (_loc, operator, operands) -> (
+  | A.Application (_loc, operator, operands') -> (
       let open Result in
       let* operands = 
-        operands 
+        operands' 
         |> List.map (eval env)  
         |> Result.sequenceA 
       in
       match eval env operator with 
       | Ok (V.VClosure f) -> f operands
-      | Ok _ -> Error "This expression is not a function, so it cannot be applied"
+      | Ok _ ->
+        Error
+          (Printf.sprintf "This expression %s, is not a function, so it cannot be applied to %s"
+             (A.pp_expression operator) (A.pp_list operands' A.pp_expression))
       | Error s -> Error s)
   | A.Record (_loc, name, body) -> 
     let open Result in
@@ -173,7 +177,7 @@ let rec process_toplevel env = function
 let operator op = 
     let clo = function  
         | [V.VInteger x; V.VInteger y] -> Ok (V.VInteger (op x y))
-        | [_; _] -> Error "Expected integers"
+        | [a; b] -> Error (Printf.sprintf "dont know how to use op on %s and %s" (V.pp_value a) (V.pp_value b))
         | _ -> Error "Invalid Number of arguemnts"
     in
     V.VClosure clo
@@ -187,7 +191,7 @@ let generic_plus =
       Ok (V.VString (Printf.sprintf "%s%d" y x ))
     | [V.VString y; V.VString x] ->
       Ok (V.VString (Printf.sprintf "%s%s" y x ))
-    | [_; _] -> Error "Expected integers"
+    | [a; b] -> Error (Printf.sprintf "dont know how to add %s and %s" (V.pp_value a) (V.pp_value b))
     | _ -> Error "Invalid Number of arguemnts"
   in
   V.VClosure clo

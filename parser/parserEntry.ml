@@ -128,7 +128,7 @@ let rec sc =
   
 and sc_clauses = function
   | A.Return (name, expr) -> A.Return (name, sc expr)
-  | A.Operation (name, args, kvar, expr) -> A.Operation (name, args, kvar, expr)
+  | A.Operation (name, args, kvar, expr) -> A.Operation (name, args, kvar, sc expr)
 
 let sc_toplevel l =
   let f = function
