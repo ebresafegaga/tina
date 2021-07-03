@@ -13,11 +13,11 @@ let () =
   in
   temp
   |> Desugar.desugar_toplevel
-  (* |> List.map (fun expr ->
+  |> List.map (fun expr ->
       expr
       |> Ast.pp_toplevel
       |> print_endline;
-      expr)  dump ast *)
+      expr)
   |> Eval.process_toplevel
   |> String.concat "\n"
   |> Printf.printf "%s\n"

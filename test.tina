@@ -175,3 +175,27 @@ def name = "chidera"
 def age = 25
 
 name + " is " + age + " years old."
+
+
+10 + 10
+
+"ogaga"
+
+def comp = do Name ()
+
+handle "afoke " {
+   return x -> x + 1000,
+}
+
+handle (do Name ()) {
+    return y -> y,
+    Name () k -> "hey"
+}
+
+let x = "ebresafe"; x
+
+let b = do Name ("dd");
+   handle (b) {
+       return x -> x,
+       Name (o) k -> k ("lol")
+    }

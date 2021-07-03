@@ -60,6 +60,7 @@ let rec get_operation_clauses l =
 let rec g term =
   (*  Printf.printf "%s" (A.pp_expression term); *)
   match term with
+  (* | A.Fn (loc, vars, body) -> A.Fn (loc, vars, g body)*)
   | A.Plain e ->
     (* print_endline "i got here";*)
     let ks = fresh_var "ks" in
@@ -69,6 +70,7 @@ let rec g term =
             (d,
              A.Application (d, first, [A.Variable (d, ks)]),
              [g e; A.Application (d, rest, [A.Variable (d, ks)])]))
+  
   | A.Do (_loc, label, args) ->
     let args = A.Tuple (d, List.map g args) in
     let ks = fresh_var "ks"
@@ -90,8 +92,7 @@ let rec g term =
                                                                               [A.Variable (d, x);
                                                                                A.Application (d, cons,
                                                                                               [A.Variable (d, h);
-                                                                                               A.Variable (d, ks2)]
-                                                                                             )]))]);
+                                                                                               A.Variable (d, ks2)])]))]);
                                                            A.Variable (d, ks)]))))
   | A.Let (_loc, pat, expr, body) ->
     let get_variable = function A.PVariable x -> x | _ -> failwith "can only bind a variable with a let pattern" in
@@ -109,10 +110,9 @@ let rec g term =
                                              A.Application (d, g body, [A.Application (d, cons, [A.Variable (d, k);
                                                                                                  A.Variable (d, ks'')])])),
                      A.Application (d, g expr, [A.Application (d, cons, [A.Variable (d, f);
-                                                                        A.Variable (d, ks')])]))))       
+                                                                         A.Variable (d, ks')])]))))       
   | A.Handle (_loc, expr, clauses) ->
-    let ks, k1, z, k2 = fresh_var "ks", fresh_var "k1", fresh_var "z", fresh_var "k2"
-    and _k_prime, _h_prime = fresh_var "k'", fresh_var "h'" in                         
+    let ks, k1, z, k2 = fresh_var "ks", fresh_var "k1", fresh_var "z", fresh_var "k2" in
     let ret =
       let `Return (name, body) = get_return_clause clauses in
       let h, ks' = fresh_var "h", fresh_var "ks'" in
@@ -142,13 +142,13 @@ let rec g term =
         fresh_var "x", fresh_var "ks''"
       in
       A.Let (d, A.PTuple [A.PVariable k'; A.PVariable h'; A.PVariable ks'], A.Variable (d, ks),
-       A.Let (d, A.PVariable f,
-             A.Fn (d, [x; ks''],
-                  A.Application (d, A.Variable (d, kvar),
-                    [A.Variable (d, x);
-                     A.Application (d, cons, [A.Variable (d, k'); A.Application (d, cons,
-                                                                    [A.Variable(d, h'); A.Variable (d, ks'')])])])),
-               A.Application (d, A.Variable (d, h'), [ A.Tuple (d, [label; arg; A.Variable (d, f)]); A.Variable (d, ks')])))
+             A.Let (d, A.PVariable f,
+                    A.Fn (d, [x; ks''],
+                          A.Application (d, A.Variable (d, kvar),
+                                         [A.Variable (d, x);
+                                          A.Application (d, cons, [A.Variable (d, k'); A.Application (d, cons,
+                                                                                                      [A.Variable(d, h'); A.Variable (d, ks'')])])])),
+                    A.Application (d, A.Variable (d, h'), [ A.Tuple (d, [label; arg; A.Variable (d, f)]); A.Variable (d, ks')])))
     in       
     let cases = cases in
     let op_clauses =
@@ -162,7 +162,7 @@ let rec g term =
                                           foward (A.Variable (d, label), A.Variable (d, args), kvar) k1]))
     in
     A.Fn (d, [k2], A.Application (d, g expr, [A.Application (d, cons, [ret; A.Application
-                                                                        (d, cons, [op_clauses; A.Variable (d, k2)])])]))
+                                                                         (d, cons, [op_clauses; A.Variable (d, k2)])])]))
   | x -> A.Plain x
 
 
@@ -178,8 +178,8 @@ let const =
 
 let handler =
   let comp, ks = fresh_var "comp", fresh_var "ks" in
-  A.Fn (d, [comp],
-        A.Fn (d, [ks], A.LitTodo (d)))
+  A.Fn (d, [comp; ks],
+        ( A.LitTodo (d) ))
 
 let handler_l = A.Application (d, cons, [handler; nil])
 
@@ -196,3 +196,4 @@ let desugar_toplevel l =
     | any -> any
   in
   List.map f l
+
