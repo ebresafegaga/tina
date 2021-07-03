@@ -43,7 +43,6 @@ rule read_token = parse
     | "def" { DEF }
     | "the" { THE }
     | "datatype" { DATA } 
-    | "ability" { ABILITY }
     | "case" { CASE }
     | "end" { END }
     | "->" { ARROW }
@@ -54,6 +53,10 @@ rule read_token = parse
     | "if" { IF }
     | "then" { THEN }
     | "else" { ELSE }
+    | "do" { DO }
+    | "handle" { HANDLE }
+    | "ability" { ABILITY }
+    | "return" { RETURN }
     | "+" { PLUS }
     | "*" { STAR }
     | "-" { MINUS }

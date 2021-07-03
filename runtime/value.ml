@@ -2,15 +2,15 @@ open Syntax
 open Naming
 
 type value = 
-    | VUnit 
-    | VInteger of int 
-    | VString of string 
+    | VUnit
+    | VInteger of int
+    | VString of string
     | VFloat of float
-    | VBool of bool 
+    | VBool of bool
     | VTuple of value list 
     | VClosure of (value list -> (value, string) result)
     | VRecord of DataName.t * (FieldName.t * value) list 
-    | VVariant of VarName.t * value list 
+    | VVariant of VarName.t * value list
 
 let rec pp_value v = 
     let pp_value_list values sep = values |> List.map pp_value |> String.concat sep in
@@ -21,7 +21,6 @@ let rec pp_value v =
     | VFloat f -> Float.to_string f 
     | VBool b -> Bool.to_string b
     | VClosure _clo -> "<fun>" (* unfortunately, we can't inspect _clo *)
-    
     | VRecord (name, fields) ->
         let fields_pp = 
             fields  
@@ -33,12 +32,3 @@ let rec pp_value v =
     | VVariant (name, []) -> VarName.to_string name
     | VVariant (name, values) -> Printf.sprintf "%s (%s)" (VarName.to_string name) (pp_value_list values ", ")
     | VTuple (values) -> Printf.sprintf "(%s)" (pp_value_list values ", ")
-
-(* experemental stuff *)
-type value_result = 
-    | VOkay of value 
-    | VError of Loc.t * err 
-
-and err = 
-    | ApplicationError 
-
