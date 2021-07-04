@@ -18,10 +18,18 @@ module Env : S with type key := VarName.t = struct
 end
 
 (* Pattern matching handling *)
-exception PatternFailure
+exception PatternFailure of string
 
 let rec pattern_binder pattern value env = 
-  let length_check l1 l2 =  if List.length l1 <> List.length l2 then raise PatternFailure in
+  let length_check l1 l2 =
+    let len1, len2 = List.length l1, List.length l2 in
+    let msg = Printf.sprintf
+    "can't match because the length of a tuple or variant arguments aren't equal. want: %d, got: %d. pattern: %s, expression %s"
+        len1 len2 (A.pp_list l1 A.pp_pattern) (A.pp_list l2 V.pp_value)
+    in
+    if len1 <> len2
+    then raise @@ PatternFailure msg
+  in
   match pattern, value with 
   | A.PVariable name, value -> Env.add name value env
   | A.PInteger i, V.VInteger i' when i = i' -> env
@@ -40,7 +48,11 @@ let rec pattern_binder pattern value env =
   | A.PTuple patterns, V.VTuple values -> 
     length_check patterns values;
     List.fold_right2 pattern_binder patterns values env
-  | _ -> raise PatternFailure
+  | pattern, value ->
+    let msg = Printf.sprintf "The value %s doens't match the pattern %s"
+        (A.pp_pattern pattern) (V.pp_value value)
+    in
+    raise @@ PatternFailure msg
 
 let rec eval env = function
   | A.Variable (_loc, name) -> (
@@ -71,7 +83,8 @@ let rec eval env = function
       (* This check might not be valid if I change 
          the representation of closures to use frames. *)
       if expected <> got then
-        Error (Printf.sprintf "function %s: expected %d arguments, but got %d" (A.pp_expression f) expected got)
+        Error (Printf.sprintf "function %s: expected %d arguments, but got %d. the arguments are %s"
+                 (A.pp_expression f) expected got (A.pp_list values V.pp_value))
       else
         let env = List.fold_right2 Env.add names values env in
         eval env body
@@ -115,7 +128,7 @@ let rec eval env = function
         let p, e = x in
         match pattern_binder p value env with 
         | env -> eval env e
-        | exception PatternFailure -> eval_cases xs
+        | exception PatternFailure _ -> eval_cases xs
     in 
     eval_cases cases 
   | A.Tuple (_loc, exprs) -> 

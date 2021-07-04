@@ -86,7 +86,7 @@ let rec g term =
             (d,
              A.Application (d, first, [A.Variable (d, ks)]),
              [g e; A.Application (d, rest, [A.Variable (d, ks)])]))
-  
+
   | A.Do (_loc, label, args) ->
     let args = A.Tuple (d, List.map g args) in
     let ks = fresh_var "ks"
@@ -104,11 +104,11 @@ let rec g term =
                                                                           (d,
                                                                            [x], 
                                                                            A.Fn (d, [ks2], A.Application
-                                                                             (d, A.Variable (d, k), 
-                                                                              [A.Variable (d, x);
-                                                                               A.Application (d, cons,
-                                                                                              [A.Variable (d, h);
-                                                                                               A.Variable (d, ks2)])])))]);
+                                                                                   (d, A.Variable (d, k), 
+                                                                                    [A.Variable (d, x);
+                                                                                     A.Application (d, cons,
+                                                                                                    [A.Variable (d, h);
+                                                                                                     A.Variable (d, ks2)])])))]);
                                                            A.Variable (d, ks)]))))
   | A.Let (_loc, pat, expr, body) ->
     let get_variable = function
@@ -160,13 +160,14 @@ let rec g term =
         fresh_var "ks'", fresh_var "f",
         fresh_var "x", fresh_var "ks''"
       in
-      A.Let (d, A.PTuple [A.PVariable k'; A.PVariable h'; A.PVariable ks'], A.Variable (d, ks),
+      A.Let (d, A.PTuple [A.PVariable k'; A.PTuple [A.PVariable h'; A.PVariable ks']], A.Variable (d, ks),
              A.Let (d, A.PVariable f,
-                    A.Fn (d, [x; ks''],
-                          A.Application (d, A.Variable (d, kvar),
-                                         [A.Variable (d, x);
-                                          A.Application (d, cons, [A.Variable (d, k'); A.Application (d, cons,
-                                                                                                      [A.Variable(d, h'); A.Variable (d, ks'')])])])),
+                    A.Fn (d, [x],
+                          A.Fn (d, [ks''], A.Application (d, A.Application (d, A.Variable (d, kvar),
+                                         [A.Variable (d, x)]),
+                                          [A.Application (d, cons, [A.Variable (d, k');
+                                                                   A.Application (d, cons,
+                                                                     [A.Variable(d, h'); A.Variable (d, ks'')])])]))),
                     A.Application (d, A.Variable (d, h'), [ A.Tuple (d, [label; arg; A.Variable (d, f)]); A.Variable (d, ks')])))
     in       
     let cases = cases in
@@ -182,18 +183,28 @@ let rec g term =
     in
     A.Fn (d, [k2], A.Application (d, g expr, [A.Application (d, cons, [ret; A.Application
                                                                          (d, cons, [op_clauses; A.Variable (d, k2)])])]))
-  | x -> A.Plain x (* what if i transform x, just like the plain case here? *)
+  | e ->
+    (* this should always be the body of a plain expression body of a handler clause *)
+    (* A.Plain x what if i transform x, just like the plain case here? *)
+    (*  let ks = fresh_var "ks" in
+        A.Fn (d,
+           [ks],
+           A.Application
+             (d,
+              A.Application (d, first, [A.Variable (d, ks)]),
+              [e; A.Application (d, rest, [A.Variable (d, ks)])])) *)
+    A.Plain e
 
 
-(* 
+    (* 
    Tuple (d, vars)
 
    P =  label:string, (args ...), k
 *)
 
-let const =
-  let x, ks = fresh_var "x", fresh_var "ks" in
-  A.Fn (d, [x; ks], A.Variable (d, x))
+    let const =
+      let x, ks = fresh_var "x", fresh_var "ks" in
+      A.Fn (d, [x; ks], A.Variable (d, x))
 
 let handler =
   let comp, ks = fresh_var "comp", fresh_var "ks" in
@@ -230,7 +241,10 @@ let desugar_toplevel l =
        but if we have a variable, or an integer, 
        we would lift it using `Plain`
 
-   a variable *cannot* be a computation
+   a variable *cannot* be a computation; lambdas are the only syntactic 
+   construct that can generate a computation (its arguments are values), 
+   hence their elimination form
+   must be handled with care.
 
    i'm certain this would work.
 

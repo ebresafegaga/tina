@@ -36,17 +36,22 @@ handle 10 {
    return x -> x,
 }
 
-def b = do Absurd ()
-
-handle (b) {
-   return x -> "yooooo",
-   Absurd () k -> k ("nothing")
-}   
-
 handle (let k = do K ();
          k) {
     return x -> x,
     K () k -> k ("my k")
 }
 
-do N ()
+handle (handle do N () {
+       return y -> y, }) {
+       return x -> x,
+       N () k -> k (1)
+}
+
+handle (handle (handle do N () {
+       return y -> y, }) {
+       return x -> x,
+}) {
+  return z -> z,
+  N () k -> k ("fuck yeah")
+}
