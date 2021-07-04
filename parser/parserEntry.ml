@@ -87,7 +87,7 @@ let rec sc =
   | A.Let (loc, name, expr, body) ->
     A.Let (loc, name, sc expr, sc body)
   | A.Do (loc, name, args) ->
-    A.Do (loc, name, List.map sc args)
+    A.Do (loc, name, args)
   | A.Handle (loc, expr, clauses) ->
     A.Handle (loc, sc expr, List.map sc_clauses clauses)
   | A.Plain e -> A.Plain e (* hmm *)
@@ -128,7 +128,7 @@ let rec sc =
   
 and sc_clauses = function
   | A.Return (name, expr) -> A.Return (name, sc expr)
-  | A.Operation (name, args, kvar, expr) -> A.Operation (name, args, kvar, sc expr)
+  | A.Operation (name, args, kvar, expr) -> A.Operation (name, args, kvar, expr)
 
 let sc_toplevel l =
   let f = function
@@ -166,3 +166,5 @@ let pp_token =
   | G.TY_INT -> "TYINT" | G.TY_FLOAT -> "TYFLOAT"
   | G.TY_STRING -> "TYSTRING" | G.TK_TODO -> "TKTODO"
   | G.THE -> "THE" | G.DOT -> "DOT" | G.EOF -> "EOF"
+
+(* i don't apply sc to the arguments of do and the expression body of handler clauses *)

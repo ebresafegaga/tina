@@ -1,19 +1,52 @@
 	
 
-
 handle (let y = do N ("ogaga", 20);
         let b = do S ();
 	"hello " + y + " you are " + b + " years old ") {
    return x -> x,
-   N (a, b) k -> "",
-   S () k -> 20
+   N (a, b) k -> k (a),
+   S () k -> k ("some")
 }
 
 
 handle (let a = do Number ();
         let b = do Number ();
-	a +b) {
+	a +b ) {
 	return a -> a,
-	Number () k -> 1
+	Number () k -> let x = k (1);
+	               let y = k (2);
+		       fn (ks) x + y
 }
 
+
+handle (let a = do Get ();
+        if a then "t" else "false") {
+  return x -> x,
+  Get () k -> k (true)
+}
+
+handle (let a = do Get ();
+        case (a) { 0 -> "yay", y -> y } ) {
+  return x -> x,
+  Get () k -> 99234
+}
+
+
+handle 10 {
+   return x -> x,
+}
+
+def b = do Absurd ()
+
+handle (b) {
+   return x -> "yooooo",
+   Absurd () k -> k ("nothing")
+}   
+
+handle (let k = do K ();
+         k) {
+    return x -> x,
+    K () k -> k ("my k")
+}
+
+do N ()

@@ -182,7 +182,7 @@ let rec g term =
     in
     A.Fn (d, [k2], A.Application (d, g expr, [A.Application (d, cons, [ret; A.Application
                                                                          (d, cons, [op_clauses; A.Variable (d, k2)])])]))
-  | x -> A.Plain x
+  | x -> A.Plain x (* what if i transform x, just like the plain case here? *)
 
 
 (* 
@@ -210,9 +210,28 @@ let handle_comp computation =
 
 let desugar_toplevel l =
   let f = function
-    | A.Def (loc, name, expr) -> A.Def (loc, name, g expr)
+    | A.Def (loc, name, expr) -> A.Def (loc, name, handle_comp expr) (* this is actually wrong, the value gotten from evaluating handle_comp should be bound to name -- i've corrected it, it was `g expr` before *)
     | A.Expression (e) -> A.Expression (handle_comp e)
     | any -> any
   in
   List.map f l
 
+(* the major problem now is that returning from a handler clause 
+   without calling the continuation doesn't work *)
+
+(* okay, i know whats wrong. 
+   the body expression on the clause is expected to be a computation, but 
+   in the `sc` transform we leave expressions just the way they are. 
+   for this to work, we have to lift expressions that are not computations 
+   using the plain constructor. 
+
+   this is basically selective lifting. 
+   i.e if we have a `Let` we wouldn't lift it
+       but if we have a variable, or an integer, 
+       we would lift it using `Plain`
+
+   a variable *cannot* be a computation
+
+   i'm certain this would work.
+
+*)
