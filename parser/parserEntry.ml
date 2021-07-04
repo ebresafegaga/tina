@@ -128,7 +128,20 @@ let rec sc =
   
 and sc_clauses = function
   | A.Return (name, expr) -> A.Return (name, sc expr)
-  | A.Operation (name, args, kvar, expr) -> A.Operation (name, args, kvar, expr)
+  | A.Operation (name, args, kvar, expr) -> A.Operation (name, args, kvar, return expr)
+
+and return expr =
+  let open Syntax in
+  let open Naming in
+  let d = Loc.dummy in
+  let x = VarName.of_string "___x" in
+  let ks = VarName.of_string "___ks" in
+  match expr with
+  | A.Let (l, p, body, expr) -> A.Let (l, p, return body, return expr)
+  | A.Do _ | A.Handle _ | A.Application _ -> expr
+  | _ -> A.Fn (d, [ks],
+        A.Let (d, A.PVariable x, expr, A.Variable (d, x)))
+
 
 let sc_toplevel l =
   let f = function

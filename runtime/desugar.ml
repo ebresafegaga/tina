@@ -94,22 +94,20 @@ let rec g term =
     and h = fresh_var "h" in
     let tag = A.LitString (d, VarName.to_string label) in
     let x, ks2 = fresh_var "x", fresh_var "ks" in
+    let ks' = fresh_var "ks'" in
     A.Fn
       (d,
        [ks],
-       A.Let (d, A.PVariable k, A.Application (d, first , [A.Variable (d, ks)]),
-              A.Let (d, A.PVariable h, A.Application (d, first, [A.Application (d, rest, [A.Variable (d, ks)])]),
+       A.Let (d, A.PTuple [A.PVariable k; A.PTuple [A.PVariable h; A.PVariable ks']], A.Variable (d, ks),
                      A.Application (d, A.Variable (d, h), [A.Tuple (d, [tag; args;
-                                                                        A.Fn
-                                                                          (d,
-                                                                           [x], 
-                                                                           A.Fn (d, [ks2], A.Application
-                                                                                   (d, A.Variable (d, k), 
-                                                                                    [A.Variable (d, x);
-                                                                                     A.Application (d, cons,
+                                                                        A.Fn (d, [x], 
+                                                                              A.Fn (d, [ks2],
+                                                                                    A.Application (d, A.Variable (d, k), 
+                                                                                       [A.Variable (d, x);
+                                                                                        A.Application (d, cons,
                                                                                                     [A.Variable (d, h);
                                                                                                      A.Variable (d, ks2)])])))]);
-                                                           A.Variable (d, ks)]))))
+                                                           A.Variable (d, ks')])))
   | A.Let (_loc, pat, expr, body) ->
     let get_variable = function
       | A.PVariable x -> x

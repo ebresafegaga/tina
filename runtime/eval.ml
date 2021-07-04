@@ -71,7 +71,11 @@ let rec eval env = function
     (match e with 
      | V.VBool true -> eval env pt
      | V.VBool false -> eval env pf
-     | v -> Error (Printf.sprintf "expected a bool type at an if expression, but got expression %s" (V.pp_value v)))
+     | v ->
+       Error
+         (Printf.sprintf
+            "expected a bool type at an if expression, but got expression %s. Also note true-case: %s, false-case %s"
+            (V.pp_value v) (A.pp_expression pt) (A.pp_expression pf)))
   | A.Let (_loc, pat, expr, body) ->
     let open Result in 
     let* value = eval env expr in

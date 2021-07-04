@@ -1,0 +1,19 @@
+
+
+handle (
+handle (handle (let a = do Get (); a) {
+  return x -> x,
+  Get () k ->
+  let v = do N ();
+  k (v)
+}) {
+    return x -> x,
+    N () k ->
+       let a = do Id ("me");
+       let v = do Add (1, 2);
+       v
+}) {
+  return any -> any,
+  Id (v) k -> k (v),
+  Add (a, b) k -> k (a + b)
+}
