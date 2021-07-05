@@ -1,2 +1,2 @@
 
-let omega = (fn (x) x (x)); omega (omega)
+2

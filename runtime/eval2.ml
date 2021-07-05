@@ -1,7 +1,8 @@
 open Syntax
 open Naming
 open Utility
-
+open Errors
+    
 module A = Ast
 
 (* Enviroment mangement *)
@@ -43,38 +44,12 @@ let rec pp_value v =
             |> List.map (fun (name, value) -> Printf.sprintf " %s: %s" (FieldName.to_string name) (pp_value value))
             |> String.concat ","
         in
-        Printf.sprintf "%s {%s }" (DataName.to_string name) fields_pp 
-
+        Printf.sprintf "%s {%s }" (DataName.to_string name) fields_pp
     | VVariant (name, []) -> VarName.to_string name
     | VVariant (name, values) -> Printf.sprintf "%s (%s)" (VarName.to_string name) (pp_value_list values ", ")
     | VTuple (values) -> Printf.sprintf "(%s)" (pp_value_list values ", ")
 
-(* Pattern matching handling *)
-exception PatternFailure
-
-let rec pattern_binder pattern value env = 
-  let length_check l1 l2 =  if List.length l1 <> List.length l2 then raise PatternFailure in
-  match pattern, value with 
-  | A.PVariable name, value -> Env.add name value env
-  | A.PInteger i, VInteger i' when i = i' -> env
-  | A.PString s, VString s' when s = s' -> env
-  | A.PBool b, VBool b' when b = b' -> env
-  | A.PRecord (name, body), VRecord (name', body') when name = name' -> 
-    let extender (n, p) env = 
-      match List.assoc_opt n body' with 
-      | Some v -> pattern_binder p v env
-      | None -> failwith "Field does not exist" (* TODO: use Result monad *)
-    in 
-    List.fold_right extender body env
-  | A.PVariant (name, body), VVariant (name', body') when name = name' -> 
-    length_check body body';
-    List.fold_right2 (fun p v env -> pattern_binder p v env) body body' env
-  | A.PTuple patterns, VTuple values -> 
-    length_check patterns values;
-    List.fold_right2 pattern_binder patterns values env
-  | _ -> raise PatternFailure
-
-  (* expression[value/variable]*)
+(* expression[value/variable]*)
 let rec subst value variable e =
   let s = subst value variable in 
   match e with
@@ -107,91 +82,131 @@ let rec subst value variable e =
     A.Handle (loc, s expr, clauses)
 
 let subst_list subs expr = List.fold_right (fun (x, v) e -> subst x v e) subs expr
- 
-let rec eval env = function
-  | A.Variable (_loc, name) -> (
-      let e = env |> Env.to_seq |> List.of_seq in
-      let env_str = A.pp_list e (fun (n, v) -> Printf.sprintf "%s=%s" (VarName.to_string n) (pp_value v)) in
-      match Env.lookup name env with 
-      | Some x -> Ok x 
-      | None ->
-        print_string "in the enviroment ";
-        print_endline env_str; 
-        Error (Printf.sprintf "Unbound Variable %s" (VarName.to_string name)))
-  | A.LitUnit _loc -> Ok VUnit 
-  | A.LitInteger (_loc, i) -> Ok (VInteger i)
-  | A.LitBool (_loc, b) -> Ok (VBool b)
-  | A.LitFloat (_loc, f) -> Ok (VFloat f)
-  | A.LitString (_loc, s) -> Ok (VString s)
-  | A.Annotated (_loc, e, _) -> eval env e
-  | A.If (_loc, e', pt, pf) -> 
-    let open Result in 
-    let* e = eval env e' in 
-    (match e with 
-     | VBool true -> eval env pt
-     | VBool false -> eval env pf
-     | _v -> Error "expected a bool type at an if expression" )
-  | A.Let (_loc, pat, expr, body) ->
-    let open Result in 
-    let* value = eval env expr in
-    let env = pattern_binder pat value env in
-    eval env body
-  | A.Fn (_loc, names, body) -> Ok (VClosure (env, names, body))
-  | A.Application (_loc, operator, operands) -> apply env operator operands
-  | A.Record (_loc, name, body) -> 
-    let open Result in
-    let names, exprs = List.split body in
-    let* values = exprs |> List.map (eval env) |> Result.sequenceA in
-    let body = List.combine names values in
-    Ok (VRecord (name, body))
-  | A.RecordIndex (_loc, record, field) -> (
-      let open Result in
-      let* record = eval env record in
-      match record with 
-      | VRecord (_, fields) -> (
-          match List.assoc_opt field fields with 
-          | Some value -> Ok value 
-          | None -> Error "That field is not defied on the record")
-      | _ -> Error "Not a record")
-  | A.Case (_loc, expr, cases) -> 
-    let open Result in
-    let* value = eval env expr in
-    let rec eval_cases = function
-      | [] -> Error "Pattern match failure"
-      | x :: xs ->
-        let p, e = x in
-        match pattern_binder p value env with 
-        | env -> eval env e
-        | exception PatternFailure -> eval_cases xs
-    in 
-    eval_cases cases 
-  | A.Tuple (_loc, exprs) -> 
-    let open Result in
-    let* result = exprs |> List.map (eval env) |> Result.sequenceA in
-    Ok (VTuple result)
-  | A.Plain e -> eval env e
-  | A.Sequence (_loc, _e1, _e2) -> Error "Sequence expressions not yet implemented"
-  | A.LitTodo _loc -> Error "Not yet supported"
+
+let print_env env =
+  let e = env |> Env.to_seq |> List.of_seq in
+  let env_str = A.pp_list e (fun (n, v) -> Printf.sprintf "%s=%s" (VarName.to_string n) (pp_value v)) in
+  print_string "in the enviroment ";
+  print_endline env_str
+
+exception PatternFailure of string
+
+let rec is_value = function 
+  | A.Variable _ 
+  | A.LitUnit _
+  | A.LitInteger _ 
+  | A.LitBool _
+  | A.LitFloat _
+  | A.LitString _ -> true 
+  | A.Annotated (_, e, _) -> is_value e
+  | A.If _ -> false 
+  | A.Let _ -> false
+  | A.Fn _ -> true 
+  | A.Application _ -> false 
+  | A.Record _ -> true
+  | A.RecordIndex _ -> false 
+  | A.Case _ -> false
+  | A.Tuple _ -> true 
+  | A.Plain e -> is_value e
+  | A.Sequence _ -> false 
+  | A.LitTodo _ -> true 
   | A.Do _ | A.Handle _ -> failwith "should not be evaluated by me"
 
-and apply env operator operands =
-  (* is this lazy applicaton ?? *)
-  match eval env operator with 
-  | Ok (VClosure (env, vars, body)) ->
-    print_endline "got here";
-    (* ensure length operands = length vars *)
-    let sub = List.combine operands vars in
-    let expr = subst_list sub body in
-    Printf.printf "after substitution [%s]%s, we have %s \n"
-      (A.pp_list sub (fun (e, n) -> Printf.sprintf "%s -> %s" (A.pp_expression e) (VarName.to_string n)))
-      (A.pp_expression body)
-      (A.pp_expression expr);
-    eval env expr
-  | Ok _ -> Error (Printf.sprintf "This expression is not a function, so it can't be applied")
-  | Error s -> Error s
+let rec eval = function
+  | A.Variable (_loc, name) ->
+    Errors.runtime @@ Printf.sprintf "Unbound Variable %s" @@ VarName.to_string name
+  | A.LitUnit loc -> A.LitUnit loc
+  | A.LitInteger (loc, i) -> A.LitInteger (loc, i)
+  | A.LitBool (loc, b) -> A.LitBool (loc, b)
+  | A.LitFloat (loc, f) -> A.LitFloat (loc, f)
+  | A.LitString (loc, s) -> A.LitString (loc, s)
+  | A.Annotated (_loc, e, _) -> eval e
 
-let is_fn = function A.Fn _ -> true | _ -> false
-  
+  | A.If (_loc, A.LitBool (_, b), pt, pf) -> (
+      match b with 
+      | true -> eval pt
+      | false -> eval pf)
+  | A.If (_loc, p, _pt, _pf) when is_value p -> Errors.runtime "expected a bool at an if expression"
+  | A.If (loc, p, pt, pf) -> eval @@ A.If (loc, eval p, pt, pf)
+
+  | A.Let (_loc, pat, expr, body) ->
+    let sub = pattern_binder pat expr in
+    eval (subst_list sub body)
+  | A.Fn (loc, names, body) -> A.Fn (loc, names, body)
+
+  | A.Application (_loc, A.Fn (_, vars, body), args) -> eval @@ subst_list (List.combine args vars) body
+  | A.Application (_loc, f, _args) when is_value f -> 
+    Errors.runtime @@ Printf.sprintf "this value is not a function so it can't be applied"
+  | A.Application (loc, f, args) -> eval @@ A.Application (loc, eval f, args)
+
+  | A.Record (loc, name, body) -> A.Record (loc, name, body)
+
+  | A.RecordIndex (_loc, A.Record (_, _name, fields), field) -> (
+      match List.assoc_opt field fields with 
+      | Some value -> value 
+      | None ->
+        Errors.runtime @@
+        Printf.sprintf "That field name %s is not defied on the record"
+          (FieldName.to_string field))
+  | A.RecordIndex (_loc, record, _field) when is_value record -> Errors.runtime "Expected a record at an index expression"
+  | A.RecordIndex (loc, record, field) -> eval @@  A.RecordIndex (loc, eval record, field)
+
+  | A.Case (_loc, expr, cases) -> 
+
+    let rec eval_cases msg = function
+      | [] -> Errors.runtime msg
+      | x :: xs ->
+        let p, e = x in
+        match pattern_binder p expr with 
+        | sub -> eval (subst_list sub e)
+        | exception PatternFailure msg' ->
+          let msg = Printf.sprintf "%s | %s" msg msg' in
+          eval_cases msg xs
+    in 
+    eval_cases "" cases
+
+  | A.Tuple (loc, exprs) ->  A.Tuple (loc, exprs)
+  | A.Plain e -> eval e
+  | A.Sequence (_loc, _e1, _e2) -> Errors.runtime "Sequence expressions not yet implemented"
+  | A.LitTodo _loc -> Errors.runtime "Not yet supported"
+  | A.Do _ | A.Handle _ -> Errors.runtime "effects are not supported by this evaluator"
+
+and pattern_binder pattern value = 
+  let length_check l1 l2 =
+    let len1, len2 = List.length l1, List.length l2 in
+    let msg = Printf.sprintf
+        "can't match because the length of a tuple or variant arguments aren't equal. want: %d, got: %d. pattern: %s, expression %s"
+        len1 len2 (A.pp_list l1 A.pp_pattern) (A.pp_list l2 A.pp_expression)
+    in
+    if len1 <> len2
+    then raise @@ PatternFailure msg
+  in
+  match pattern, value with
+  | A.PVariable name, value ->  [value, name]
+  | A.PInteger i, A.LitInteger (_, i') when i = i' -> []
+  | A.PString s, A.LitString (_, s') when s = s' -> []
+  | A.PBool b, A.LitBool (_, b') when b = b' -> []
+  | A.PRecord (name, body), A.Record (_, name', body') when name = name' -> 
+    let extender (n, p) env = 
+      match List.assoc_opt n body' with 
+      | Some v -> pattern_binder p v @ env
+      | None -> failwith "Field does not exist" (* TODO: use Result monad *)
+    in 
+    List.fold_right extender body []
+  | A.PVariant (_name, _body), _ (* Variant (name', body') when name = name' *) -> 
+    failwith "todo" (* length_check body body';*)
+  (* List.fold_right2 (fun p v env -> pattern_binder p v @ env) body body' [] *)
+  | A.PTuple patterns, A.Tuple (_, values) -> 
+    length_check patterns values;
+    List.fold_right2 (fun p v env -> pattern_binder p v @ env) patterns values []
+  | _pattern, expression when is_value expression ->
+    let msg = Printf.sprintf "The value %s doens't match the pattern %s"
+        (A.pp_pattern pattern) (A.pp_expression expression)
+    in
+    raise @@ PatternFailure msg
+  | pattern, expression -> pattern_binder pattern (eval expression)
+
+(*
 let rec process_toplevel env = function
   | [] -> []
   | A.Claim (_loc, _, _) :: rest -> process_toplevel env rest 
@@ -223,4 +238,5 @@ let rec process_toplevel env = function
    process_toplevel env rest *)
 
 let process_toplevel = process_toplevel Env.empty
+*)
 
