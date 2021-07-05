@@ -241,8 +241,7 @@ let desugar_toplevel l =
 
    a variable *cannot* be a computation; lambdas are the only syntactic 
    construct that can generate a computation (its arguments are values), 
-   hence their elimination form
-   must be handled with care.
+   hence their elimination form must be handled with care.
 
    i'm certain this would work.
 

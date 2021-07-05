@@ -137,9 +137,10 @@ and return expr =
   let x = VarName.of_string "___x" in
   let ks = VarName.of_string "___ks" in
   match expr with
-  | A.Let (l, p, body, expr) -> A.Let (l, p, return body, return expr)
+  | A.Let (l, p, body, expr) -> A.Let (l, p,  return body, return expr)
   | A.Do _ | A.Handle _ | A.Application _ -> expr
-  | _ -> A.Fn (d, [ks],
+  | _ ->
+    A.Fn (d, [ks],
         A.Let (d, A.PVariable x, expr, A.Variable (d, x)))
 
 

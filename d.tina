@@ -1,0 +1,4 @@
+
+def omega = fn (x) x (x)
+
+omega (omega)

@@ -28,6 +28,27 @@ type value =
 
 and env = value Env.t
 
+let rec pp_value v = 
+    let pp_value_list values sep = values |> List.map pp_value |> String.concat sep in
+    match v with 
+    | VUnit -> "(void)"
+    | VInteger i -> Int.to_string i
+    | VString s -> Printf.sprintf "%s%s%s" {|"|} s {|"|} 
+    | VFloat f -> Float.to_string f 
+    | VBool b -> Bool.to_string b
+    | VClosure _ -> "<fun>" (* we can't inspect the body of the closure if we like *)
+    | VRecord (name, fields) ->
+        let fields_pp = 
+            fields  
+            |> List.map (fun (name, value) -> Printf.sprintf " %s: %s" (FieldName.to_string name) (pp_value value))
+            |> String.concat ","
+        in
+        Printf.sprintf "%s {%s }" (DataName.to_string name) fields_pp 
+
+    | VVariant (name, []) -> VarName.to_string name
+    | VVariant (name, values) -> Printf.sprintf "%s (%s)" (VarName.to_string name) (pp_value_list values ", ")
+    | VTuple (values) -> Printf.sprintf "(%s)" (pp_value_list values ", ")
+
 (* Pattern matching handling *)
 exception PatternFailure
 
@@ -56,7 +77,7 @@ let rec pattern_binder pattern value env =
   (* expression[value/variable]*)
 let rec subst value variable e =
   let s = subst value variable in 
-  match e with 
+  match e with
   | A.Variable (_loc, name) when name = variable -> value
   | A.Variable _ | A.LitUnit _ 
   | A.LitInteger _ | A.LitBool _ | A.LitFloat _
@@ -152,69 +173,47 @@ and apply env operator operands =
   (* is this lazy applicaton ?? *)
   match eval env operator with 
   | Ok (VClosure (env, vars, body)) ->
+    print_endline "got here";
     (* ensure length operands = length vars *)
     let sub = List.combine operands vars in
     eval env (subst_list sub body)
   | Ok _ -> Error (Printf.sprintf "This expression is not a function, so it can't be applied")
   | Error s -> Error s
 
-(*  let is_fn = function A.Fn _ -> true | _ -> false 
- let rec process_toplevel env = function
+let is_fn = function A.Fn _ -> true | _ -> false
+  
+let rec process_toplevel env = function
   | [] -> []
   | A.Claim (_loc, _, _) :: rest -> process_toplevel env rest 
-  | A.Def (_loc, name, body) :: rest when is_fn body ->
-    let env' = ref env in 
-    let body_value = 
-      V.VClosure (fun values -> 
-          match eval !env' body with 
-          | Ok (V.VClosure f) -> f values
-          | Ok _ -> Error "This value is not a function so it can't be applied"
-          | Error s -> Error s) 
-    in 
-    env' := Env.add name body_value !env';
-    process_toplevel !env' rest
-  | A.Def (_loc, name, body) :: rest -> 
-    let body_value = eval env body in 
-    (match body_value with 
-     | Ok value -> 
-       let env = Env.add name value env in 
-       process_toplevel env rest
+  | A.Def (_loc, name, body) :: rest ->
+    (match eval env body with 
+     | Ok (VClosure (env_me, names, body) as f) ->
+       print_endline "evaluating closure";
+       let _env_me = Env.add name f env_me in
+       let clo = VClosure (env_me, names, body) in
+       let env_global = Env.add name clo env in
+       process_toplevel env_global rest
+     | Ok value ->
+       let env_global = Env.add name value env in
+       process_toplevel env_global rest
      | Error s -> Printf.sprintf "Error: %s" s :: process_toplevel env rest)
   | A.Expression e :: rest -> 
     (match eval env e with 
-     | Ok value -> (V.pp_value value) :: process_toplevel env rest
+     | Ok value -> (pp_value value) :: process_toplevel env rest
      | Error s -> Printf.sprintf "Error: %s" s :: process_toplevel env rest)
   | A.RecordDef (_loc, _, _) :: rest -> process_toplevel env rest
   | A.AbilityDef _ :: rest -> process_toplevel env rest  (* do nothing for now *)
-  | A.VariantDef (_loc, _name, body) :: rest ->
-    let variant_extend (name, l) env =
-      match l with 
-      | [] -> Env.add name (V.VVariant (name, [])) env
-      | _ :: _ -> 
-        let clo = guard_values_by_len (List.length l) (fun values -> V.VVariant (name, values)) in
-        Env.add name (V.VClosure clo) env
-    in
-    let env = List.fold_right variant_extend body env in
-    process_toplevel env rest
+  | A.VariantDef (_loc, _name, _body) :: _rest -> failwith "variants not yet implemented"
+(* | A.VariantDef (_loc, _name, body) :: rest ->
+   let variant_extend (name, l) env =
+    match l with 
+    | [] -> Env.add name (V.VVariant (name, [])) env
+    | _ :: _ -> 
+      let clo = guard_values_by_len (List.length l) (fun values -> V.VVariant (name, values)) in
+      Env.add name (V.VClosure clo) env
+   in
+   let env = List.fold_right variant_extend body env in
+   process_toplevel env rest *)
 
-let rec pp_value v = 
-    let pp_value_list values sep = values |> List.map pp_value |> String.concat sep in
-    match v with 
-    | VUnit -> "(void)"
-    | VInteger i -> Int.to_string i
-    | VString s -> Printf.sprintf "%s%s%s" {|"|} s {|"|} 
-    | VFloat f -> Float.to_string f 
-    | VBool b -> Bool.to_string b
-    | VClosure _clo -> "<fun>" (* unfortunately, we can't inspect _clo *)
-    | VRecord (name, fields) ->
-        let fields_pp = 
-            fields  
-            |> List.map (fun (name, value) -> Printf.sprintf " %s: %s" (FieldName.to_string name) (pp_value value))
-            |> String.concat ","
-        in
-        Printf.sprintf "%s {%s }" (DataName.to_string name) fields_pp 
+let process_toplevel = process_toplevel Env.empty
 
-    | VVariant (name, []) -> VarName.to_string name
-    | VVariant (name, values) -> Printf.sprintf "%s (%s)" (VarName.to_string name) (pp_value_list values ", ")
-    | VTuple (values) -> Printf.sprintf "(%s)" (pp_value_list values ", ")
-*)

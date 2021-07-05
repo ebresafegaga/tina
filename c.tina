@@ -1,8 +1,9 @@
 
 
+((fn (a) fn (b) b) (10)) (let x = 11; x)
+
 handle (let v = do Add (5, 6);
-        let b = do Add (2, 2);
-        v + b) {
-    return x -> x, 
-    Add (a, b) k -> k (a-b)
+       v) {
+    return x -> x,
+    Add (a, b) k -> 10
 }

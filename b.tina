@@ -5,7 +5,7 @@ handle (let y = do N ("ogaga", 20);
 	"hello " + y + " you are " + b + " years old ") {
    return x -> x,
    N (a, b) k -> k (a),
-   S () k -> k ("some")
+   S () k -> k (20)
 }
 
 
@@ -13,9 +13,10 @@ handle (let a = do Number ();
         let b = do Number ();
 	a +b ) {
 	return a -> a,
-	Number () k -> let x = k (1);
-	               let y = k (2);
-		       fn (ks) x + y
+	Number () k ->
+	       let c = k (10);
+	       let d = k (20);
+	       c
 }
 
 
@@ -55,3 +56,21 @@ handle (handle (handle do N () {
   return z -> z,
   N () k -> k ("fuck yeah")
 }
+
+
+def b = handle do Read () {
+       return x -> x,
+       Read () k ->
+         let r = k (13);
+	 let s = k (12);
+	 let b = (fn (xs) xs);
+	 "ogaga"	 
+}
+
+
+
+datatype p = { claim a String, claim b Nat}
+
+def v = p { a: "og", b: 10 }
+
+let p = v; p.b
