@@ -107,12 +107,17 @@ let rec subst value variable e =
     A.Handle (loc, s expr, clauses)
 
 let subst_list subs expr = List.fold_right (fun (x, v) e -> subst x v e) subs expr
-
+ 
 let rec eval env = function
   | A.Variable (_loc, name) -> (
+      let e = env |> Env.to_seq |> List.of_seq in
+      let env_str = A.pp_list e (fun (n, v) -> Printf.sprintf "%s=%s" (VarName.to_string n) (pp_value v)) in
       match Env.lookup name env with 
       | Some x -> Ok x 
-      | None -> Error (Printf.sprintf "Unbound Variable %s" (VarName.to_string name)))
+      | None ->
+        print_string "in the enviroment ";
+        print_endline env_str; 
+        Error (Printf.sprintf "Unbound Variable %s" (VarName.to_string name)))
   | A.LitUnit _loc -> Ok VUnit 
   | A.LitInteger (_loc, i) -> Ok (VInteger i)
   | A.LitBool (_loc, b) -> Ok (VBool b)
@@ -176,7 +181,12 @@ and apply env operator operands =
     print_endline "got here";
     (* ensure length operands = length vars *)
     let sub = List.combine operands vars in
-    eval env (subst_list sub body)
+    let expr = subst_list sub body in
+    Printf.printf "after substitution [%s]%s, we have %s \n"
+      (A.pp_list sub (fun (e, n) -> Printf.sprintf "%s -> %s" (A.pp_expression e) (VarName.to_string n)))
+      (A.pp_expression body)
+      (A.pp_expression expr);
+    eval env expr
   | Ok _ -> Error (Printf.sprintf "This expression is not a function, so it can't be applied")
   | Error s -> Error s
 
@@ -187,12 +197,9 @@ let rec process_toplevel env = function
   | A.Claim (_loc, _, _) :: rest -> process_toplevel env rest 
   | A.Def (_loc, name, body) :: rest ->
     (match eval env body with 
-     | Ok (VClosure (env_me, names, body) as f) ->
-       print_endline "evaluating closure";
-       let _env_me = Env.add name f env_me in
-       let clo = VClosure (env_me, names, body) in
-       let env_global = Env.add name clo env in
-       process_toplevel env_global rest
+     | Ok (VClosure (_env, _names, _body) as f) ->
+       let env = Env.add name f env in
+       process_toplevel env rest
      | Ok value ->
        let env_global = Env.add name value env in
        process_toplevel env_global rest

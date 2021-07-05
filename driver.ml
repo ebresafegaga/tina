@@ -9,7 +9,7 @@ let () =
     |> open_in
     |> Lexing.from_channel
     |> P.parse
-    (* |> P.sc_toplevel *)
+    (* |> P.sc_toplevel*)
   in
   temp
   (* |> Desugar.desugar_toplevel *)
