@@ -1,4 +1,2 @@
 
-def omega = fn (x) x (x)
-
-omega (omega)
+let omega = (fn (x) x (x)); omega (omega)
