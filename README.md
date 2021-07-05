@@ -1,9 +1,9 @@
 
-## Tina, an educational programming language with *abilities*.
+## Tina, a programming language with *abilities*.
 
 ![Build](https://github.com/ebresafegaga/tina/actions/workflows/test.yml/badge.svg)
 
-Abilities are just *algebric effects*
+Abilities are just *algebraic effects*
 
 ### Things to fix
 
