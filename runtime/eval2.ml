@@ -5,50 +5,6 @@ open Errors
     
 module A = Ast
 
-(* Enviroment mangement *)
-module type S = sig 
-    include Map.S
-    val lookup : key -> 'a t -> 'a option
-end
-
-module Env : S with type key := VarName.t = struct 
-    include Map.Make (VarName)
-    let lookup = find_opt
-end
-  
-type value =
-  | VUnit
-  | VInteger of int
-  | VString of string
-  | VFloat of float
-  | VBool of bool
-  | VTuple of value list
-  | VClosure of env * VarName.t list * Ast.expression
-  | VRecord of DataName.t * (FieldName.t * value) list 
-  | VVariant of VarName.t * value list
-
-and env = value Env.t
-
-let rec pp_value v = 
-    let pp_value_list values sep = values |> List.map pp_value |> String.concat sep in
-    match v with 
-    | VUnit -> "(void)"
-    | VInteger i -> Int.to_string i
-    | VString s -> Printf.sprintf "%s%s%s" {|"|} s {|"|} 
-    | VFloat f -> Float.to_string f 
-    | VBool b -> Bool.to_string b
-    | VClosure _ -> "<fun>" (* we can't inspect the body of the closure if we like *)
-    | VRecord (name, fields) ->
-        let fields_pp = 
-            fields  
-            |> List.map (fun (name, value) -> Printf.sprintf " %s: %s" (FieldName.to_string name) (pp_value value))
-            |> String.concat ","
-        in
-        Printf.sprintf "%s {%s }" (DataName.to_string name) fields_pp
-    | VVariant (name, []) -> VarName.to_string name
-    | VVariant (name, values) -> Printf.sprintf "%s (%s)" (VarName.to_string name) (pp_value_list values ", ")
-    | VTuple (values) -> Printf.sprintf "(%s)" (pp_value_list values ", ")
-
 let rec pat_freevars = function
   | A.PVariable v -> [v]
   | A.PInteger _ | A.PString _
@@ -117,11 +73,11 @@ let rec subst value variable e =
 
 let subst_list subs expr = List.fold_right (fun (x, v) e -> subst x v e) subs expr
 
-let print_env env =
+(* let print_env env =
   let e = env |> Env.to_seq |> List.of_seq in
   let env_str = A.pp_list e (fun (n, v) -> Printf.sprintf "%s=%s" (VarName.to_string n) (pp_value v)) in
   print_string "in the enviroment ";
-  print_endline env_str
+   print_endline env_str *)
 
 exception PatternFailure of string
 

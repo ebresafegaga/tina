@@ -9,10 +9,10 @@ let () =
     |> open_in
     |> Lexing.from_channel
     |> P.parse
-    (* |> P.sc_toplevel *)
+    |> P.sc_toplevel
   in
   temp
-  (* |> Desugar.desugar_toplevel *)
+  |> Desugar.desugar_toplevel
   (* |> List.map (fun expr ->
       expr
       |> Ast.pp_toplevel
