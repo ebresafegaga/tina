@@ -1,6 +1,6 @@
 (executable
  (name driver)
- (flags -ccopt -static)
+ ;; (flags -ccopt -static)
  (modes byte exe)
  (libraries utility syntax parser runtime))
 
