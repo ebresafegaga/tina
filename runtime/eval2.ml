@@ -49,6 +49,24 @@ let rec pp_value v =
     | VVariant (name, values) -> Printf.sprintf "%s (%s)" (VarName.to_string name) (pp_value_list values ", ")
     | VTuple (values) -> Printf.sprintf "(%s)" (pp_value_list values ", ")
 
+let rec pat_freevars = function
+  | A.PVariable v -> [v]
+  | A.PInteger _ | A.PString _
+  | A.PBool _ -> []
+  | A.PTuple pats ->
+    pats
+    |> List.map pat_freevars
+    |> List.concat
+  | A.PVariant (_, pats) ->
+    pats
+    |> List.map pat_freevars
+    |> List.concat
+  | A.PRecord (_, pats) ->
+    pats
+    |> List.map snd
+    |> List.map pat_freevars
+    |> List.concat
+
 (* expression[value/variable]*)
 let rec subst value variable e =
   let s = subst value variable in 
@@ -59,16 +77,32 @@ let rec subst value variable e =
   | A.LitString _ | A.LitTodo _ -> e
   | A.Annotated (loc, e, ty) -> A.Annotated (loc, s e, ty)
   | A.If (loc, p, pt, pf) -> A.If (loc, s p, s pt, s pf)
-  | A.Let (loc, pat, expr, body) -> A.Let (loc, pat, s expr, s body)
+
+  | A.Let (loc, pat, expr, body) ->
+    let free = pat_freevars pat in
+    let mem = List.mem variable free in
+    if mem then
+      A.Let (loc, pat, s expr, body) (* lexical scoping! *)
+    else
+      A.Let (loc, pat, s expr, s body)
+
   | A.Fn (loc, names, body) -> A.Fn (loc, names, s body)
   | A.Application (loc, operator, operands) -> A.Application (loc, s operator, List.map s operands)
   | A.Record (loc, name, body) ->
     let body = List.map (fun (fn, e) -> (fn, s e)) body in
     A.Record (loc, name, body)
   | A.RecordIndex (loc, record, field) -> A.RecordIndex (loc, s record, field)
+
   | A.Case (loc, expr, cases) ->
-    let cases = cases |> List.map (fun (p, e) -> (p, s e)) in
+    let cases =
+      cases
+      |> List.map (fun (pat, e) ->
+          let free = pat_freevars pat in
+          let mem = List.mem variable free in
+          if mem then (pat, e) else (pat, s e)) (* again, lexical scoping *)
+    in
     A.Case (loc, s expr, cases)
+
   | A.Tuple (loc, exprs) -> A.Tuple (loc, List.map s exprs)
   | A.Plain e -> s e
   | A.Sequence (loc, e1, e2) -> A.Sequence (loc, s e1, s e2)
@@ -206,25 +240,31 @@ and pattern_binder pattern value =
     raise @@ PatternFailure msg
   | pattern, expression -> pattern_binder pattern (eval expression)
 
-(*
-let rec process_toplevel env = function
+let rec subst_toplevel names = function
+  | A.Def (loc, name, body) :: rest ->
+    let names' = (body, name) :: names in
+    A.Def (loc, name, subst_list names body) :: subst_toplevel names' rest 
+  | A.Expression e :: rest ->
+    A.Expression (subst_list names e) :: subst_toplevel names rest
+
+  (* trivial cases*)
   | [] -> []
-  | A.Claim (_loc, _, _) :: rest -> process_toplevel env rest 
+  | A.Claim _ as c :: rest -> c :: subst_toplevel names rest
+  | A.RecordDef _ as rd :: rest -> rd :: subst_toplevel names rest
+  | A.AbilityDef _ as ad :: rest -> ad :: subst_toplevel names rest
+  | A.VariantDef _ as vd  :: rest -> vd :: subst_toplevel names rest
+
+let rec process_toplevel= function
+  | [] -> []
+  | A.Claim (_loc, _, _) :: rest -> process_toplevel rest 
   | A.Def (_loc, name, body) :: rest ->
-    (match eval env body with 
-     | Ok (VClosure (_env, _names, _body) as f) ->
-       let env = Env.add name f env in
-       process_toplevel env rest
-     | Ok value ->
-       let env_global = Env.add name value env in
-       process_toplevel env_global rest
-     | Error s -> Printf.sprintf "Error: %s" s :: process_toplevel env rest)
+    let env = [body, name] in
+    let tops = subst_toplevel env rest in
+    process_toplevel tops 
   | A.Expression e :: rest -> 
-    (match eval env e with 
-     | Ok value -> (pp_value value) :: process_toplevel env rest
-     | Error s -> Printf.sprintf "Error: %s" s :: process_toplevel env rest)
-  | A.RecordDef (_loc, _, _) :: rest -> process_toplevel env rest
-  | A.AbilityDef _ :: rest -> process_toplevel env rest  (* do nothing for now *)
+    A.pp_expression e :: process_toplevel rest  
+  | A.RecordDef (_loc, _, _) :: rest -> process_toplevel  rest
+  | A.AbilityDef _ :: rest -> process_toplevel rest  (* do nothing for now *)
   | A.VariantDef (_loc, _name, _body) :: _rest -> failwith "variants not yet implemented"
 (* | A.VariantDef (_loc, _name, body) :: rest ->
    let variant_extend (name, l) env =
@@ -235,8 +275,5 @@ let rec process_toplevel env = function
       Env.add name (V.VClosure clo) env
    in
    let env = List.fold_right variant_extend body env in
-   process_toplevel env rest *)
-
-let process_toplevel = process_toplevel Env.empty
-*)
+   process_toplevel env rest  *)
 
