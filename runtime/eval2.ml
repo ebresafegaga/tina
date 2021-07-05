@@ -258,11 +258,11 @@ let rec process_toplevel= function
   | [] -> []
   | A.Claim (_loc, _, _) :: rest -> process_toplevel rest 
   | A.Def (_loc, name, body) :: rest ->
-    let env = [body, name] in
+    let env = [eval body, name] in
     let tops = subst_toplevel env rest in
     process_toplevel tops 
   | A.Expression e :: rest -> 
-    A.pp_expression e :: process_toplevel rest  
+    A.pp_expression (eval e) :: process_toplevel rest  
   | A.RecordDef (_loc, _, _) :: rest -> process_toplevel  rest
   | A.AbilityDef _ :: rest -> process_toplevel rest  (* do nothing for now *)
   | A.VariantDef (_loc, _name, _body) :: _rest -> failwith "variants not yet implemented"

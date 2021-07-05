@@ -1,2 +1,15 @@
 
-2
+
+def name = 12
+
+name
+
+def tuple (a, b) = (a, b)
+
+def id (x) = x
+
+tuple ("ogaga", name)
+
+id (10)
+
+if true then 10 else "no"
