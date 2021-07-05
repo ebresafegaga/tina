@@ -42,7 +42,9 @@ let rec subst value variable e =
     else
       A.Let (loc, pat, s expr, s body)
 
-  | A.Fn (loc, names, body) -> A.Fn (loc, names, s body)
+  | A.Fn (loc, names, body) ->
+    let mem = List.mem variable names in
+    if mem then A.Fn (loc, names, body) else A.Fn (loc, names, s body)
   | A.Application (loc, operator, operands) -> A.Application (loc, s operator, List.map s operands)
   | A.Record (loc, name, body) ->
     let body = List.map (fun (fn, e) -> (fn, s e)) body in
@@ -126,7 +128,7 @@ let rec eval = function
 
   | A.Application (_loc, A.Fn (_, vars, body), args) -> eval @@ subst_list (List.combine args vars) body
   | A.Application (_loc, f, _args) when is_value f -> 
-    Errors.runtime @@ Printf.sprintf "this value is not a function so it can't be applied"
+    Errors.runtime @@ Printf.sprintf "this value %s is not a function so it can't be applied" (A.pp_expression f)
   | A.Application (loc, f, args) -> eval @@ A.Application (loc, eval f, args)
 
   | A.Record (loc, name, body) -> A.Record (loc, name, body)

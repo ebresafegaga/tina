@@ -1,0 +1,17 @@
+
+
+datatype person = { claim name String, claim age Nat }
+
+def e = person {name: "ogag", age:12 }
+
+case (e) {
+   person {name: e, age:a } -> (e, a)
+}
+
+def k = fn (a) fn (e) a
+
+def s = fn (esv) fn (es) fn (e) esv (e) (es (e))
+
+def i = s (k) (k)
+
+i (1000)
