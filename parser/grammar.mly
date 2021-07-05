@@ -4,15 +4,23 @@
     open Naming
 
     let empty_variants : VarName.t list ref = ref []
+    let non_empty_variants : VarName.t list ref = ref []
     let collect_empty_variants = function 
         | VariantDef (_loc, _name, body) -> 
-            let result = 
+            let mt, non_mt = 
                 body 
-                |> List.filter_map (function (name, []) -> Some name | _ -> None)
+                |> List.partition_map (function name, [] -> Either.Left name | name, _ -> Either.Right name)
             in 
-            empty_variants := result @ !empty_variants
+            empty_variants := mt @ !empty_variants;
+	    non_empty_variants := non_mt @ !non_empty_variants
         | _ -> ()
     let is_empty_variant x = List.mem x !empty_variants
+    let is_non_empty_variant x = List.mem x !non_empty_variants
+
+   let is_variable = function
+      | Variable (_, var) -> Some var
+      | _ -> None
+
 %}
 
 %token <int> INT
@@ -168,7 +176,11 @@ pattern:
       { PVariant (VarName.of_string variant_name, body) }
 
 expression: 
-    | name = ID { Variable ($loc, VarName.of_string name) }
+    | name = ID
+    { if is_empty_variant (VarName.of_string name) then
+	  Variant ($loc, DataName.of_string name, [])
+      else
+	  Variable ($loc, VarName.of_string name) }
     | LPAREN; RPAREN { LitUnit ($loc) }
 
     | value = INT { LitInteger ($loc, value) }
@@ -186,8 +198,15 @@ expression:
       { Fn ($loc, args, body) }
     | THE; t = ty; e = expression; 
       { Annotated ($loc, e, t) }
-    | operand = expression; operator = expr_list;
-     { Application ($loc, operand, operator) }
+    | f = expression; args = expr_list;
+    { match is_variable f with
+      | Some var -> 
+	 if is_non_empty_variant var then
+	     Variant ($loc, DataName.of_string (VarName.to_string var), args)
+	 else
+	     Application ($loc, f, args)
+      | None ->
+	  Application ($loc, f, args) }
     | e1 = expression; SEMICOLON; e2 = expression 
       { Sequence ($loc, e1, e2) }
     | record = expression; DOT; field = ID;

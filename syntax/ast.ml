@@ -54,8 +54,8 @@ type expression =
   | Record of Loc.t * DataName.t * (FieldName.t * expression) list
   | RecordIndex of Loc.t * expression * FieldName.t
   | Tuple of Loc.t * expression list
-  (* | Variant of Loc.t * DataName.t * expression list *)
-(* list? tuples? *)
+  | Variant of Loc.t * DataName.t * expression list
+  (* list? tuples? *)
   | Do of Loc.t * VarName.t * expression list
   | Handle of Loc.t * expression * handler_clauses list (* must always have a return clause *)
   | Plain of expression (* wraps a an expression to seperate expression from computations *)
@@ -73,6 +73,8 @@ type toplevel =
   | Expression of expression
 
 (* pretty printing facilities for the the ast *)
+
+let a  = List.partition
 
 let pp_list es f = es |> List.map f |> String.concat ", "
 
@@ -158,6 +160,9 @@ let rec pp_expression = function
     Printf.sprintf "%s.%s"
       (pp_expression expr)
       (FieldName.to_string name)
+  | Variant (_loc, name, []) -> DataName.to_string name
+  | Variant (_loc, name, args) ->
+    Printf.sprintf "%s (%s)" (DataName.to_string name) (pp_list args pp_expression)
   | Plain (e) -> Printf.sprintf "Plain (%s)" (pp_expression e)
   | Do _ | Handle _ -> ""
 
@@ -172,4 +177,4 @@ let pp_toplevel = function
       (VarName.to_string name)
       (pp_expression expr)
   | Expression expr -> pp_expression expr
-  | VariantDef _ | RecordDef _ -> "<def>" (* for now *)
+  | VariantDef _ | RecordDef _ | AbilityDef _ -> "<def>" (* for now *)

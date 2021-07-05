@@ -6,9 +6,9 @@ open Errors
 module A = Ast
 
 let rec pat_freevars = function
-  | A.PVariable v -> [v]
   | A.PInteger _ | A.PString _
   | A.PBool _ -> []
+  | A.PVariable v -> [v]
   | A.PTuple pats ->
     pats
     |> List.map pat_freevars
@@ -44,7 +44,8 @@ let rec subst value variable e =
 
   | A.Fn (loc, names, body) ->
     let mem = List.mem variable names in
-    if mem then A.Fn (loc, names, body) else A.Fn (loc, names, s body)
+    if mem then A.Fn (loc, names, body) else A.Fn (loc, names, s body) (* lexical scoping *)
+        
   | A.Application (loc, operator, operands) -> A.Application (loc, s operator, List.map s operands)
   | A.Record (loc, name, body) ->
     let body = List.map (fun (fn, e) -> (fn, s e)) body in
@@ -62,6 +63,7 @@ let rec subst value variable e =
     A.Case (loc, s expr, cases)
 
   | A.Tuple (loc, exprs) -> A.Tuple (loc, List.map s exprs)
+  | A.Variant (loc, name, exprs) -> A.Variant (loc, name, List.map s exprs)
   | A.Plain e -> s e
   | A.Sequence (loc, e1, e2) -> A.Sequence (loc, s e1, s e2)
   | A.Do (loc, name, exprs) -> A.Do (loc, name, List.map s exprs)
@@ -101,7 +103,8 @@ let rec is_value = function
   | A.Tuple _ -> true 
   | A.Plain e -> is_value e
   | A.Sequence _ -> false 
-  | A.LitTodo _ -> true 
+  | A.LitTodo _ -> true
+  | A.Variant _ -> true
   | A.Do _ | A.Handle _ -> failwith "should not be evaluated by me"
 
 let rec eval = function
@@ -138,10 +141,14 @@ let rec eval = function
       | Some value -> value 
       | None ->
         Errors.runtime @@
-        Printf.sprintf "That field name %s is not defied on the record"
+        Printf.sprintf "That field name %s is not defined on the record"
           (FieldName.to_string field))
   | A.RecordIndex (_loc, record, _field) when is_value record -> Errors.runtime "Expected a record at an index expression"
   | A.RecordIndex (loc, record, field) -> eval @@  A.RecordIndex (loc, eval record, field)
+
+
+  | A.Variant (loc, name, args) when List.for_all is_value args -> A.Variant (loc, name, args)
+  | A.Variant (loc, name, args) -> A.Variant (loc, name, List.map eval args)
 
   | A.Case (_loc, expr, cases) -> 
 
@@ -223,7 +230,7 @@ let rec process_toplevel= function
     A.pp_expression (eval e) :: process_toplevel rest  
   | A.RecordDef (_loc, _, _) :: rest -> process_toplevel  rest
   | A.AbilityDef _ :: rest -> process_toplevel rest  (* do nothing for now *)
-  | A.VariantDef (_loc, _name, _body) :: _rest -> failwith "variants not yet implemented"
+  | A.VariantDef (_loc, _name, _body) :: rest -> process_toplevel rest
 (* | A.VariantDef (_loc, _name, body) :: rest ->
    let variant_extend (name, l) env =
     match l with 

@@ -5,4 +5,10 @@ handle (handle do N () {
 }) {
    return x -> x,
    N () k -> k ("thank you God")
-}   
+}
+
+datatype e = Og | Ogaga (Nat, Nat)
+
+Og
+
+Ogaga (45, 45)

@@ -125,6 +125,9 @@ let rec sc =
   | A.Tuple (loc, es) ->
     let tuple = A.Tuple (loc, List.map sc es) in
     plain tuple
+  | A.Variant (loc, name, es) ->
+    let variant = A.Variant (loc, name, List.map sc es) in
+    plain variant
   
 and sc_clauses = function
   | A.Return (name, expr) -> A.Return (name, sc expr)
