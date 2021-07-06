@@ -9,7 +9,7 @@ let () =
   |> Lexing.from_channel
   |> P.parse
   |> P.sc_toplevel
-  |> Desugar.desugar_toplevel
+  |> DesugarEffect.desugar_toplevel
   (* |> List.map (fun expr ->
       expr
       |> Ast.pp_toplevel

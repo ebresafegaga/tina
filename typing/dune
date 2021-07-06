@@ -1,3 +1,3 @@
 (library
  (name typing)
- (libraries utility syntax))
+ (libraries utility syntax errors))

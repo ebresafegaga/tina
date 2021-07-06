@@ -3,7 +3,7 @@ open Naming
 open Utility
 open Errors
     
-module A = Ast
+module A = DesugarEffect
 
 let rec pat_freevars = function
   | A.PInteger _ | A.PString _
@@ -64,8 +64,8 @@ let rec subst value variable e =
 
   | A.Tuple (loc, exprs) -> A.Tuple (loc, List.map s exprs)
   | A.Variant (loc, name, exprs) -> A.Variant (loc, name, List.map s exprs)
-  | A.Plain e -> s e
-  | A.Sequence (loc, e1, e2) -> A.Sequence (loc, s e1, s e2)
+  | A.Sequence (loc, e1, e2) -> A.Sequence (loc, s e1, s e2)                                  
+  (* | A.Plain e -> s e
   | A.Do (loc, name, exprs) -> A.Do (loc, name, List.map s exprs)
   | A.Handle (loc, expr, clauses) ->
     let f = function
@@ -73,7 +73,7 @@ let rec subst value variable e =
       | A.Operation (name, args, kvar, body) -> A.Operation (name, args, kvar, s body)
     in
     let clauses = clauses |> List.map f in
-    A.Handle (loc, s expr, clauses)
+     A.Handle (loc, s expr, clauses) *)
 
 let subst_list subs expr = List.fold_right (fun (x, v) e -> subst x v e) subs expr
 
@@ -101,11 +101,11 @@ let rec is_value = function
   | A.RecordIndex _ -> false 
   | A.Case _ -> false
   | A.Tuple _ -> true 
-  | A.Plain e -> is_value e
+  (* | A.Plain e -> is_value e *)
   | A.Sequence _ -> false 
   | A.LitTodo _ -> true
   | A.Variant _ -> true
-  | A.Do _ | A.Handle _ -> failwith "should not be evaluated by me"
+(* | A.Do _ | A.Handle _ -> failwith "should not be evaluated by me" *)
 
 let rec eval = function
   | A.Variable (_loc, name) ->
@@ -169,10 +169,10 @@ let rec eval = function
     eval_cases "" cases
 
   | A.Tuple (loc, exprs) ->  A.Tuple (loc, exprs)
-  | A.Plain e -> eval e
+  (* | A.Plain e -> eval e *)
   | A.Sequence (_loc, _e1, _e2) -> Errors.runtime "Sequence expressions not yet implemented"
   | A.LitTodo _loc -> Errors.runtime "Not yet supported"
-  | A.Do _ | A.Handle _ -> Errors.runtime "effects are not supported by this evaluator"
+(* | A.Do _ | A.Handle _ -> Errors.runtime "effects are not supported by this evaluator" *)
 
 and pattern_binder pattern value = 
   let length_check l1 l2 =
@@ -223,7 +223,7 @@ let rec subst_toplevel names = function
   | A.AbilityDef _ as ad :: rest -> ad :: subst_toplevel names rest
   | A.VariantDef _ as vd  :: rest -> vd :: subst_toplevel names rest
 
-let rec process_toplevel= function
+let rec process_toplevel = function
   | [] -> []
   | A.Claim (_loc, _, _) :: rest -> process_toplevel rest 
   | A.Def (_loc, name, body) :: rest ->
