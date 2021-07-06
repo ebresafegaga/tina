@@ -137,14 +137,18 @@ and return expr =
   let open Syntax in
   let open Naming in
   let d = Loc.dummy in
-  let x = VarName.of_string "___x" in
+  let k = VarName.of_string "___k___" in
+  let ks' = VarName.of_string "___ks'___" in
   let ks = VarName.of_string "___ks" in
   match expr with
   | A.Let (l, p, body, expr) -> A.Let (l, p,  return body, return expr)
   | A.Do _ | A.Handle _ | A.Application _ -> expr
   | _ ->
     A.Fn (d, [ks],
-        A.Let (d, A.PVariable x, expr, A.Variable (d, x)))
+          A.Case (d, A.Variable (d, ks),
+                  [A.PTuple [A.PVariable k; A.PVariable ks'],
+                   A.Application (d, A.Variable (d, k), [expr; A.Variable (d, ks')])]))
+          (* A.Let (d, A.PVariable x, expr, A.Variable (d, x)) *)
 
 
 let sc_toplevel l =

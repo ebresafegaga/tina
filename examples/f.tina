@@ -4,7 +4,11 @@ handle (handle do N () {
    return y -> y,
 }) {
    return x -> x,
-   N () k -> k ("thank you God")
+   N () k ->
+     let name = "tinu";
+     let c = "afoke";
+     let d = k (1);
+     d
 }
 
 datatype e = Og | Ogaga (Nat, Nat)

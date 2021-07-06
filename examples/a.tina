@@ -15,5 +15,5 @@ handle (handle (let a = do Get (); a) {
 }) {
   return any -> any,
   Id (v) k -> k (v),
-  Add (a, b) k -> k (a + b)
+  Add (a, b) k -> k ((a, b))
 }

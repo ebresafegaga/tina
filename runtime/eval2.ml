@@ -129,6 +129,10 @@ let rec eval = function
     eval (subst_list sub body)
   | A.Fn (loc, names, body) -> A.Fn (loc, names, body)
 
+  | A.Application (_loc, A.Fn (_, vars, _body), args) when List.length args <> List.length vars ->
+    let expected, got = List.length vars, List.length args in
+    let msg = Printf.sprintf "This function expected %d argument(s), but got %d" expected got in
+    Errors.runtime msg
   | A.Application (_loc, A.Fn (_, vars, body), args) -> eval @@ subst_list (List.combine args vars) body
   | A.Application (_loc, f, _args) when is_value f -> 
     Errors.runtime @@ Printf.sprintf "this value %s is not a function so it can't be applied" (A.pp_expression f)
