@@ -8,7 +8,16 @@ handle (handle do N () {
      let name = "tinu";
      let c = "afoke";
      let d = k (1);
-     d
+     
+}
+
+def f (x) = do Comp (x)
+
+def g (x) = x
+
+handle do Comp ((void)) {
+       return c -> c,
+       Comp (v) k -> g ("a mil")
 }
 
 datatype e = Og | Ogaga (Nat, Nat)

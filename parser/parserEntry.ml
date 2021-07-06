@@ -133,6 +133,7 @@ and sc_clauses = function
   | A.Return (name, expr) -> A.Return (name, sc expr)
   | A.Operation (name, args, kvar, expr) -> A.Operation (name, args, kvar, return expr)
 
+(* implicitly lift *values* into *computations* *)
 and return expr =
   let open Syntax in
   let open Naming in
@@ -142,6 +143,7 @@ and return expr =
   let ks = VarName.of_string "___ks" in
   match expr with
   | A.Let (l, p, body, expr) -> A.Let (l, p,  return body, return expr)
+  | A.Fn (d, vars, body) -> A.Fn (d, vars, return body)
   | A.Do _ | A.Handle _ | A.Application _ -> expr
   | _ ->
     A.Fn (d, [ks],
@@ -149,7 +151,6 @@ and return expr =
                   [A.PTuple [A.PVariable k; A.PVariable ks'],
                    A.Application (d, A.Variable (d, k), [expr; A.Variable (d, ks')])]))
           (* A.Let (d, A.PVariable x, expr, A.Variable (d, x)) *)
-
 
 let sc_toplevel l =
   let f = function
@@ -187,5 +188,6 @@ let pp_token =
   | G.TY_INT -> "TYINT" | G.TY_FLOAT -> "TYFLOAT"
   | G.TY_STRING -> "TYSTRING" | G.TK_TODO -> "TKTODO"
   | G.THE -> "THE" | G.DOT -> "DOT" | G.EOF -> "EOF"
+  | G.HANDLE -> "HANDLE" | G.DO -> "DO" | G.RETURN -> "RETURN"
 
 (* i don't apply sc to the arguments of do and the expression body of handler clauses *)

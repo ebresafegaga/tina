@@ -72,11 +72,14 @@ let rec get_operation_clauses l =
    - we need to re-write the evaluator to explicity its closures, and 
      the evaluator should be aware of this `g` transform
    - there is probably a bug with the handler case in this `g` transform
+
+  also:
+   - a handler returns a computation
 *)
 let rec g term =
   (*  Printf.printf "%s" (A.pp_expression term); *)
   match term with
-  (* | A.Fn (loc, vars, body) -> A.Fn (loc, vars, g body)*)
+  | A.Fn (loc, vars, body) -> A.Fn (loc, vars, g body)
   | A.Plain e ->
     (* print_endline "i got here";*)
     let ks = fresh_var "ks" in
