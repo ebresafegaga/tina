@@ -216,7 +216,7 @@ let rec subst_toplevel names = function
   | A.Expression e :: rest ->
     A.Expression (subst_list names e) :: subst_toplevel names rest
 
-  (* trivial cases*)
+  (* trivial cases *)
   | [] -> []
   | A.Claim _ as c :: rest -> c :: subst_toplevel names rest
   | A.RecordDef _ as rd :: rest -> rd :: subst_toplevel names rest

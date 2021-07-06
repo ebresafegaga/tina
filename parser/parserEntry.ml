@@ -133,14 +133,16 @@ and sc_clauses = function
   | A.Return (name, expr) -> A.Return (name, sc expr)
   | A.Operation (name, args, kvar, expr) -> A.Operation (name, args, kvar, return expr)
 
-(* implicitly lift *values* into *computations* *)
+(* implicitly lift *values* into *computations* 
+   this is not available to the users just to keep 
+   things simple *)
 and return expr =
   let open Syntax in
   let open Naming in
   let d = Loc.dummy in
-  let k = VarName.of_string "___k___" in
+  let k = VarName.of_string "___k___" in (* i just put the the wierdest variable name i could think of *)
   let ks' = VarName.of_string "___ks'___" in
-  let ks = VarName.of_string "___ks" in
+  let ks = VarName.of_string "___ks___" in
   match expr with
   | A.Let (l, p, body, expr) -> A.Let (l, p,  return body, return expr)
   | A.Fn (d, vars, body) -> A.Fn (d, vars, return body)
