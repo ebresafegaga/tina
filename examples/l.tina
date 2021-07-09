@@ -1,0 +1,10 @@
+
+
+
+handle (let a = do Number ();
+        let b = do Number ();
+	(a, b) ) {
+	return a -> "nothing",
+	Number () k ->  k (1)
+}
+

@@ -31,6 +31,7 @@ type t =
   | RecordIndex of Loc.t * t * FieldName.t
   | Tuple of Loc.t * t list
   | Variant of Loc.t * DataName.t * t list
+  | Absurd of string 
 
 type toplevel =
   | Claim of Loc.t * VarName.t * A.ty
@@ -39,6 +40,49 @@ type toplevel =
   | RecordDef of Loc.t * DataName.t * (FieldName.t * A.ty) list
   | AbilityDef of Loc.t * VarName.t * A.ty list
   | Expression of t
+
+
+let rec pat_to_t = function
+  | A.PInteger i -> PInteger i
+  | A.PString s -> PString s
+  | A.PBool b -> PBool b
+  | A.PVariable v -> PVariable v
+  | A.PTuple pats ->
+    let pats = List.map pat_to_t pats in
+    PTuple pats
+  | A.PVariant (name, pats) ->
+    let pats = List.map pat_to_t pats in
+    PVariant (name, pats)
+  | A.PRecord (name, pats) ->
+    let pats = List.map (fun (n, p) -> n, pat_to_t p) pats in
+    PRecord (name, pats)
+
+let rec expr_to_t = function
+  | A.Variable (loc, name) -> Variable (loc, name)
+  | A.LitUnit loc -> LitUnit loc
+  | A.LitInteger (loc, i) -> LitInteger (loc, i)
+  | A.LitBool (loc, b) -> LitBool (loc, b)
+  | A.LitFloat (loc, f) -> LitFloat (loc, f)
+  | A.LitString (loc, s) -> LitString (loc, s)
+  | A.Annotated (loc, e, ty) -> Annotated (loc, expr_to_t e, ty) 
+  | A.If (loc, p, pt, pf) -> If (loc, expr_to_t p, expr_to_t pt, expr_to_t pf) 
+  | A.Let (loc, pat, expr, body) -> Let (loc, pat_to_t pat, expr_to_t expr, expr_to_t body)
+  | A.Fn (loc, names, body) -> Fn (loc, names, expr_to_t body)
+  | A.Application (loc, operator, operands) -> Application (loc, expr_to_t operator, List.map expr_to_t operands)
+  | A.Record (loc, name, body) ->
+    let body = List.map (fun (n, e) -> n, expr_to_t e) body in
+    Record (loc, name, body)
+  | A.RecordIndex (loc, record, field) -> RecordIndex (loc, expr_to_t record, field)
+  | A.Case (loc, expr, cases) ->
+    let cases = List.map (fun (p, e) -> pat_to_t p, expr_to_t e) cases in
+    Case (loc, expr_to_t expr, cases)
+  | A.Tuple (loc, exprs) -> Tuple (loc, List.map expr_to_t exprs)
+  | A.Plain e -> expr_to_t e
+  | A.Sequence (loc, e1, e2) -> Sequence (loc, expr_to_t e1, expr_to_t e2)
+  | A.Variant (loc, name, args) -> Variant (loc, name, List.map expr_to_t args)
+  | A.LitTodo loc -> LitTodo loc
+  | A.Absurd s -> Absurd s
+  | A.Do _ | A.Handle _ -> assert false
 
 
 let pp_list es f = es |> List.map f |> String.concat ", "
@@ -115,6 +159,8 @@ let rec pp_expression = function
   | Variant (_loc, name, []) -> DataName.to_string name
   | Variant (_loc, name, args) ->
     Printf.sprintf "%s (%s)" (DataName.to_string name) (pp_list args pp_expression)
+  | Absurd s ->
+    Printf.sprintf "absurd %s" s
 
 let pp_toplevel = function
   | Claim (_loc, name, ty) ->
@@ -187,21 +233,62 @@ let rec get_operation_clauses l =
   | A.Operation (label, vars, kvar, body) :: rest ->
     `Operation (label, vars, kvar, body) :: get_operation_clauses rest
 
-let rec g_pat = function
-  | A.PInteger i -> PInteger i
-  | A.PString s -> PString s
-  | A.PBool b -> PBool b
-  | A.PVariable v -> PVariable v
-  | A.PTuple pats ->
-    let pats = List.map g_pat pats in
-    PTuple pats
-  | A.PVariant (name, pats) ->
-    let pats = List.map g_pat pats in
-    PVariant (name, pats)
-  | A.PRecord (name, pats) ->
-    let pats = List.map (fun (n, p) -> n, g_pat p) pats in
-    PRecord (name, pats)
 
+
+(* implicitly lift *values* into *computations* 
+   this is not available to the users just to keep 
+   things simple *)
+let rec return expr =
+  (* let ret t  =
+    if is_value t then
+      return t
+    else t
+     in *)
+  let k = fresh_var "___k___" in (* i just put the the wierdest variable name i could think of *)
+  let ks' = fresh_var "___ks'___" in
+  let ks = fresh_var "___ks___" in
+  match expr with
+  | Let (l, p, body, expr) -> Let (l, p, body, expr)
+  | Fn _ -> expr
+  | Application _ -> expr
+  | _ ->
+    (* print_endline "yes"; *)
+    let e = Fn (d, [ks],
+                Case (d, Variable (d, ks),
+                      [PTuple [PVariable k; PVariable ks'],
+                       Application (d, Variable (d, k), [expr; Variable (d, ks')])]))
+    in
+    (* print_endline (pp_expression e); *)
+    e
+
+let ret t expr =
+  if A.is_value expr then
+    return t
+  else t
+
+let rec is_value = function 
+  | A.Variable _ 
+  | A.LitUnit _
+  | A.LitInteger _ 
+  | A.LitBool _
+  | A.LitFloat _
+  | A.LitString _ -> true 
+  | A.Annotated (_, e, _) -> is_value e
+  | A.If _ -> true
+  | A.Let _ -> false
+  | A.Fn _ -> true 
+  | A.Application _ -> false 
+  | A.Record _ -> true
+  | A.RecordIndex _ -> true
+  | A.Case _ -> true
+  | A.Tuple _ -> true 
+  | A.Plain e -> is_value e
+  | A.Sequence _ -> false 
+  | A.LitTodo _ -> true
+  | A.Variant _ -> true
+  | A.Absurd _ -> false (* hack *)
+  | A.Do _ | A.Handle _ -> false
+      
 (* rants: - applications, if .. then .. else .. are *computations*!  -
    in this setting, whenever we get a "should not be evaluated by me"
    error from the interpreter, we are probably using a computation as
@@ -230,19 +317,23 @@ let rec g = function
   | A.Record (loc, name, args) -> 
     let args = List.map (fun (n, e) -> n, g e) args in
     Record (loc, name, args)
+
+  (* btw this is also a computation *)
   | A.RecordIndex (loc, expr, name) -> RecordIndex (loc, g expr, name)
+
   | A.Annotated (loc, expr, ty) -> Annotated (loc, g expr, ty)
   | A.Sequence (loc, a, b) -> Sequence (loc, g a, g b)
-  | A.Fn (loc, vars, body) -> Fn (loc, vars, g body)
+  | A.Fn (loc, vars, body) -> Fn (loc, vars, ret (g body) body)
   | A.Plain e ->
-    (* print_endline "i got here";*)
-    let ks = fresh_var "ks" in
-    Fn (d,
+    (* print_endline "i got here"; *)
+    (* let ks = fresh_var "ks" in
+       Fn (d,
         [ks],
         Application
           (d,
            Application (d, first, [Variable (d, ks)]),
-           [g e; Application (d, rest, [Variable (d, ks)])]))
+           [g e; Application (d, rest, [Variable (d, ks)])])) *)
+    expr_to_t e
 
   | A.Do (_loc, label, args) ->
     let args = Tuple (d, List.map g args) in
@@ -276,32 +367,45 @@ let rec g = function
       fresh_var "ks'", fresh_var "f",
       fresh_var "ks''"
     in
-    Fn
-      (d,
-       [ks],
-       Let (d, PTuple [PVariable k; PVariable ks'], Variable (d, ks),
-            Let (d, PVariable f, Fn (d, [x; ks''],
-                                     Application (d, g body, [Application (d, cons, [Variable (d, k);
-                                                                                     Variable (d, ks'')])])),
-                 Application (d, g expr, [Application (d, cons, [Variable (d, f);
-                                                                 Variable (d, ks')])]))))       
+    let e = Fn
+        (d,
+         [ks],
+         Let (d, PTuple [PVariable k; PVariable ks'], Variable (d, ks),
+              Let (d, PVariable f, Fn (d, [x; ks''],
+                                       Application (d, return (g body), [Application (d, cons, [Variable (d, k);
+                                                                                                Variable (d, ks'')])])),
+                   Application (d, return (g expr) , [Application (d, cons, [Variable (d, f);
+                                                                             Variable (d, ks')])]))))
+    in
+    (* print_string "the let: ";
+       print_endline (pp_expression e);
+       print_endline "after let" ; *)
+    e
   | A.Handle (_loc, expr, clauses) ->
     let ks, k1, z, k2 = fresh_var "ks", fresh_var "k1", fresh_var "z", fresh_var "k2" in
     let ret =
       let `Return (name, body) = get_return_clause clauses in
       let h, ks' = fresh_var "h", fresh_var "ks'" in
+      (* print_endline "here";
+         print_endline (pp_expression (g body)); *)
       Fn
         (d,
          [name; ks],
-         Let(d, PTuple [PVariable h; PVariable ks'], Variable (d, ks),
-             Application (d, g body, [Variable (d, ks')])))
+         Let (d, PTuple [PVariable h; PVariable ks'], Variable (d, ks),
+              Application (d, ret (g body) body, [Variable (d, ks')])))
     in
     let g_clause ks clause =
       let `Operation (label, vars, kvar, body) = clause in
       let label = VarName.to_string label in
       let pvars = vars |> List.map (fun var -> PVariable var) in
       let pat = PTuple [PString label; PTuple pvars; PVariable kvar] in
-      let body = Application (d, g body, [Variable (d, ks)]) in
+      (* print_endline "here we go";
+         print_endline (pp_expression (return @@ g body)); 
+         there are some subtleties here 
+         we need to return only when we know body is a value 
+         before the transform *)
+
+      let body = Application (d, return (g body), [Variable (d, ks)]) in
       (pat, body)
     in
     let cases =
@@ -331,22 +435,24 @@ let rec g = function
         fresh_var "label", fresh_var "args",
         fresh_var "kvar"
       in
-      Fn(d, [z; k1],
-         Case (d, Variable (d, z), cases @
-                                   [PTuple [PVariable label; PVariable args; PVariable kvar],
-                                    foward (Variable (d, label), Variable (d, args), kvar) k1]))
+      Fn (d, [z; k1],
+          Case (d, Variable (d, z), cases @
+                                    [PTuple [PVariable label; PVariable args; PVariable kvar],
+                                     foward (Variable (d, label), Variable (d, args), kvar) k1]))
     in
     Fn (d, [k2], Application (d, g expr, [Application (d, cons, [ret; Application
                                                                    (d, cons, [op_clauses; Variable (d, k2)])])]))
 
   (* these are actually computation. idk for now *)
   | A.Case (loc, expr, clauses) ->
-    let clauses = List.map (fun (pat, expr) -> g_pat pat, g expr) clauses in
+    let clauses = List.map (fun (pat, expr) -> pat_to_t pat, g expr) clauses in
     Case (loc, g expr, clauses)
   | A.If (loc, p, pt, pf) -> If (loc, g p, g pt, g pf)
   | A.Application (loc, f, args) ->
     let args = List.map g args in
+    (* Printf.printf "(args: %s)" (pp_list args pp_expression); *)
     Application (loc, g f, args)
+  | A.Absurd s -> Absurd s 
   
     (* this should always be the body of a plain expression body of a handler clause *)
     (* A.Plain x what if i transform x, just like the plain case here? *)
@@ -366,29 +472,33 @@ let rec g = function
    P =  label:string, (args ...), k
 *)
 
-    let const =
-      let x, ks = fresh_var "x", fresh_var "ks" in
-      Fn (d, [x; ks], Variable (d, x))
+let const =
+  let x, ks = fresh_var "x", fresh_var "ks" in
+  Fn (d, [x; ks], Variable (d, x))
 
 let handler =
   let comp, ks = fresh_var "comp", fresh_var "ks" in
+  let l, idk1, idk2 = fresh_var "l", fresh_var "idk1", fresh_var "idk2" in
   Fn (d, [comp; ks],
-        ( LitTodo (d) ))
+      (Let (d, PTuple [PVariable l; PVariable idk1; PVariable idk2],
+            Variable (d, comp),
+           Absurd "unhandled effect")))
 
 let handler_l = Application (d, cons, [handler; nil])
 
 let handlers = Application (d, cons, [const; handler_l])
-  
+      
 let handle_comp computation =
-  Application (d, g computation, [handlers])
-
+  Application (d, ret (g computation) computation, [handlers])
 
 let desugar_toplevel l =
   let f = function
     | A.Def (loc, name, expr) -> Def (loc, name, handle_comp expr) (* this is actually wrong, the value gotten from evaluating handle_comp should be bound to name -- i've corrected it, it was `g expr` before *)
     | A.Expression (e) -> Expression (handle_comp e)
     | A.Claim (loc, name, ty) -> Claim (loc, name, ty)
-    | _ -> failwith "no yet implemented defination"
+    | A.VariantDef (loc, name, body) ->  VariantDef (loc, name, body)
+    | A.AbilityDef (loc, name, args) -> AbilityDef (loc, name, args)
+    | A.RecordDef (loc, name, body) -> RecordDef (loc, name, body)
   in
   List.map f l
 

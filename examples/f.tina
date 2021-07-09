@@ -8,7 +8,7 @@ handle (handle do N () {
      let name = "tinu";
      let c = "afoke";
      let d = k (1);
-     
+    1000
 }
 
 def f (x) = do Comp (x)

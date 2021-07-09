@@ -1,0 +1,41 @@
+
+()
+
+32.44
+
+10
+
+"abc"
+
+fn (x) x
+
+datatype person = { claim age Nat,
+                    claim name String }
+
+def p = person { age: 12, name: "ogaga" }
+
+p.name
+
+case (p) {
+   person { age: a, name: n } -> a,
+   n -> "should not be evaluated"
+}
+
+datatype student =
+   L100 | L200 | L300 | L300 |
+   L400 | Other (String)
+
+def o = Other ("masters")
+
+
+case (o) {
+   L100 -> "100 level",
+   L200 -> "200 level",
+   L300 -> "300 level",
+   L400 -> "400 level",
+   Other (s) -> s
+}
+
+def t = (1, 2)
+
+t

@@ -1,9 +1,9 @@
 open Syntax
 open Runtime
-
+    
 module P = Parser.ParserEntry
 
-let () =
+let _old () =
   Sys.argv.(1)
   |> open_in
   |> Lexing.from_channel
@@ -18,3 +18,5 @@ let () =
   |> Eval2.process_toplevel
   |> String.concat "\n"
   |> Printf.printf "%s\n"
+
+let () = Repl.run ()

@@ -67,7 +67,7 @@ let fail text buffer checkpoint =
   let message = ParserMessages.message (state checkpoint) in
   let message = E.expand (get text checkpoint) message in
   let msg = Printf.sprintf "%s at %s" message location in
-  failwith msg (* for now just failwith the message *)
+  Errors.runtime msg
   
 let parse lexbuf =
   let text = lexbuf.lex_buffer |> Bytes.to_string in
@@ -81,57 +81,59 @@ let parse lexbuf =
   let checkpoint = Grammar.Incremental.toplevel lexbuf.lex_curr_p in
   I.loop_handle succeed (fail text buffer) supplier checkpoint
 
+(* use the plain constructor on expression you want to be implicitly lifted*)
 let rec sc =
   let plain x = A.Plain x in
   function
   | A.Let (loc, name, expr, body) ->
-    A.Let (loc, name, sc expr, sc body)
+    A.Let (loc, name, expr, body)
   | A.Do (loc, name, args) ->
     A.Do (loc, name, args)
   | A.Handle (loc, expr, clauses) ->
-    A.Handle (loc, sc expr, List.map sc_clauses clauses)
+    A.Handle (loc, expr, clauses)
   | A.Plain e -> A.Plain e (* hmm *)
-  | A.LitTodo _ as t -> plain t
-  | A.LitUnit _ as u -> plain u
-  | A.LitBool _ as b -> plain b
-  | A.LitInteger _ as i -> plain i
-  | A.LitFloat _ as f -> plain f
-  | A.LitString _ as s -> plain s
-  | A.Variable  _ as v -> plain v
+  | A.LitTodo _ as t -> t
+  | A.LitUnit _ as u -> u
+  | A.LitBool _ as b ->  b
+  | A.LitInteger _ as i ->  i
+  | A.LitFloat _ as f ->  f
+  | A.LitString _ as s ->  s
+  | A.Variable  _ as v ->  v
   | A.If (loc, p, pt, pf) ->
     let iff = A.If (loc, sc p, sc pt, sc pf) in
-    plain iff
+    iff
   | A.Application (loc, rator, rand) ->
     let app = A.Application (loc, sc rator, List.map sc rand) in
-    plain app
+    app
   | A.Fn (loc, args, body) ->
-    let fn = A.Fn (loc, args, sc body) in
-    plain fn
+    let fn = A.Fn (loc, args, body) in
+    fn
   | A.Annotated (loc, e, ty) ->
     let ann = A.Annotated (loc, sc e, ty) in
-    plain ann
+    ann
   | A.Sequence (loc, a, b) ->
     let seq = A.Sequence (loc, sc a, sc b) in
-    plain seq
+    seq
   | A.Case (loc, expr, clauses) ->
     let cases = A.Case (loc, sc expr, List.map (fun (p, e) -> (p, sc e)) clauses) in
-    plain cases
+    cases
   | A.Record (loc, name, body) ->
     let record = A.Record (loc, name, List.map (fun (n, e) -> (n, sc e)) body) in
-    plain record
+    record
   | A.RecordIndex (loc, e, name) ->
     let record_index = A.RecordIndex (loc, sc e, name) in
-    plain record_index
+    record_index
   | A.Tuple (loc, es) ->
     let tuple = A.Tuple (loc, List.map sc es) in
-    plain tuple
+    tuple
   | A.Variant (loc, name, es) ->
     let variant = A.Variant (loc, name, List.map sc es) in
-    plain variant
-  
+    variant
+  | A.Absurd s -> A.Absurd s
+
 and sc_clauses = function
   | A.Return (name, expr) -> A.Return (name, sc expr)
-  | A.Operation (name, args, kvar, expr) -> A.Operation (name, args, kvar, return expr)
+  | A.Operation (name, args, kvar, expr) -> A.Operation (name, args, kvar, sc expr)
 
 (* implicitly lift *values* into *computations* 
    this is not available to the users just to keep 
@@ -140,19 +142,28 @@ and return expr =
   let open Syntax in
   let open Naming in
   let d = Loc.dummy in
-  let k = VarName.of_string "___k___" in (* i just put the the wierdest variable name i could think of *)
-  let ks' = VarName.of_string "___ks'___" in
-  let ks = VarName.of_string "___ks___" in
+  let k = fresh_var "___k___" in (* i just put the the wierdest variable name i could think of *)
+  let ks' = fresh_var "___ks'___" in
+  let ks = fresh_var "___ks___" in
   match expr with
   | A.Let (l, p, body, expr) -> A.Let (l, p,  return body, return expr)
-  | A.Fn (d, vars, body) -> A.Fn (d, vars, return body)
+  (* | A.Fn (d, vars, body) -> A.Fn (d, vars, return body) *)
   | A.Do _ | A.Handle _ | A.Application _ -> expr
   | _ ->
     A.Fn (d, [ks],
           A.Case (d, A.Variable (d, ks),
                   [A.PTuple [A.PVariable k; A.PVariable ks'],
                    A.Application (d, A.Variable (d, k), [expr; A.Variable (d, ks')])]))
-          (* A.Let (d, A.PVariable x, expr, A.Variable (d, x)) *)
+(* A.Let (d, A.PVariable x, expr, A.Variable (d, x)) *)
+
+and fresh_var =
+  let open Syntax in
+  let open Naming in
+  let state = ref 0 in
+  fun id ->
+    let s = Printf.sprintf "%s_%d" id !state in
+    VarName.of_string s
+
 
 let sc_toplevel l =
   let f = function

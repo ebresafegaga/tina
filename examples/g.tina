@@ -1,0 +1,15 @@
+
+
+def get () = do Get ()
+-- there's something wrong 
+
+handle (
+handle get () {
+       return x -> x,
+       Get () k -> "fail",
+       Get (a, b) k -> do Set (20)
+}
+)  {
+   return x -> x,
+   Set (v) k -> k (v)
+}

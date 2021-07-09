@@ -7,6 +7,7 @@ module type ID = sig
 
     val compare : t -> t -> int
     val pp : t -> string
+    val fresh: string -> t 
 end
 
 module StringID = struct
@@ -16,6 +17,12 @@ module StringID = struct
     let ( = ) = String.equal
     let compare x y = if x = y then 0 else if x > y then 1 else -1  
     let pp = to_string
+    let fresh =
+      let state = ref 0 in
+      fun s ->
+        let v = Printf.sprintf "%s/%d" s !state in
+        incr state;
+        of_string v
 end
 
 module VarName : ID = StringID

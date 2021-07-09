@@ -59,6 +59,7 @@ type expression =
   | Do of Loc.t * VarName.t * expression list
   | Handle of Loc.t * expression * handler_clauses list (* must always have a return clause *)
   | Plain of expression (* wraps a an expression to seperate expression from computations *)
+  | Absurd of string
 
 and handler_clauses =
   | Return of VarName.t * expression
@@ -74,7 +75,7 @@ type toplevel =
 
 (* pretty printing facilities for the the ast *)
 
-let a  = List.partition
+
 
 let pp_list es f = es |> List.map f |> String.concat ", "
 
@@ -165,6 +166,8 @@ let rec pp_expression = function
     Printf.sprintf "%s (%s)" (DataName.to_string name) (pp_list args pp_expression)
   | Plain (e) -> Printf.sprintf "Plain (%s)" (pp_expression e)
   | Do _ | Handle _ -> ""
+  | Absurd s ->
+    Printf.sprintf "absurd %s" s
 
 let pp_toplevel = function
   | Claim (_loc, name, ty) ->
@@ -178,3 +181,28 @@ let pp_toplevel = function
       (pp_expression expr)
   | Expression expr -> pp_expression expr
   | VariantDef _ | RecordDef _ | AbilityDef _ -> "<def>" (* for now *)
+
+
+let rec is_value = function 
+  | Variable _ 
+  | LitUnit _
+  | LitInteger _ 
+  | LitBool _
+  | LitFloat _
+  | LitString _ -> true 
+  | Annotated (_, e, _) -> is_value e
+  | If _ -> true
+  | Let _ -> false
+  | Fn _ -> true 
+  | Application _ -> false 
+  | Record _ -> true
+  | RecordIndex _ -> true
+  | Case _ -> true
+  | Tuple _ -> true 
+  | Plain e -> is_value e
+  | Sequence _ -> false 
+  | LitTodo _ -> true
+  | Variant _ -> true
+  | Absurd _ -> false (* hack *)
+  | Do _ | Handle _ -> false
+

@@ -64,7 +64,8 @@ let rec subst value variable e =
 
   | A.Tuple (loc, exprs) -> A.Tuple (loc, List.map s exprs)
   | A.Variant (loc, name, exprs) -> A.Variant (loc, name, List.map s exprs)
-  | A.Sequence (loc, e1, e2) -> A.Sequence (loc, s e1, s e2)                                  
+  | A.Sequence (loc, e1, e2) -> A.Sequence (loc, s e1, s e2)
+  | A.Absurd s -> A.Absurd s
   (* | A.Plain e -> s e
   | A.Do (loc, name, exprs) -> A.Do (loc, name, List.map s exprs)
   | A.Handle (loc, expr, clauses) ->
@@ -85,7 +86,8 @@ let subst_list subs expr = List.fold_right (fun (x, v) e -> subst x v e) subs ex
 
 exception PatternFailure of string
 
-let rec is_value = function 
+let rec is_value = function
+  | A.Absurd _ 
   | A.Variable _ 
   | A.LitUnit _
   | A.LitInteger _ 
@@ -121,7 +123,8 @@ let rec eval = function
       match b with 
       | true -> eval pt
       | false -> eval pf)
-  | A.If (_loc, p, _pt, _pf) when is_value p -> Errors.runtime "expected a bool at an if expression"
+  | A.If (_loc, p, _pt, _pf) when is_value p ->
+    Errors.runtime @@ Printf.sprintf "expected a bool at an if expression but got %s" @@ A.pp_expression p
   | A.If (loc, p, pt, pf) -> eval @@ A.If (loc, eval p, pt, pf)
 
   | A.Let (_loc, pat, expr, body) ->
@@ -129,9 +132,12 @@ let rec eval = function
     eval (subst_list sub body)
   | A.Fn (loc, names, body) -> A.Fn (loc, names, body)
 
-  | A.Application (_loc, A.Fn (_, vars, _body), args) when List.length args <> List.length vars ->
+  | A.Application (_loc, (A.Fn (_, vars, _) as f), args) when List.length args <> List.length vars ->
     let expected, got = List.length vars, List.length args in
-    let msg = Printf.sprintf "This function expected %d argument(s), but got %d" expected got in
+    let msg =
+      Printf.sprintf "This function %s expected %d argument(s), but got %d"
+        (A.pp_expression f) expected got 
+    in
     Errors.runtime msg
   | A.Application (_loc, A.Fn (_, vars, body), args) -> eval @@ subst_list (List.combine args vars) body
   | A.Application (_loc, f, _args) when is_value f -> 
@@ -171,6 +177,7 @@ let rec eval = function
   | A.Tuple (loc, exprs) ->  A.Tuple (loc, exprs)
   (* | A.Plain e -> eval e *)
   | A.Sequence (_loc, _e1, _e2) -> Errors.runtime "Sequence expressions not yet implemented"
+  | A.Absurd s -> Errors.runtime s
   | A.LitTodo _loc -> Errors.runtime "Not yet supported"
 (* | A.Do _ | A.Handle _ -> Errors.runtime "effects are not supported by this evaluator" *)
 
@@ -196,14 +203,15 @@ and pattern_binder pattern value =
       | None -> failwith "Field does not exist" (* TODO: use Result monad *)
     in 
     List.fold_right extender body []
-  | A.PVariant (_name, _body), _ (* Variant (name', body') when name = name' *) -> 
-    failwith "todo" (* length_check body body';*)
-  (* List.fold_right2 (fun p v env -> pattern_binder p v @ env) body body' [] *)
+  | A.PVariant (name, patterns), A.Variant (_, name', values)
+     when VarName.to_string name = DataName.to_string name' -> 
+    length_check patterns values;
+    List.fold_right2 (fun p v env -> pattern_binder p v @ env) patterns values []
   | A.PTuple patterns, A.Tuple (_, values) -> 
     length_check patterns values;
     List.fold_right2 (fun p v env -> pattern_binder p v @ env) patterns values []
   | _pattern, expression when is_value expression ->
-    let msg = Printf.sprintf "The value %s doens't match the pattern %s"
+    let msg = Printf.sprintf "The pattern %s doens't match the expression %s"
         (A.pp_pattern pattern) (A.pp_expression expression)
     in
     raise @@ PatternFailure msg

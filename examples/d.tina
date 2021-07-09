@@ -13,5 +13,3 @@ tuple ("ogaga", name)
 id (10)
 
 if true then 10 else "no"
-
-do Name ()

@@ -16,6 +16,11 @@
    notes: 
    - we might need a new data structure to represent the 
      transformed ast, without case expressions 
+
+   - the transformation functions need to work nicely recursively
+
+   Some (10, x) ~> 
+     Some (x, y) -> 
 *)
 
 open Syntax
@@ -41,4 +46,15 @@ type t =
   | RecordIndex of Loc.t * t * FieldName.t
   | Tuple of Loc.t * t list
   | Variant of Loc.t * DataName.t * t list
+  | Absurd of string
 
+let firstly = function
+  | A.Case (loc, expr, [clause]) ->
+    let z = VarName.fresh "z" in
+    A.Case (loc, expr,
+              [clause;
+              A.PVariable z, Absurd "pattern match failure"])
+  | A.Case (loc, expr, clause :: clauses) ->
+    let z = VarName.fresh "z" in
+    failwith ""
+  | _ -> failwith "not yet implemented"

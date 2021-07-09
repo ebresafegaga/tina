@@ -73,6 +73,8 @@ rule read_token = parse
     | '"' { read_string (Buffer.create 17) lexbuf }
     | whitespace { read_token lexbuf }
     | newline  { next_line lexbuf; read_token lexbuf }
+    | "--"  { read_single_line_comment lexbuf }
+    | "{-"  { read_multi_line_comment lexbuf }
     | id { ID (Lexing.lexeme lexbuf) }
     | int { INT (int_of_string (Lexing.lexeme lexbuf)) }
     | float { FLOAT (float_of_string (Lexing.lexeme lexbuf)) }
@@ -93,3 +95,14 @@ and read_string buf = parse
     }
     | _ { raise (SyntaxError (lexbuf.lex_curr_p, "Illegal string character: " ^ Lexing.lexeme lexbuf)) }
     | eof { raise (SyntaxError (lexbuf.lex_curr_p, "String is not terminated")) }
+
+and read_single_line_comment = parse
+  | newline { next_line lexbuf; read_token lexbuf }
+  | eof { EOF }
+  | _ { read_single_line_comment lexbuf }
+
+and read_multi_line_comment = parse
+  | "-}" { read_token lexbuf }
+  | newline { next_line lexbuf; read_multi_line_comment lexbuf }
+  | eof { raise (SyntaxError (lexbuf.lex_curr_p, "Lexer - Unexpected EOF - please terminate your comment.")) }
+  | _ { read_multi_line_comment lexbuf }

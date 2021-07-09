@@ -33,9 +33,11 @@ handle (let a = do Get ();
 }
 
 
+{- 
 handle 10 {
    return x -> x,
 }
+-}
 
 handle (let k = do K ();
          k) {
@@ -72,5 +74,3 @@ def b = handle do Read () {
 datatype p = { claim a String, claim b Nat}
 
 def v = p { a: "og", b: 10 }
-
-let p = v; p.b
