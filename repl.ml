@@ -22,14 +22,28 @@ let state = object
 end
 
 let prompt = "tina*> "
-let print_prompt () = Printf.printf "%s" prompt
+let print_to_repl = print_endline
+let print_prompt () = print_string prompt
 let read_line () = read_line () |> String.trim
-let print_error msg = Printf.printf "%s\n" msg
-let print_list lst =
-  lst
-  |> List.iter (Printf.printf "%s\n")
+let print_error msg = print_to_repl msg
+let print_list lst = lst |> List.iter print_to_repl
 
 let is_command s = s.[0] = ':'
+
+let eval lexbuf =
+  lexbuf
+  |> P.parse
+  |> P.sc_toplevel
+  |> DesugarEffect.desugar_toplevel
+  |> List.map (fun expr ->
+      if state#get_dump () then
+        (expr
+         |> DesugarEffect.pp_toplevel
+         |> print_endline; expr)
+      else expr)
+  |> Eval2.process_toplevel
+  |> String.concat "\n"
+  |> print_to_repl
 
 let rec process_command input =
   let commands = String.split_on_char ' ' input in
@@ -51,13 +65,13 @@ let rec process_command input =
   | ":clear" :: _args ->
     state#clear (); repl ()
   | ":quit" :: _args ->
-    Printf.printf "Bye Bye!";
+    print_to_repl "Bye Bye!";
     exit 0;
   | ":dump" :: "start" :: _args ->
-    Printf.printf "dumping started ...\n";
+    print_to_repl "dumping started ...\n";
     state#start_dump (); repl ()
   | ":dump" :: "end" :: _args ->
-    Printf.printf "dumping ending ...\n";
+    print_to_repl "dumping ending ...\n";
     state#end_dump (); repl ()
   | invalid :: _args ->
     let msg = Printf.sprintf "invalid command %s" invalid in
@@ -72,7 +86,7 @@ and process_load = function
     | channel ->
       state#add_file file;
       (try process_file channel with
-       | Errors.RuntimeError m -> print_error m);
+         Errors.RuntimeError m -> print_error m);
       process_load files
     | exception Sys_error msg ->
       print_error msg;
@@ -81,33 +95,13 @@ and process_load = function
 and process_file channel =
   channel
   |> Lexing.from_channel
-  |> P.parse
-  |> P.sc_toplevel
-  |> DesugarEffect.desugar_toplevel
-  |> List.map (fun expr ->
-      if state#get_dump () then
-        (expr
-         |> DesugarEffect.pp_toplevel
-         |> print_endline; expr)
-      else expr )
-  |> Eval2.process_toplevel
-  |> String.concat "\n"
-  |> Printf.printf "%s\n"
+  |> eval
+
 
 and process_line input =
   input
   |> Lexing.from_string
-  |> P.parse
-  |> P.sc_toplevel
-  |> DesugarEffect.desugar_toplevel
-  (* |> List.map (fun expr ->
-      expr
-      |> Ast.pp_toplevel
-      |> print_endline;
-      expr) dump ast *)
-  |> Eval2.process_toplevel
-  |> String.concat "\n"
-  |> Printf.printf "%s\n"
+  |> eval
 
 and repl () =
   print_prompt ();
@@ -122,9 +116,7 @@ and repl () =
          Errors.RuntimeError m -> print_error m);
     repl ()
       
-
-
 let run () =
-  Printf.printf "Welcome to Tina: programming with typed algebraic effects \n";
+  print_to_repl "Welcome to Tina: programming with typed algebraic effects \n";
   repl ()
 

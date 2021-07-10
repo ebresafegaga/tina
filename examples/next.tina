@@ -1,0 +1,20 @@
+
+
+-- functions at the top level
+-- function application
+
+-- case expression is a computation
+
+case 0 {
+   0 -> do None (),
+   any -> ()
+}
+
+-- function application should sequence arguments
+
+
+-- if expression is a computation
+
+- record index is a computation
+
+-- sequence is a computation (can easily be transformed into a let)

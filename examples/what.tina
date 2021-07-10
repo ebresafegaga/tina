@@ -30,3 +30,5 @@ handle comp {
     Return k -> x
     Name (a, b) k ->
 }
+
+fn (n) { n }

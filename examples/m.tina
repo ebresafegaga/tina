@@ -1,0 +1,13 @@
+
+
+handle (let a = do A ();
+        let b = do B ();
+	(a, b)) {
+	return x ->
+	   case (x) {
+	      ("ogaga", afoke) -> "yes, ",
+	      n -> "should not be possible"
+	   },
+	A () k -> k ("ogaga"),
+	B () k -> k ("afoke")
+}	

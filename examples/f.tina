@@ -13,11 +13,11 @@ handle (handle do N () {
 
 def f (x) = do Comp (x)
 
-def g (x) = x
+-- def g (x) = x
 
 handle do Comp ((void)) {
-       return c -> c,
-       Comp (v) k -> g ("a mil")
+       return c -> "should not be printed",
+       Comp (v) k -> (v, "a mil")
 }
 
 datatype e = Og | Ogaga (Nat, Nat)
