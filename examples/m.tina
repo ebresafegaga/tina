@@ -1,13 +1,24 @@
 
+ 
 
-handle (let a = do A ();
+handle (
+        let a = do A ();
         let b = do B ();
-	(a, b)) {
+	let c = do C ("some val");
+	if do Decide () then do Comp () else (a, c)) {
 	return x ->
 	   case (x) {
-	      ("ogaga", afoke) -> "yes, ",
-	      n -> "should not be possible"
+	      ("ogaga", afoke, "some val") -> "yes, ",
+	      n -> n
 	   },
 	A () k -> k ("ogaga"),
-	B () k -> k ("afoke")
-}	
+	B () k -> k ("afoke"),
+	C (value) k -> k (value), 
+	Decide () k -> k (true),
+	Comp () k -> k ("this is it y'all")
+}
+
+handle (if do N () then "tru" else "fal") {
+   return x -> x,
+   N () k -> k (false)
+}   
