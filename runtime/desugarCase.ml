@@ -21,10 +21,15 @@
 
    Some (10, x) ~> 
      Some (x, y) -> 
+
+   we need to implement a generic equality operation 
 *)
 
 open Syntax
 open Naming
+
+let d = Loc.dummy
+let fresh = VarName.fresh          
 
 module A = Ast
     
@@ -48,6 +53,7 @@ type t =
   | Variant of Loc.t * DataName.t * t list
   | Absurd of string
 
+(*
 let firstly = function
   | A.Case (loc, expr, [clause]) ->
     let z = VarName.fresh "z" in
@@ -58,3 +64,49 @@ let firstly = function
     let z = VarName.fresh "z" in
     failwith ""
   | _ -> failwith "not yet implemented"
+*)
+
+(* 
+   case v { 
+      Some (Some (None, y), z) -> ...
+               .
+               .
+               .
+   }
+
+
+   case v {
+     Some (%fresh, z) ->
+        case (%fresh) {
+           Some (%fresh2, y) -> 
+               case (%fresh2) {
+                   None -> ...
+               }
+        }
+   }
+   
+*)
+
+let is_pvariable = function A.PVariable _ -> true | _ -> false
+let is_complex = Fun.negate is_pvariable  
+
+let rec g body pattern =
+  match pattern with
+  | A.PVariable _ -> `Simple (pattern, body)
+  | A.PBool b -> `Case (A.PBool b, body)
+  | A.PInteger i -> `Case (A.PInteger i, body)
+  | A.PString s -> `Case (A.PString s, body)
+  | A.PTuple pats ->
+    let is_simple =
+      pats
+      |> List.map (g body)
+      |> List.for_all (function `Simple _ -> true | _ -> false)
+    in
+    if is_simple then
+      `Case (A.PTuple pats, body)
+    else
+      failwith ""
+  | _ -> failwith ""
+
+
+

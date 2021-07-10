@@ -55,7 +55,7 @@ let rec pattern_binder pattern value env =
     raise @@ PatternFailure msg
 
 let rec eval env = function
-  | A.Absurd s -> Error s
+  | A.Absurd (s, _e) -> Error s
   | A.Variant (_loc, name, args) ->
     let name =  name |> DataName.to_string |> VarName.of_string in 
     let open Result in

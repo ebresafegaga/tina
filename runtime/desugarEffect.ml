@@ -31,7 +31,7 @@ type t =
   | RecordIndex of Loc.t * t * FieldName.t
   | Tuple of Loc.t * t list
   | Variant of Loc.t * DataName.t * t list
-  | Absurd of string 
+  | Absurd of string * t
 
 type toplevel =
   | Claim of Loc.t * VarName.t * A.ty
@@ -81,7 +81,7 @@ let rec expr_to_t = function
   | A.Sequence (loc, e1, e2) -> Sequence (loc, expr_to_t e1, expr_to_t e2)
   | A.Variant (loc, name, args) -> Variant (loc, name, List.map expr_to_t args)
   | A.LitTodo loc -> LitTodo loc
-  | A.Absurd s -> Absurd s
+  | A.Absurd (s, e) -> Absurd (s, expr_to_t e)
   | A.Do _ | A.Handle _ -> assert false
 
 
@@ -159,8 +159,8 @@ let rec pp_expression = function
   | Variant (_loc, name, []) -> DataName.to_string name
   | Variant (_loc, name, args) ->
     Printf.sprintf "%s (%s)" (DataName.to_string name) (pp_list args pp_expression)
-  | Absurd s ->
-    Printf.sprintf "absurd %s" s
+  | Absurd (s, e) ->
+    Printf.sprintf "absurd (%s, %s)" s (pp_expression e)
 
 let pp_toplevel = function
   | Claim (_loc, name, ty) ->
@@ -274,7 +274,7 @@ let rec is_value = function
   | A.LitFloat _
   | A.LitString _ -> true 
   | A.Annotated (_, e, _) -> is_value e
-  | A.If _ -> true
+  | A.If _ -> false
   | A.Let _ -> false
   | A.Fn _ -> true 
   | A.Application _ -> false 
@@ -373,7 +373,7 @@ let rec g = function
          Let (d, PTuple [PVariable k; PVariable ks'], Variable (d, ks),
               Let (d, PVariable f, Fn (d, [x; ks''],
                                        Application (d, return (g body), [Application (d, cons, [Variable (d, k);
-                                                                                                Variable (d, ks'')])])),
+                                                                                                Variable (d, ks'')])]) ),
                    Application (d, return (g expr) , [Application (d, cons, [Variable (d, f);
                                                                              Variable (d, ks')])]))))
     in
@@ -447,12 +447,29 @@ let rec g = function
   | A.Case (loc, expr, clauses) ->
     let clauses = List.map (fun (pat, expr) -> pat_to_t pat, g expr) clauses in
     Case (loc, g expr, clauses)
-  | A.If (loc, p, pt, pf) -> If (loc, g p, g pt, g pf)
+  | A.If (_loc, p, pt, pf) ->
+    let ks, k, ks', f = fresh_var "ks", fresh_var "k", fresh_var "ks'", fresh_var "f" in
+    let x, ks'' = fresh_var "x", fresh_var "ks''" in
+    (* If (loc, g p, g pt, g pf) 
+       Application (d, return (g body),
+       [Application (d, cons, [Variable (d, k); Variable (d, ks'')])]
+    *)
+    let e = Fn
+        (d,
+         [ks],
+         Let (d, PTuple [PVariable k; PVariable ks'], Variable (d, ks),
+              Let (d, PVariable f, Fn (d, [x; ks''],
+                                       Application (d, If (d, Variable (d, x), return (g pt), return (g pf)),
+                                       [Application (d, cons, [Variable (d, k); Variable (d, ks'')])])),
+                   Application (d, return (g p) , [Application (d, cons, [Variable (d, f);
+                                                                             Variable (d, ks')])]))))
+    in
+    e
   | A.Application (loc, f, args) ->
     let args = List.map g args in
     (* Printf.printf "(args: %s)" (pp_list args pp_expression); *)
     Application (loc, g f, args)
-  | A.Absurd s -> Absurd s 
+  | A.Absurd (s, e) -> Absurd (s, expr_to_t e)
   
     (* this should always be the body of a plain expression body of a handler clause *)
     (* A.Plain x what if i transform x, just like the plain case here? *)
@@ -482,13 +499,17 @@ let handler =
   Fn (d, [comp; ks],
       (Let (d, PTuple [PVariable l; PVariable idk1; PVariable idk2],
             Variable (d, comp),
-           Absurd "unhandled effect")))
+           Absurd ("Unhandled effect", Variable (d, l)))))
 
 let handler_l = Application (d, cons, [handler; nil])
 
 let handlers = Application (d, cons, [const; handler_l])
       
 let handle_comp computation =
+  (* let gs = pp_expression (g computation) in
+     let after_gs = pp_expression @@ ret (g computation) computation in
+     print_endline "before g "; print_endline gs;
+     print_endline "after g"; print_endline after_gs; *)
   Application (d, ret (g computation) computation, [handlers])
 
 let desugar_toplevel l =

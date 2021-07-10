@@ -59,7 +59,7 @@ type expression =
   | Do of Loc.t * VarName.t * expression list
   | Handle of Loc.t * expression * handler_clauses list (* must always have a return clause *)
   | Plain of expression (* wraps a an expression to seperate expression from computations *)
-  | Absurd of string
+  | Absurd of string * expression
 
 and handler_clauses =
   | Return of VarName.t * expression
@@ -166,8 +166,8 @@ let rec pp_expression = function
     Printf.sprintf "%s (%s)" (DataName.to_string name) (pp_list args pp_expression)
   | Plain (e) -> Printf.sprintf "Plain (%s)" (pp_expression e)
   | Do _ | Handle _ -> ""
-  | Absurd s ->
-    Printf.sprintf "absurd %s" s
+  | Absurd (s, e) ->
+    Printf.sprintf "absurd (%s, %s)" s (pp_expression e)
 
 let pp_toplevel = function
   | Claim (_loc, name, ty) ->
@@ -194,7 +194,7 @@ let rec is_value = function
   | If _ -> true
   | Let _ -> false
   | Fn _ -> true 
-  | Application _ -> false 
+  | Application _ -> false
   | Record _ -> true
   | RecordIndex _ -> true
   | Case _ -> true

@@ -129,7 +129,7 @@ let rec sc =
   | A.Variant (loc, name, es) ->
     let variant = A.Variant (loc, name, List.map sc es) in
     variant
-  | A.Absurd s -> A.Absurd s
+  | A.Absurd (s, e) -> A.Absurd (s, e)
 
 and sc_clauses = function
   | A.Return (name, expr) -> A.Return (name, sc expr)

@@ -65,7 +65,7 @@ let rec subst value variable e =
   | A.Tuple (loc, exprs) -> A.Tuple (loc, List.map s exprs)
   | A.Variant (loc, name, exprs) -> A.Variant (loc, name, List.map s exprs)
   | A.Sequence (loc, e1, e2) -> A.Sequence (loc, s e1, s e2)
-  | A.Absurd s -> A.Absurd s
+  | A.Absurd (label, e) -> A.Absurd (label, s e)
   (* | A.Plain e -> s e
   | A.Do (loc, name, exprs) -> A.Do (loc, name, List.map s exprs)
   | A.Handle (loc, expr, clauses) ->
@@ -76,7 +76,7 @@ let rec subst value variable e =
     let clauses = clauses |> List.map f in
      A.Handle (loc, s expr, clauses) *)
 
-let subst_list subs expr = List.fold_right (fun (x, v) e -> subst x v e) subs expr
+let subst_list = List.fold_right (fun (x, v) e -> subst x v e)
 
 (* let print_env env =
   let e = env |> Env.to_seq |> List.of_seq in
@@ -177,7 +177,9 @@ let rec eval = function
   | A.Tuple (loc, exprs) ->  A.Tuple (loc, exprs)
   (* | A.Plain e -> eval e *)
   | A.Sequence (_loc, _e1, _e2) -> Errors.runtime "Sequence expressions not yet implemented"
-  | A.Absurd s -> Errors.runtime s
+  | A.Absurd (s, e) ->
+    let msg = Printf.sprintf "%s, %s" s (A.pp_expression e) in
+    Errors.runtime msg
   | A.LitTodo _loc -> Errors.runtime "Not yet supported"
 (* | A.Do _ | A.Handle _ -> Errors.runtime "effects are not supported by this evaluator" *)
 
