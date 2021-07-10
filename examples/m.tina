@@ -1,6 +1,4 @@
 
- 
-
 handle (
         let a = do A ();
         let b = do B ();
@@ -21,4 +19,4 @@ handle (
 handle (if do N () then "tru" else "fal") {
    return x -> x,
    N () k -> k (false)
-}   
+}

@@ -176,9 +176,6 @@ let pp_toplevel = function
   | VariantDef _ | RecordDef _ | AbilityDef _ -> "<def>" (* for now *)
 
 
-
-
-
 let d = Loc.dummy
 
 let fresh_var =
