@@ -3,6 +3,7 @@ open Naming
 
 module A = Ast
 
+(* these are all boilerplate code. i should really be using polymorphic variants.*)
 type pattern = 
   | PInteger of int 
   | PString of string 
@@ -175,8 +176,39 @@ let pp_toplevel = function
   | Expression expr -> pp_expression expr
   | VariantDef _ | RecordDef _ | AbilityDef _ -> "<def>" (* for now *)
 
+(* end of boilerplate *)
 
-let d = Loc.dummy
+(* computations are represented as functions that take 
+  a stack of functions, which alternate `k` and `h` continuations. 
+  `k` continuations represent how we would normally return a value. 
+   `h` coninutations represent how to handle an effect. *)
+
+(* 
+   for more details on this cps translation see:
+
+   [1] https://dhil.net/research/papers/generalised_continuations-jfp2020.pdf
+   [2] https://homepages.inf.ed.ac.uk/slindley/papers/handlers-cps.pdf
+   [3] https://www.cs.uoregon.edu/research/summerschool/summer18/lectures/bauer_notes.pdf
+   [4] https://raw.githubusercontent.com/matijapretnar/eff/master/docs/handlers-tutorial.pdf
+*)
+
+(* i what to use this as a marker for 
+   computations that have been created. 
+   what i *really* want to do is keep 
+   metadata with the syntax, but oh well... *)
+let d' = Lexing.{
+  pos_fname = "comp--00";
+  pos_lnum = -9;
+  pos_bol = -8;
+  pos_cnum = -7;
+}
+let d = (d', d')    
+
+let is_cps_computation = function
+  | Fn (loc, _, _) -> loc = d
+  | _ -> false
+
+(* let d = Loc.dummy *)
 
 let fresh_var =
   let state = ref 0 in
@@ -230,25 +262,27 @@ let rec get_operation_clauses l =
   | A.Operation (label, vars, kvar, body) :: rest ->
     `Operation (label, vars, kvar, body) :: get_operation_clauses rest
 
-
+(* GENERAL RULE OF THUMB TO AVOID UNWEIEDLY BUGS:
+   ALWAYS APPLY THE DESUGARING FUNCTION `g` BEFORE 
+   CALLING `return` *)
 
 (* implicitly lift *values* into *computations* 
    this is not available to the users just to keep 
    things simple *)
 let rec return expr =
-  (* let ret t  =
-    if is_value t then
-      return t
-    else t
-     in *)
   let k = fresh_var "___k___" in (* i just put the the wierdest variable name i could think of *)
   let ks' = fresh_var "___ks'___" in
   let ks = fresh_var "___ks___" in
   match expr with
-  | Let (l, p, body, expr) -> Let (l, p, body, expr)
-  | Fn _ -> expr
-  | Application _ -> expr
-  | _ ->
+  (* | Let (l, p, body, expr) -> Let (l, p, body, expr) *)
+  (* | Fn _ -> expr *)
+  
+  (* applications result in a computation that doesn't start with a function, 
+     but when eventually reduced, it produces a function that *should* be marked 
+     as a computation.  *)
+  | Application _ -> expr 
+  | expr when is_cps_computation expr -> expr
+  | expr ->
     (* print_endline "yes"; *)
     let e = Fn (d, [ks],
                 Case (d, Variable (d, ks),
@@ -257,34 +291,6 @@ let rec return expr =
     in
     (* print_endline (pp_expression e); *)
     e
-
-let ret t expr =
-  if A.is_value expr then
-    return t
-  else t
-
-let rec is_value = function 
-  | A.Variable _ 
-  | A.LitUnit _
-  | A.LitInteger _ 
-  | A.LitBool _
-  | A.LitFloat _
-  | A.LitString _ -> true 
-  | A.Annotated (_, e, _) -> is_value e
-  | A.If _ -> false
-  | A.Let _ -> false
-  | A.Fn _ -> true 
-  | A.Application _ -> false 
-  | A.Record _ -> true
-  | A.RecordIndex _ -> true
-  | A.Case _ -> true
-  | A.Tuple _ -> true 
-  | A.Plain e -> is_value e
-  | A.Sequence _ -> false 
-  | A.LitTodo _ -> true
-  | A.Variant _ -> true
-  | A.Absurd _ -> false (* hack *)
-  | A.Do _ | A.Handle _ -> false
       
 (* rants: - applications, if .. then .. else .. are *computations*!  -
    in this setting, whenever we get a "should not be evaluated by me"
@@ -301,6 +307,17 @@ let rec is_value = function
    there is probably a bug with the handler case in this `g` transform
 
        also: - a handler returns a computation *)
+
+(* what's left?  
+   1. some computations are still treated like values -- this is unfair.
+   2. function application needs to sequence its arguments. 
+ 
+  ---------------------------------------
+
+   bugs? 
+
+   none so far. *)
+
 let rec g = function
   | A.LitBool (loc, b) -> LitBool (loc, b)
   | A.LitFloat (loc, f) -> LitFloat (loc, f)
@@ -319,8 +336,12 @@ let rec g = function
   | A.RecordIndex (loc, expr, name) -> RecordIndex (loc, g expr, name)
 
   | A.Annotated (loc, expr, ty) -> Annotated (loc, g expr, ty)
+                                     
+  (* this is also a computation (can easily be translated into a let) *)                                     
   | A.Sequence (loc, a, b) -> Sequence (loc, g a, g b)
-  | A.Fn (loc, vars, body) -> Fn (loc, vars, ret (g body) body)
+                                
+  | A.Fn (loc, vars, body) ->
+    Fn (loc, vars, return (g body))
   | A.Plain e ->
     (* print_endline "i got here"; *)
     (* let ks = fresh_var "ks" in
@@ -389,7 +410,7 @@ let rec g = function
         (d,
          [name; ks],
          Let (d, PTuple [PVariable h; PVariable ks'], Variable (d, ks),
-              Application (d, ret (g body) body, [Variable (d, ks')])))
+              Application (d, return (g body), [Variable (d, ks')])))
     in
     let g_clause ks clause =
       let `Operation (label, vars, kvar, body) = clause in
@@ -507,7 +528,7 @@ let handle_comp computation =
      let after_gs = pp_expression @@ ret (g computation) computation in
      print_endline "before g "; print_endline gs;
      print_endline "after g"; print_endline after_gs; *)
-  Application (d, ret (g computation) computation, [handlers])
+  Application (d, return (g computation), [handlers])
 
 let desugar_toplevel l =
   let f = function

@@ -1,0 +1,22 @@
+
+{-
+
+let a = 10;
+let b = 20;
+(a, b)
+
+-}
+
+def decide () = if do Decide () then "ogaga" else "afoke"
+
+def id (x) = do Hey (x)
+
+handle id (10) {
+       return x -> x,
+       Hey (v) k -> (v, "ahhh")
+}
+
+handle decide () {
+    return c -> c,
+    Decide () k -> k (true)
+}    

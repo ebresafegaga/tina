@@ -33,8 +33,8 @@ let is_command s = s.[0] = ':'
 let eval lexbuf =
   lexbuf
   |> P.parse
-  |> P.sc_toplevel
-  |> DesugarEffect.desugar_toplevel
+  (* |> P.sc_toplevel *)
+  |> DesugarEffect.desugar_toplevel 
   |> List.map (fun expr ->
       if state#get_dump () then
         (expr

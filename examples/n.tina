@@ -3,3 +3,7 @@
 -- let a = 20; do Bot (a)
 
 if false then 10 else do Cry ()
+
+
+-- def get () = do Get ()
+let a = do Help ("i need a GitHub Copilot access");
