@@ -1,0 +1,12 @@
+
+
+def invoke () =
+    let a = do Number1 ();
+    let b = do Number2 ();
+    (a, b)
+
+handle invoke () {
+	return a -> a,
+	Number1 () k -> k (1),
+	Number2 () k -> k (2)
+}
