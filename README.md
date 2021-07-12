@@ -1,5 +1,5 @@
 
-## Tina, an educational programming language with *abilities*.
+## Tina, a programming language with typed *abilities*.
 
 ![Build](https://github.com/ebresafegaga/tina/actions/workflows/test.yml/badge.svg)
 
