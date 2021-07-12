@@ -1,17 +1,10 @@
 
 
--- ((fn (a) fn (b) b) (10)) (let x = 11; x)
-
-{-
- This is probably a bug with the toplevel substituition
- mechanism.
- 
-def f = g (10)
-
-f
--}
+((fn (a) fn (b) b) (10)) (let x = 11; x)
 
 def g = fn (a) fn (b) b
+
+def f = g (10)
 
 -- let f = g (10); f ("i")
 

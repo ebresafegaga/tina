@@ -221,8 +221,9 @@ and pattern_binder pattern value =
 
 let rec subst_toplevel names = function
   | A.Def (loc, name, body) :: rest ->
-    let names' = (body, name) :: names in
-    A.Def (loc, name, subst_list names body) :: subst_toplevel names' rest 
+    let x = subst_list names body in
+    let names' = (x, name) :: names in
+    A.Def (loc, name, x) :: subst_toplevel names' rest 
   | A.Expression e :: rest ->
     A.Expression (subst_list names e) :: subst_toplevel names rest
 
