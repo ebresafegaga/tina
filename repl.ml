@@ -97,8 +97,8 @@ and process_file channel =
   |> Lexing.from_channel
   |> eval
 
-
 and process_line input =
+  let _files = state#get_files () in
   input
   |> Lexing.from_string
   |> eval

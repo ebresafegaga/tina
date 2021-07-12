@@ -316,7 +316,9 @@ let rec return expr =
 
    bugs? 
 
-   none so far. *)
+   1. closure seem not to be working (pattern matching on arg as `ks`) 
+
+*)
 
 let rec g = function
   | A.LitBool (loc, b) -> LitBool (loc, b)
@@ -336,10 +338,10 @@ let rec g = function
   | A.RecordIndex (loc, expr, name) -> RecordIndex (loc, g expr, name)
 
   | A.Annotated (loc, expr, ty) -> Annotated (loc, g expr, ty)
-                                     
+
   (* this is also a computation (can easily be translated into a let) *)                                     
   | A.Sequence (loc, a, b) -> Sequence (loc, g a, g b)
-                                
+
   | A.Fn (loc, vars, body) ->
     Fn (loc, vars, return (g body))
   | A.Plain e ->
@@ -478,15 +480,29 @@ let rec g = function
          Let (d, PTuple [PVariable k; PVariable ks'], Variable (d, ks),
               Let (d, PVariable f, Fn (d, [x; ks''],
                                        Application (d, If (d, Variable (d, x), return (g pt), return (g pf)),
-                                       [Application (d, cons, [Variable (d, k); Variable (d, ks'')])])),
+                                                    [Application (d, cons, [Variable (d, k); Variable (d, ks'')])])),
                    Application (d, return (g p) , [Application (d, cons, [Variable (d, f);
-                                                                             Variable (d, ks')])]))))
+                                                                          Variable (d, ks')])]))))
     in
     e
-  | A.Application (loc, f, args) ->
-    let args = List.map g args in
-    (* Printf.printf "(args: %s)" (pp_list args pp_expression); *)
-    Application (loc, g f, args)
+  | A.Application (_loc, f, args) ->
+    let ks, k, ks', fn = fresh_var "ks", fresh_var "k", fresh_var "ks'", fresh_var "fn" in
+    let x, ks'' = fresh_var "x", fresh_var "ks''" in
+    let args' = List.map expr_to_t args in
+    let e = Fn
+        (d,
+         [ks],
+         Let (d, PTuple [PVariable k; PVariable ks'], Variable (d, ks),
+              Let (d, PVariable fn, Fn (d, [x; ks''],
+                                       Application (d, Application (d, Variable (d, x), args'),
+                                                    [Application (d, cons, [Variable (d, k); Variable (d, ks'')])])),
+                   Application (d, return (g f) , [Application (d, cons, [Variable (d, fn);
+                                                                          Variable (d, ks')])]))))
+    in
+    (* let e = Application (loc, expr_to_t f, args') in *)
+    (* print_endline "application";
+       print_endline @@ pp_expression e; *)
+    e
   | A.Absurd (s, e) -> Absurd (s, expr_to_t e)
   
     (* this should always be the body of a plain expression body of a handler clause *)
@@ -532,7 +548,7 @@ let handle_comp computation =
 
 let desugar_toplevel l =
   let f = function
-    | A.Def (loc, name, expr) -> Def (loc, name, handle_comp expr) (* this is actually wrong, the value gotten from evaluating handle_comp should be bound to name -- i've corrected it, it was `g expr` before *)
+    | A.Def (loc, name, expr) -> Def (loc, name, handle_comp expr)
     | A.Expression (e) -> Expression (handle_comp e)
     | A.Claim (loc, name, ty) -> Claim (loc, name, ty)
     | A.VariantDef (loc, name, body) ->  VariantDef (loc, name, body)

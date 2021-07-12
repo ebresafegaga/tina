@@ -1,9 +1,25 @@
 
 
-((fn (a) fn (b) b) (10)) (let x = 11; x)
+-- ((fn (a) fn (b) b) (10)) (let x = 11; x)
 
-handle (let v = do Add (5, 6);
-       v) {
+{-
+ This is probably a bug with the toplevel substituition
+ mechanism.
+ 
+def f = g (10)
+
+f
+-}
+
+def g = fn (a) fn (b) b
+
+-- let f = g (10); f ("i")
+
+g (10) ("og")
+
+-- g ("str") (2)
+
+handle (let v = do Add (5, 6); v) {
     return x -> x,
     Add (a, b) k -> 10
 }

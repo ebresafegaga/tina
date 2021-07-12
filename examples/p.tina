@@ -1,0 +1,9 @@
+
+def id (x) = x
+
+-- we need to sequence the arguments of functions 
+
+handle ( (do F ())(10) ) {
+   return x -> x,
+   F () k -> k (id)
+}   
