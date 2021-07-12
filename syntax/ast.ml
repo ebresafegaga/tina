@@ -58,7 +58,6 @@ type expression =
   (* list? tuples? *)
   | Do of Loc.t * VarName.t * expression list
   | Handle of Loc.t * expression * handler_clauses list (* must always have a return clause *)
-  | Plain of expression (* wraps a an expression to seperate expression from computations *)
   | Absurd of string * expression
 
 and handler_clauses =
@@ -164,7 +163,6 @@ let rec pp_expression = function
   | Variant (_loc, name, []) -> DataName.to_string name
   | Variant (_loc, name, args) ->
     Printf.sprintf "%s (%s)" (DataName.to_string name) (pp_list args pp_expression)
-  | Plain (e) -> Printf.sprintf "Plain (%s)" (pp_expression e)
   | Do _ | Handle _ -> ""
   | Absurd (s, e) ->
     Printf.sprintf "absurd (%s, %s)" s (pp_expression e)
@@ -199,7 +197,6 @@ let rec is_value = function
   | RecordIndex _ -> true
   | Case _ -> true
   | Tuple _ -> true 
-  | Plain e -> is_value e
   | Sequence _ -> false 
   | LitTodo _ -> true
   | Variant _ -> true

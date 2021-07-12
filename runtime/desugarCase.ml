@@ -53,5 +53,55 @@ type t =
   | Variant of Loc.t * DataName.t * t list
   | Absurd of string * t
 
-let g _pattern _frontier =
-  failwith ""
+let is_pvariable = function
+  | A.PVariable _ -> true
+  | _ -> false
+
+let is_simple_pattern = function
+  | A.PVariable _ | A.PString _
+  | A.PInteger _ | A.PBool _ -> true
+  | A.PRecord _ | A.PTuple _
+  | A.PVariant _ -> false
+
+let variable name = A.Variable (d, name)
+let case expr clauses = A.Case (d, expr, clauses)
+
+let rec freshen pats =
+  match pats with
+  | A.PVariable name :: pats ->
+    let row, frech = freshen pats in
+    A.PVariable name :: row, frech
+  | pat :: pats ->
+    let var = fresh "%fresh" in
+    let row, frech = freshen pats in
+    (A.PVariable var :: row), (var, pat) :: frech
+  | [] -> [], []
+
+let rec g body frontier =
+  let g = g body in
+  match frontier with
+  | [] -> body
+  | (name, A.PVariable x) :: frontier ->
+    case (variable name)
+      [A.PVariable x, g frontier]
+  | (name, A.PBool b) :: frontier ->
+    case (variable name)
+      [A.PBool b, g frontier]
+  | (name, A.PInteger i) :: frontier ->
+    case (variable name)
+      [A.PInteger i, g frontier]
+  | (name, A.PString s) :: frontier ->
+    case (variable name)
+      [A.PString s, g frontier]
+  | (name, A.PTuple pats) :: frontier ->
+    let pats, front = freshen pats in
+    let frontier = front @ frontier in
+    case (variable name)
+      [A.PTuple pats, g frontier]
+  | (_, A.PRecord _) :: _ | (_, A.PVariant _) :: _  -> failwith "not yet impl"
+
+
+
+
+
+

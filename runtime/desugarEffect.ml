@@ -78,7 +78,6 @@ let rec expr_to_t = function
     let cases = List.map (fun (p, e) -> pat_to_t p, expr_to_t e) cases in
     Case (loc, expr_to_t expr, cases)
   | A.Tuple (loc, exprs) -> Tuple (loc, List.map expr_to_t exprs)
-  | A.Plain e -> expr_to_t e
   | A.Sequence (loc, e1, e2) -> Sequence (loc, expr_to_t e1, expr_to_t e2)
   | A.Variant (loc, name, args) -> Variant (loc, name, List.map expr_to_t args)
   | A.LitTodo loc -> LitTodo loc
@@ -344,16 +343,6 @@ let rec g = function
 
   | A.Fn (loc, vars, body) ->
     Fn (loc, vars, return (g body))
-  | A.Plain e ->
-    (* print_endline "i got here"; *)
-    (* let ks = fresh_var "ks" in
-       Fn (d,
-        [ks],
-        Application
-          (d,
-           Application (d, first, [Variable (d, ks)]),
-           [g e; Application (d, rest, [Variable (d, ks)])])) *)
-    expr_to_t e
 
   | A.Do (_loc, label, args) ->
     let args = Tuple (d, List.map g args) in

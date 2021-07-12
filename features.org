@@ -7,4 +7,9 @@
 * is case a computation?
 * resume keyword instead of binding a comtinuation function?
 * an abstraction to implement tina functions from ocaml
-* equality operators 
+* equality operators
+* list and arrays
+* fix ambuguity in parsing variable/record pattern as the expression
+  to match on in case expression.
+  i.e currently, `case v { ... }` wold try to parse as `case (v { ... })`
+      instead of `case (v) { ... }`
