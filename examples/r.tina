@@ -1,0 +1,19 @@
+
+
+def something () =
+    do Some ()
+
+def try (x) =
+    handle something () {
+    	   return x -> x,
+	   Some () resume -> resume (x)
+    }
+
+try (10)
+
+def fact (n) =
+       case (n) {
+           0 -> 1   
+       }
+
+fact (10)

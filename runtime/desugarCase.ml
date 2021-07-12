@@ -52,3 +52,6 @@ type t =
   | Tuple of Loc.t * t list
   | Variant of Loc.t * DataName.t * t list
   | Absurd of string * t
+
+let g _pattern _frontier =
+  failwith ""

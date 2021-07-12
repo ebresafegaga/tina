@@ -1,4 +1,3 @@
 
 
-type element = 
-    | TypeVar 
+(* this file would contain context manipulation functions *)

@@ -1,2 +1,22 @@
-
-* 
+Computational effects, in general, are any observable change a
+function makes to its enclosing enviroment; this includes I/O
+operations, network request, database connections, mutable states,
+generating random variables, and basically anything that interacts
+with the "real world". The idea of a pure function pervades functional
+programming. A pure function is one which is free of computational
+effect and, it can be viewed as a mathematical function in that
+sense. The beuaty and rationale behind pure functions is something
+known as local reasoning: since a function returns the same value for
+each input we can easily write correct programs and maybe prove them
+correct. Another benefit of pure functions is that in a multithreading
+setting, we don't need to use lock, mutexes, or write barriers to
+access variable; since values are not changing we don't need to deal
+with horrible race conditions. Clearly, pure functions are a
+desireable thing, but there is a little problem: we write programs
+solely for their effects. To solve this problem, we need to a means of
+combination for computational effects and pure function. Regardless of
+how ironic they sound when put together, there are clever solutions to
+this problem already. One of such solutions involve monads which has
+roots in category theory. In this paper, we focus on bringing
+computaional effects to pure functions using albegraic effects and
+effect handlers.

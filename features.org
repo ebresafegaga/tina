@@ -1,0 +1,10 @@
+
+
+* actual rec bindings using subsituition
+* remove plain constructors from the ast
+* give the programmer the ability to use `absurd` and `return`
+* new anonymous function syntax
+* is case a computation?
+* resume keyword instead of binding a comtinuation function?
+* an abstraction to implement tina functions from ocaml
+* equality operators 
