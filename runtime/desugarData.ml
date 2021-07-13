@@ -72,66 +72,56 @@ type toplevel =
   | AbilityDef of Loc.t * VarName.t * A.ty list
   | Expression of t
 
+
+(* [reduce_to_record f g xs tag] takes a contructor function [f], a 
+   transformation function [g] a list of transformable items [xs], and a 
+   [tag] which is already tranformed. it then created an a list of pairs 
+   of transformed items tagged with a field name. the list starts with [(0, tag)]
+   then all the other transformed items folllow, paired up with their respective 
+   index. the constructor function [f] is then applied to this a-list to get whatever 
+   expression we desire. *)
+let transform f g xs tag = 
+  let len = 1 + List.length xs in  (* add one to accomodate the tag *)
+  let names = List.init len (string_of_int >> FieldName.of_string) in
+  let fields = tag :: List.map g xs in (* add the tag to the fields *)
+  let fields = List.combine names fields in
+  f fields
+    
+let reduce_to_precord = transform (fun e -> PRecord e)
+let reduce_to_erecord = transform (fun e -> Record (Loc.dummy, e)) (* we can also decide to take an arbitrary location *)
+
 let rec g_pat = function
   | A.PVariable name -> PVariable name 
   | A.PBool b -> PBool b
   | A.PString s -> PString s
   | A.PInteger i -> PInteger i
   | A.PRecord (_name, pats) ->
-    let len = List.length pats in
-    let tag = "tag" |> FieldName.of_string in 
-    let tag_value = PInteger 0 in
-    let names = List.init len (fun i -> i |> string_of_int |> FieldName.of_string) in
-    let fields = List.map (snd >> g_pat) pats in 
-    let fields = (tag, tag_value) :: List.combine names fields in
-    PRecord fields
+    let tag = (PInteger 0) in
+    let pats = List.map snd pats in (* forget about field names *)
+    reduce_to_precord g_pat pats tag
   | A.PVariant (name, pats) ->
     let name = name |> VarName.to_string |> DataName.of_string in
     let index = lookup_variant name in
-    let len = List.length pats in
-    let tag = "tag" |> FieldName.of_string in 
-    let tag_value = PInteger index in
-    let names = List.init len (fun i -> i |> string_of_int |> FieldName.of_string) in
-    let fields = List.map g_pat pats in 
-    let pats = (tag, tag_value) :: List.combine names fields in
-    PRecord pats
+    let tag = PInteger index in
+    reduce_to_precord g_pat pats tag
   | A.PTuple pats ->
-    let len = List.length pats in
-    let tag = "tag" |> FieldName.of_string in 
-    let tag_value = PInteger 0 in
-    let names = List.init len (fun i -> i |> string_of_int |> FieldName.of_string) in
-    let pats = List.map g_pat pats in 
-    let pats = (tag, tag_value) :: List.combine names pats in
-    PRecord pats
+    let tag = PInteger 0 in
+    reduce_to_precord g_pat pats tag
 
 let rec g expr =
   match expr with
   | A.Tuple (loc, fields) ->
-    let len = List.length fields in
-    let tag = "tag" |> FieldName.of_string in 
-    let tag_value = LitInteger (loc, 0) in
-    let names = List.init len (fun i -> i |> string_of_int |> FieldName.of_string) in
-    let fields = List.map g fields in 
-    let fields = (tag, tag_value) :: List.combine names fields in
-    Record (loc, fields)
+    let tag = LitInteger (loc, 0) in
+    reduce_to_erecord g fields tag
   | A.Variant (loc, name, fields) ->
     let index = lookup_variant name in
-    let len = List.length fields in
-    let tag = "tag" |> FieldName.of_string in 
-    let tag_value = LitInteger (loc, index) in
-    let names = List.init len (fun i -> i |> string_of_int |> FieldName.of_string) in
-    let fields = List.map g fields in 
-    let fields = (tag, tag_value) :: List.combine names fields in
-    Record (loc, fields)
+    let tag = LitInteger (loc, index) in
+    reduce_to_erecord g fields tag
   | A.Record (loc, _name, fields) ->
     (* we need to transform all uses of fields to their integer positions *)
-    let len = List.length fields in
-    let tag = "tag" |> FieldName.of_string in 
-    let tag_value = LitInteger (loc, 0) in
-    let names = List.init len (fun i -> i |> string_of_int |> FieldName.of_string) in
-    let fields = List.map (snd >> g) fields in 
-    let fields = (tag, tag_value) :: List.combine names fields in
-    Record (loc, fields)
+    let fields = List.map snd fields in
+    let tag = LitInteger (loc, 0) in
+    reduce_to_erecord g fields tag
   | A.LitTodo loc -> LitTodo loc
   | A.LitUnit loc -> LitUnit loc
   | A.LitBool (loc, b) -> LitBool (loc, b)
@@ -149,14 +139,14 @@ let rec g expr =
   | A.Annotated (loc, expr, ty) -> Annotated (loc, g expr, ty)
   | A.Sequence (loc, a, b) -> Sequence (loc, g a, g b)
   | A.Absurd (s, e) -> Absurd (s, g e)
-                         
+
   | A.Case (loc, expr, clauses) ->
     let clauses = clauses |> List.map (fun (p, e) -> g_pat p, g e) in
     Case (loc, g expr, clauses)
   | A.RecordIndex (loc, expr, name) -> 
     let index = lookup_record name |> string_of_int |> FieldName.of_string in
     RecordIndex (loc, g expr, index)
-      
+
   |A.Do (_, _, _)
   |A.Handle (_, _, _) -> failwith "leave this for now, fix after we implment the Type module"
 
@@ -178,7 +168,7 @@ let toplevel = function
     record_table := tbl @ !record_table;
     RecordDef (loc, name, body) 
   | A.AbilityDef (loc, name, tys) -> AbilityDef (loc, name, tys)
-  | A.Expression _ -> failwith ""
+  | A.Expression e -> Expression (g e)
 
 let handle_toplevel = List.map toplevel
 
@@ -190,3 +180,86 @@ let handle_toplevel = List.map toplevel
    for variants the tag is an integer representing it's position in the variants definition 
    for tuples the tag is 0 
    for records is also zero *)
+
+
+let pp_list es f = es |> List.map f |> String.concat ", "
+  
+let rec pp_pattern = function
+  | PInteger i -> Int.to_string i
+  | PString s -> s
+  | PVariable name -> VarName.to_string name
+  | PBool b -> Bool.to_string b
+  | PRecord es ->
+    Printf.sprintf "{%s}" @@
+    pp_list es (fun (name, pattern) -> Printf.sprintf "%s: %s" (FieldName.to_string name) (pp_pattern pattern))
+
+let rec pp_expression = function 
+  | LitTodo _loc -> "TODO"
+  | LitUnit _loc -> "()"
+  | LitBool (_loc, b) -> Bool.to_string b
+  | LitInteger (_loc, i) -> Int.to_string i
+  | LitFloat (_loc, f) -> Float.to_string f
+  | LitString (_loc, s) -> s
+  | Variable (_loc, v) -> VarName.to_string v
+  | If (_loc, pred, tru, fals) ->
+    Printf.sprintf "if %s then %s else %s"
+      (pp_expression pred)
+      (pp_expression tru)
+      (pp_expression fals)
+  | Application (_loc, rand, es) ->
+    Printf.sprintf "%s (%s)"
+      (pp_expression rand)
+      (pp_list es pp_expression)
+  | Let (_loc, var, value, body) ->
+    Printf.sprintf "let %s = %s; %s"
+      (pp_pattern var)
+      (pp_expression value)
+      (pp_expression body)
+  | Fn (_loc, names, body) ->
+    Printf.sprintf "fn (%s) %s"
+      (pp_list names VarName.to_string)
+      (pp_expression body)
+  | Annotated (_loc, expr, ty) ->
+    Printf.sprintf "(the %s %s)"
+      (pp_expression expr)
+      (A.pp_ty ty)
+  | Sequence (_loc, a, b) ->
+    Printf.sprintf "%s; %s;"
+      (pp_expression a)
+      (pp_expression b)
+  | Case (_loc, expr, pes) -> (* pes - pattern, expression S *)
+    let f (pat, expr) =
+      Printf.sprintf "%s -> %s"
+        (pp_pattern pat)
+        (pp_expression expr)
+    in
+    Printf.sprintf "case %s { %s }" 
+      (pp_expression expr)
+      (pp_list pes f)
+  | Record (_loc, fes) -> (* fes - field, expression S *)
+    let f (field, expr) =
+      Printf.sprintf "%s: %s"
+        (FieldName.to_string field)
+        (pp_expression expr)
+    in
+    Printf.sprintf "{%s}"
+      (pp_list fes f)
+  | RecordIndex (_loc, expr, name) ->
+    Printf.sprintf "%s.%s"
+      (pp_expression expr)
+      (FieldName.to_string name)
+  | Absurd (s, e) ->
+    Printf.sprintf "absurd (%s, %s)" s (pp_expression e)
+
+let pp_toplevel = function
+  | Claim (_loc, name, ty) ->
+    Printf.sprintf
+      "claim %s %s"
+      (VarName.to_string name)
+      (A.pp_ty ty)
+  | Def (_loc, name, expr) -> (* TODO: add a special case for fn *)
+    Printf.sprintf "def %s = %s"
+      (VarName.to_string name)
+      (pp_expression expr)
+  | Expression expr -> pp_expression expr
+  | VariantDef _ | RecordDef _ | AbilityDef _ -> "<def>" (* for now *)

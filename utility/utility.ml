@@ -15,4 +15,16 @@ module Result = struct
     
 end
 
+module List = struct
+  include List
+
+  let rec from_exclusive n m =
+    if n < m then
+      n :: from_exclusive (n+1) m
+    else
+      []
+end
+
+
 let (>>) f g x = x |> f |> g
+

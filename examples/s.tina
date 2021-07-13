@@ -1,0 +1,23 @@
+
+datatype Name = Ogaga | Afoke | Fejiro (Float) | Yoma (Nat, String) | Vovwero (Nat, Nat)
+
+def o = Ogaga
+
+def y = Yoma (10, "ooo")
+
+def v = Vovwero (23, 2)
+
+case (v) {
+     Vovwero (a, b) -> (a, b),
+     Fejiro (f) -> f,
+     Ogaga -> "ogaga",
+     Afoke -> "afoks",
+     Yoma (a, b) -> (b, a)
+}
+
+datatype person =
+   { claim name String,
+     claim age Nat }
+
+
+def p = person { name: Yoma (23, "elim"), age: 24 }

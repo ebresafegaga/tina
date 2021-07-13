@@ -80,6 +80,12 @@ let parse lexbuf =
   let checkpoint = Grammar.Incremental.toplevel lexbuf.lex_curr_p in
   I.loop_handle succeed (fail text buffer) supplier checkpoint
 
+let parse_from_file file =
+  file
+  |> open_in 
+  |> Lexing.from_channel
+  |> parse
+
 let pp_token =
   let module G = Grammar in
   function

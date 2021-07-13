@@ -31,7 +31,7 @@ open Naming
 let d = Loc.dummy
 let fresh = VarName.fresh          
 
-module A = Ast
+module A = DesugarData
     
 type t = 
   | LitTodo of Loc.t 
@@ -45,7 +45,7 @@ type t =
   | Application of Loc.t * t * t list 
   | Let of Loc.t * VarName.t * t * t
   | Fn of Loc.t * VarName.t list * t
-  | Annotated of Loc.t * t * A.ty 
+  (* | Annotated of Loc.t * t * A.ty  *)
   | Sequence of Loc.t * t * t
   | Record of Loc.t * DataName.t * (FieldName.t * t) list
   | RecordIndex of Loc.t * t * FieldName.t
@@ -60,8 +60,7 @@ let is_pvariable = function
 let is_simple_pattern = function
   | A.PVariable _ | A.PString _
   | A.PInteger _ | A.PBool _ -> true
-  | A.PRecord _ | A.PTuple _
-  | A.PVariant _ -> false
+  | A.PRecord _  -> false
 
 let variable name = A.Variable (d, name)
 let case expr clauses = A.Case (d, expr, clauses)
@@ -93,12 +92,15 @@ let rec g body frontier =
   | (name, A.PString s) :: frontier ->
     case (variable name)
       [A.PString s, g frontier]
-  | (name, A.PTuple pats) :: frontier ->
+  | (name, A.PRecord pats) :: frontier ->
+    let names = List.map fst pats in
+    let pats = List.map snd pats in
     let pats, front = freshen pats in
     let frontier = front @ frontier in
+    let name_pat = List.combine names pats in
     case (variable name)
-      [A.PTuple pats, g frontier]
-  | (_, A.PRecord _) :: _ | (_, A.PVariant _) :: _  -> failwith "not yet impl"
+      [A.PRecord name_pat, g frontier]
+  
 
 
 
