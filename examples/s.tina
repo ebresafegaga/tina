@@ -21,3 +21,5 @@ datatype person =
 
 
 def p = person { name: Yoma (23, "elim"), age: 24 }
+
+p.name

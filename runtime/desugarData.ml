@@ -87,8 +87,11 @@ let transform f g xs tag =
   let fields = List.combine names fields in
   f fields
     
-let reduce_to_precord = transform (fun e -> PRecord e)
-let reduce_to_erecord = transform (fun e -> Record (Loc.dummy, e)) (* we can also decide to take an arbitrary location *)
+let reduce_to_precord = transform (fun p -> PRecord p)
+    
+(* we can also decide to take an arbitrary `Loc.t` 
+   instead of using `Loc.dummy` *)    
+let reduce_to_erecord = transform (fun e -> Record (Loc.dummy, e))
 
 let rec g_pat = function
   | A.PVariable name -> PVariable name 
@@ -163,7 +166,7 @@ let toplevel = function
   | A.RecordDef (loc, name, body) ->
     let names = List.map fst body in
     let len = List.length body in
-    let indices = List.init len Fun.id in
+    let indices = List.map succ @@ List.init len Fun.id in
     let tbl = List.combine names indices in
     record_table := tbl @ !record_table;
     RecordDef (loc, name, body) 
