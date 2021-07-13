@@ -1,15 +1,20 @@
 
 
 * actual rec bindings using subsituition
-* remove plain constructors from the ast
 * give the programmer the ability to use `absurd` and `return`
 * new anonymous function syntax
+       `fn (x) { ... }`
 * is case a computation?
 * resume keyword instead of binding a comtinuation function?
 * an abstraction to implement tina functions from ocaml
 * equality operators
 * list and arrays
-* fix ambuguity in parsing variable/record pattern as the expression
-  to match on in case expression.
+* fix ambuguity in parsing variable/record pattern as the expression to match on, a in case expression.
   i.e currently, `case v { ... }` wold try to parse as `case (v { ... })`
       instead of `case (v) { ... }`
+* new syntax to differentiate let bindings from computation let sequencing
+                      `let x <- return x`
+		      `let y <- do Comp ();
+		       let s <- do X ();
+		       return x`
+* one current flaw of Tina is we don't handle bindings correctly

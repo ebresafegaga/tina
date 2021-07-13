@@ -14,3 +14,5 @@ module Result = struct
             Ok (x :: xs)
     
 end
+
+let (>>) f g x = x |> f |> g
