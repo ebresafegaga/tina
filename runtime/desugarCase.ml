@@ -27,10 +27,10 @@
 
 open Syntax
 open Naming
-open Utility    
+open Utility
 
 let d = Loc.dummy
-let fresh = VarName.fresh          
+let fresh = VarName.fresh              
 
 module A = DesugarData
     
@@ -161,6 +161,7 @@ let app f args = Application (Loc.dummy, f, args)
 let let' name expr body = Let (Loc.dummy, name, expr, body)
 let var name = Variable (d, VarName.of_string name)
 let record_index record name = RecordIndex (d, record, FieldName.of_string name)
+let equal = var "equal"    
 
 let expr_of_pat = function
   | A.PBool b -> LitBool (d, b)
@@ -191,7 +192,7 @@ let rec transform1 expr =
   | A.Fn (loc, vars, body) -> Fn (loc, vars, transform1 body) 
   | A.Annotated (_, e, _) -> transform1 e
   | A.Sequence (_loc, a, b) ->
-    let' (VarName.fresh "a") (transform1 a)
+    let' (fresh "seq") (transform1 a)
       (transform1 b)
   | A.Case (_loc, expr, clauses) -> top1 (transform1 expr) clauses
   | A.Record (loc, names) ->
@@ -210,19 +211,19 @@ and top1 e clauses =
       (top1 e rest)
   | (A.PInteger q, body) :: rest ->
     let q = LitInteger (d, q) in
-    let predicate = app (var "==") [q; e] in
+    let predicate = app equal [q; e] in
     if' predicate
       (transform1 body)
       (top1 e rest)
   | (A.PString s, body) :: rest ->
     let s = LitString (d, s) in
-    let predicate = app (var "==") [s; e] in
+    let predicate = app equal [s; e] in
     if' predicate
       (transform1 body)
       (top1 e rest)
   | (A.PBool b, body) :: rest ->
     let b = LitBool (d, b) in
-    let predicate = app (var "==") [b; e] in
+    let predicate = app equal [b; e] in
     if' predicate
       (transform1 body)
       (top1 e rest)
@@ -235,22 +236,12 @@ and top1 e clauses =
         pats
         (transform1 body)
     in
-    let predicate = app (var "==") [e_0; v_0] in
+    let predicate = app equal [e_0; v_0] in
     if' predicate
       predicate_true
       (top1 e rest)
 
 let g = transform0 >> transform1 
-
-
-(* there's a problem: 
-   pattern matching on records will flatten out the index 
-   to a variable, but we expect a constant pattern. 
-   
-   how do we resolve this? 
-   there are 2 ways
-   1. in `top0` we can make sure we don't touch the first field of records 
-   2. there's actually no other option lol *)
 
 let rec handle_toplevel = function
   | [] -> []
@@ -258,15 +249,9 @@ let rec handle_toplevel = function
   | A.Expression e :: rest -> Expression (g e) :: handle_toplevel rest
   | (A.VariantDef _ | A.RecordDef _ | A.AbilityDef _  | A.Claim _) :: rest -> handle_toplevel rest
 
-(* 
-  we need a table to map variants name to their correspomding integr values
-*)
 
-(* | TAG | ... 
-   for variants the tag is an integer representing it's position in the variants definition 
-   for tuples the tag is 0 
-   for records is also zero *)
 
+(* boilerplate pretty pprinting stuff *)
 
 let pp_list es f = es |> List.map f |> String.concat ", "
 
@@ -295,8 +280,7 @@ let rec pp_expression = function
     Printf.sprintf "fn (%s) %s"
       (pp_list names VarName.to_string)
       (pp_expression body)
-  
-  | Record (_loc, fes) -> (* fes - field, expression S *)
+  | Record (_loc, fes) -> 
     let f (field, expr) =
       Printf.sprintf "%s: %s"
         (FieldName.to_string field)
@@ -312,7 +296,7 @@ let rec pp_expression = function
     Printf.sprintf "absurd (%s, %s)" s (pp_expression e)
 
 let pp_toplevel = function
-  | Def (_loc, name, expr) -> (* TODO: add a special case for fn *)
+  | Def (_loc, name, expr) -> 
     Printf.sprintf "def %s = %s"
       (VarName.to_string name)
       (pp_expression expr)

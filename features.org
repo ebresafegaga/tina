@@ -1,5 +1,6 @@
 
 
+
 * actual rec bindings using subsituition
 * give the programmer the ability to use `absurd` and `return`
 * new anonymous function syntax
@@ -19,6 +20,7 @@
 		       return x`
 * one current flaw of Tina is we don't handle bindings correctly
 
+* Recursive functions now
 
 * things to fix in the parser
   - fn { } syntax
@@ -26,5 +28,7 @@
   - record to use { name: value ... } with out requirng the name
   - absurd, return keyword
 
+* we also need a pass for transforming primitive operator-like functions into their runtime
+  functions (e.g comparision functions, numerical operations functiona)
 
 * we need a desugaring pass to remove wierd things like `Sequence` and `Annotation`
