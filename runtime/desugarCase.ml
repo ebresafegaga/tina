@@ -234,3 +234,5 @@ and top1 e clauses =
     if' predicate
       predicate_true
       (top1 e rest)
+
+let g = transform0 >> transform1 
