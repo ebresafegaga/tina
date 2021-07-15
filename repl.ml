@@ -93,6 +93,7 @@ and process_js_compile tina js =
   in
   let tina = open_in tina in 
   let file = open_out js in
+  close_in tina; close_out file;
   Printf.fprintf file "%s" (process_data tina)
     
 and process_load = function
