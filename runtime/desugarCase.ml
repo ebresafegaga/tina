@@ -45,20 +45,11 @@ type t =
   | Application of Loc.t * t * t list 
   | Let of Loc.t * VarName.t * t * t
   | Fn of Loc.t * VarName.t list * t
-  (* | Annotated of Loc.t * t * A.ty  *)
-  | Sequence of Loc.t * t * t
   | Record of Loc.t * (FieldName.t * t) list
   | RecordIndex of Loc.t * t * FieldName.t
   | Absurd of string * t
 
-type toplevel =
-  (* | Claim of Loc.t * VarName.t * A.ty *)
-  | Def of Loc.t * VarName.t * t
-  (*          
-  | VariantDef of Loc.t * DataName.t * (VarName.t * A.ty list) list
-  | RecordDef of Loc.t * DataName.t * (FieldName.t * A.ty) list
-  | AbilityDef of Loc.t * VarName.t * A.ty list *)
-  | Expression of t
+type toplevel = Def of Loc.t * VarName.t * t | Expression of t
 
 let is_pvariable = function
   | A.PVariable _ -> true
@@ -199,7 +190,9 @@ let rec transform1 expr =
     Let (loc, var, transform1 expr, transform1 body)
   | A.Fn (loc, vars, body) -> Fn (loc, vars, transform1 body) 
   | A.Annotated (_, e, _) -> transform1 e
-  | A.Sequence (loc, a, b) -> Sequence (loc, transform1 a, transform1 b)
+  | A.Sequence (_loc, a, b) ->
+    let' (VarName.fresh "a") (transform1 a)
+      (transform1 b)
   | A.Case (_loc, expr, clauses) -> top1 (transform1 expr) clauses
   | A.Record (loc, names) ->
     let names = names |> List.map (fun (name, e) -> name, transform1 e) in
@@ -302,11 +295,6 @@ let rec pp_expression = function
     Printf.sprintf "fn (%s) %s"
       (pp_list names VarName.to_string)
       (pp_expression body)
-  
-  | Sequence (_loc, a, b) ->
-    Printf.sprintf "%s; %s;"
-      (pp_expression a)
-      (pp_expression b)
   
   | Record (_loc, fes) -> (* fes - field, expression S *)
     let f (field, expr) =
