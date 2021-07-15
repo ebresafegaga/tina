@@ -109,11 +109,15 @@ let rec top pat body =
   | A.PString _ -> pat, g body []
   | A.PRecord pats when pats |> List.for_all (snd >> is_pvariable) -> pat, g body []
   | A.PRecord pats ->
+    (* don't reduce the first pattern in pat because it is the tag *)
+    let tag = List.hd pats in
+    let pats = List.tl pats in
+      
     let names = List.map fst pats in
     let pats = List.map snd pats in
     let pats, frontier = freshen pats in
     let name_pat = List.combine names pats in
-    A.PRecord name_pat, g body frontier
+    A.PRecord (tag :: name_pat), g body frontier (* add the tag back *)
 
 let rec transform0 expr =
   match expr with
@@ -236,3 +240,13 @@ and top1 e clauses =
       (top1 e rest)
 
 let g = transform0 >> transform1 
+
+
+(* there's a problem: 
+   pattern matching on records will flatten out the index 
+   to a variable, but we expect a constant pattern. 
+   
+   how do we resolve this? 
+   there are 2 ways
+   1. in `top0` we can make sure we don't touch the first field of records 
+   2. there's actually no other option lol *)
