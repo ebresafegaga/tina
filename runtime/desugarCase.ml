@@ -35,7 +35,6 @@ let fresh = VarName.fresh
 module A = DesugarData
     
 type t = 
-  | LitTodo of Loc.t 
   | LitUnit of Loc.t 
   | LitBool of Loc.t * bool 
   | LitInteger of Loc.t * int 
@@ -185,7 +184,7 @@ let var_of_pat = function
 let rec transform1 expr =
   match expr with
   | A.Variable (loc, name) -> Variable (loc, name)
-  | A.LitTodo loc -> LitTodo loc
+  | A.LitTodo loc -> Absurd ("Unreplaced TODO", LitUnit loc)
   | A.LitUnit loc -> LitUnit loc
   | A.LitBool (loc, b) -> LitBool (loc, b)
   | A.LitInteger (loc, i) -> LitInteger (loc, i)
@@ -278,8 +277,7 @@ let rec handle_toplevel = function
 
 let pp_list es f = es |> List.map f |> String.concat ", "
 
-let rec pp_expression = function 
-  | LitTodo _loc -> "TODO"
+let rec pp_expression = function
   | LitUnit _loc -> "()"
   | LitBool (_loc, b) -> Bool.to_string b
   | LitInteger (_loc, i) -> Int.to_string i
