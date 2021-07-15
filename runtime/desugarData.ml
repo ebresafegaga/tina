@@ -46,12 +46,14 @@ type pattern =
   | PRecord of (FieldName.t * pattern) list
   
 type t =
-  | LitTodo of Loc.t 
+  | LitTodo of Loc.t
+                 
   | LitUnit of Loc.t 
   | LitBool of Loc.t * bool 
   | LitInteger of Loc.t * int 
   | LitFloat of Loc.t * float 
-  | LitString of Loc.t * string 
+  | LitString of Loc.t * string
+                 
   | Variable of Loc.t * VarName.t
   | If of Loc.t * t * t * t
   | Application of Loc.t * t * t list 

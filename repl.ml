@@ -98,6 +98,7 @@ and process_desugar_data =
     |> Lexing.from_channel
     |> P.parse
     |> DesugarData.handle_toplevel
+    (* |> DesugarCase.handle_toplevel *)
     |> List.map DesugarData.pp_toplevel
     |> String.concat "\n"
     |> print_to_repl

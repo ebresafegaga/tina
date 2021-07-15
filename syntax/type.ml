@@ -11,12 +11,12 @@ type t =
     | TyInt
     | TyFloat
     | TyUnit
-    | TyArrow of t list * t
+    | TyArrow of t list * t (* a ... -> b *)
     | TyRecord of (FieldName.t * t) list
     | TyTuple of t list
-    | TyVariant of t list
+    | TyVariant
           
     | TyEffect (* E = {l ...} *)
     | TyComp  (* C = A ! E *)
-    | TyHandler (* H = C1 => C2*)
+    | TyHandler (* H = M ~> N*)
        
