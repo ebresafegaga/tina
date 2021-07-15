@@ -93,11 +93,13 @@ let rec g body frontier =
     case (variable name)
       [A.PString s, g frontier]
   | (name, A.PRecord pats) :: frontier ->
+    let tag = List.hd pats in
+    let pats = List.tl pats in
     let names = List.map fst pats in
     let pats = List.map snd pats in
     let pats, front = freshen pats in
     let frontier = front @ frontier in
-    let name_pat = List.combine names pats in
+    let name_pat = tag :: List.combine names pats in
     case (variable name)
       [A.PRecord name_pat, g frontier]
 
