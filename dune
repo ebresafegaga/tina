@@ -2,7 +2,7 @@
  (name driver)
  ;; (flags -ccopt -static)
  (modes byte exe)
- (libraries utility syntax parser runtime))
+ (libraries utility syntax parser backend runtime))
 
 (env
  (dev

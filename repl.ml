@@ -1,5 +1,6 @@
 open Syntax
 open Runtime
+open Backend    
 
 module P = Parser.ParserEntry
 
@@ -74,11 +75,26 @@ let rec process_command input =
     state#end_dump (); repl ()
   | ":desugar" :: "data" :: files -> process_desugar_data files; repl ()
   | ":desugar" :: "case" :: files -> process_desugar_case files; repl ()
+  | ":compile" :: "js" :: [tina; js] -> process_js_compile tina js; repl ()
   | invalid :: _args ->
     let msg = Printf.sprintf "invalid command %s" invalid in
     print_error msg;
     repl ()
 
+and process_js_compile tina js =
+  let process_data channel =
+    channel
+    |> Lexing.from_channel
+    |> P.parse
+    |> DesugarData.handle_toplevel
+    |> DesugarCase.handle_toplevel
+    |> Js.gen_toplevel
+    |> String.concat "\n"
+  in
+  let tina = open_in tina in 
+  let file = open_out js in
+  Printf.fprintf file "%s" (process_data tina)
+    
 and process_load = function
   | [] -> ()
   | file :: files ->
