@@ -1,0 +1,27 @@
+
+
+
+datatype subject =
+   { claim name String,
+     claim code Nat,
+     claim other String }
+
+def o = subject { name: "MAT 423", code: 423, other: "no other" }
+
+def math = subject { name: "MAT 423", code: 423, other: o}
+
+case (math) {
+     subject { name: n, code: c, other: subject {name: n1, code: c1}} -> (n, c, n1, c1)
+}
+
+datatype level = L100 | L200 | L300 | L400 | L500
+
+def l = L100
+
+case (l) {
+     L100 -> 100,
+     L200 -> 200,
+     L300 -> 300,
+     L400 -> 400,
+     L500 -> 500
+}     

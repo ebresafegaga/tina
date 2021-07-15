@@ -50,9 +50,16 @@ type t =
   | Sequence of Loc.t * t * t
   | Record of Loc.t * (FieldName.t * t) list
   | RecordIndex of Loc.t * t * FieldName.t
-  | Tuple of Loc.t * t list
-  | Variant of Loc.t * DataName.t * t list
   | Absurd of string * t
+
+type toplevel =
+  (* | Claim of Loc.t * VarName.t * A.ty *)
+  | Def of Loc.t * VarName.t * t
+  (*          
+  | VariantDef of Loc.t * DataName.t * (VarName.t * A.ty list) list
+  | RecordDef of Loc.t * DataName.t * (FieldName.t * A.ty) list
+  | AbilityDef of Loc.t * VarName.t * A.ty list *)
+  | Expression of t
 
 let is_pvariable = function
   | A.PVariable _ -> true
@@ -252,3 +259,76 @@ let g = transform0 >> transform1
    there are 2 ways
    1. in `top0` we can make sure we don't touch the first field of records 
    2. there's actually no other option lol *)
+
+let rec handle_toplevel = function
+  | [] -> []
+  | A.Def (loc, name, expr) :: rest -> Def (loc, name, g expr) :: handle_toplevel rest
+  | A.Expression e :: rest -> Expression (g e) :: handle_toplevel rest
+  | (A.VariantDef _ | A.RecordDef _ | A.AbilityDef _  | A.Claim _) :: rest -> handle_toplevel rest
+
+(* 
+  we need a table to map variants name to their correspomding integr values
+*)
+
+(* | TAG | ... 
+   for variants the tag is an integer representing it's position in the variants definition 
+   for tuples the tag is 0 
+   for records is also zero *)
+
+
+let pp_list es f = es |> List.map f |> String.concat ", "
+
+let rec pp_expression = function 
+  | LitTodo _loc -> "TODO"
+  | LitUnit _loc -> "()"
+  | LitBool (_loc, b) -> Bool.to_string b
+  | LitInteger (_loc, i) -> Int.to_string i
+  | LitFloat (_loc, f) -> Float.to_string f
+  | LitString (_loc, s) -> s
+  | Variable (_loc, v) -> VarName.to_string v
+  | If (_loc, pred, tru, fals) ->
+    Printf.sprintf "if %s then %s else %s"
+      (pp_expression pred)
+      (pp_expression tru)
+      (pp_expression fals)
+  | Application (_loc, rand, es) ->
+    Printf.sprintf "%s (%s)"
+      (pp_expression rand)
+      (pp_list es pp_expression)
+  | Let (_loc, var, value, body) ->
+    Printf.sprintf "let %s = %s; %s"
+      (VarName.to_string var)
+      (pp_expression value)
+      (pp_expression body)
+  | Fn (_loc, names, body) ->
+    Printf.sprintf "fn (%s) %s"
+      (pp_list names VarName.to_string)
+      (pp_expression body)
+  
+  | Sequence (_loc, a, b) ->
+    Printf.sprintf "%s; %s;"
+      (pp_expression a)
+      (pp_expression b)
+  
+  | Record (_loc, fes) -> (* fes - field, expression S *)
+    let f (field, expr) =
+      Printf.sprintf "%s: %s"
+        (FieldName.to_string field)
+        (pp_expression expr)
+    in
+    Printf.sprintf "{%s}"
+      (pp_list fes f)
+  | RecordIndex (_loc, expr, name) ->
+    Printf.sprintf "%s.%s"
+      (pp_expression expr)
+      (FieldName.to_string name)
+  | Absurd (s, e) ->
+    Printf.sprintf "absurd (%s, %s)" s (pp_expression e)
+
+let pp_toplevel = function
+  | Def (_loc, name, expr) -> (* TODO: add a special case for fn *)
+    Printf.sprintf "def %s = %s"
+      (VarName.to_string name)
+      (pp_expression expr)
+  | Expression expr -> pp_expression expr
+  

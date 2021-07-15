@@ -73,6 +73,7 @@ let rec process_command input =
     print_to_repl "dumping ending ...\n";
     state#end_dump (); repl ()
   | ":desugar" :: "data" :: files -> process_desugar_data files; repl ()
+  | ":desugar" :: "case" :: files -> process_desugar_case files; repl ()
   | invalid :: _args ->
     let msg = Printf.sprintf "invalid command %s" invalid in
     print_error msg;
@@ -100,6 +101,29 @@ and process_desugar_data =
     |> DesugarData.handle_toplevel
     (* |> DesugarCase.handle_toplevel *)
     |> List.map DesugarData.pp_toplevel
+    |> String.concat "\n"
+    |> print_to_repl
+  in
+  function 
+  | [] -> ()
+  | file :: files ->
+    match open_in file with
+    | channel ->
+      (try process_data channel with
+         Errors.RuntimeError m -> print_error m);
+      process_desugar_data files
+    | exception Sys_error msg ->
+      print_error msg;
+      process_desugar_data files
+
+and process_desugar_case =
+  let process_data channel =
+    channel
+    |> Lexing.from_channel
+    |> P.parse
+    |> DesugarData.handle_toplevel
+    |> DesugarCase.handle_toplevel
+    |> List.map DesugarCase.pp_toplevel
     |> String.concat "\n"
     |> print_to_repl
   in
