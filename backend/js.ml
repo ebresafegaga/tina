@@ -15,8 +15,10 @@ type expression =
   | Fn of VarName.t list * statement list
   | Record of (VarName.t * expression) list
   | RecordIndex of expression * VarName.t
+  | Compound of statement list
 
 and statement =
+  | Ignore of expression 
   | If of expression * statement list * statement list
   | Return of expression option
   | Let of VarName.t * expression
@@ -51,7 +53,7 @@ let rec gexpr = function
     Application (absurd, [LitString s])
       
   (* these are statements in javascript *)
-  | Let _ | If _ -> Errors.runtime "JS code gen: Expected but got a statement"
+  | A.Let _ | A.If _ as e -> Compound (gcomp e)
 
 and gstate expr =
   match expr with 
@@ -66,6 +68,19 @@ and gstate expr =
     let p = variable p in
     [If (p, gstate pt, gstate pf)]
 
+and gcomp expr =
+  match expr with 
+  | A.LitBool _ | A.LitFloat _
+  | A.LitString _ | A.LitInteger _
+  | A.Variable _ | A.Application _
+  | Record _ | RecordIndex _ | A.Absurd _
+  | A.Fn _ -> [Ignore (gexpr expr)]
+  | A.Let (x, expr, body) ->
+    Let (x, gexpr expr) :: gstate body
+  | A.If (p, pt, pf) ->
+    let p = variable p in
+    [If (p, gstate pt, gstate pf)]
+
 let handle_top = function
   | A.Def (name, expr) -> Def (VarName.to_string name, gexpr expr)
   | A.Expression e -> Expression (gexpr e)
@@ -73,7 +88,7 @@ let handle_top = function
 let handle_toplevel = List.map handle_top
 
 let pp_list es f = es |> List.map f |> String.concat ", "
-let combine_statement es = es |> String.concat "; "                     
+let combine_statement es = es |> String.concat "; "           
                      
 let rec gen_expression = function
   | LitInteger i -> string_of_int i
@@ -90,6 +105,7 @@ let rec gen_expression = function
         Printf.sprintf "%s: %s" (VarName.to_string name) (gen_expression expr)))
   | RecordIndex (expr, index) ->
     Printf.sprintf "%s[%s]" (gen_expression expr) (VarName.to_string index)
+  | Compound ss -> (combine_statement (List.map gen_statement ss))
 
 and gen_statement = function
   | Return (Some e) -> Printf.sprintf "return %s;" (gen_expression e)
@@ -103,3 +119,9 @@ and gen_statement = function
        } |} (gen_expression p) (combine_statement (List.map gen_statement pt))
       (combine_statement (List.map gen_statement pf))
   | Let (x, e) -> Printf.sprintf "let %s = %s" (VarName.to_string x) (gen_expression e)
+  | Ignore e -> Printf.sprintf "%s;" (gen_expression e)
+
+let gen_toplevel = function
+  | Def (name, expr) ->
+    Printf.sprintf "const %s = %s;" name (gen_expression expr)
+  | Expression (e) -> Printf.sprintf "%s;" (gen_expression e)

@@ -65,7 +65,7 @@ let rec freshen pats =
     let row, frech = freshen pats in
     A.PVariable name :: row, frech
   | pat :: pats ->
-    let var = fresh "%fresh" in
+    let var = fresh "fresh" in
     let row, frech = freshen pats in
     (A.PVariable var :: row), (var, pat) :: frech
   | [] -> [], []

@@ -20,7 +20,7 @@ module StringID = struct
     let fresh =
       let state = ref 0 in
       fun s ->
-        let v = Printf.sprintf "%s/%d" s !state in
+        let v = Printf.sprintf "%s_%d" s !state in
         incr state;
         of_string v
 end

@@ -82,9 +82,24 @@ let rec process_command input =
     print_error msg;
     repl ()
 
-and process_js_compile _tina _js =
-  () (* for now, do nothing *)
-    
+and process_js_compile tina js =
+  let js = open_out js in
+  let tina = open_in tina in
+  let process channel =
+    channel
+    |> Lexing.from_channel
+    |> P.parse
+    |> DesugarData.handle_toplevel
+    |> DesugarCase.handle_toplevel
+    |> KNormal.handle_toplevel
+    |> Js.handle_toplevel
+    |> List.map Js.gen_toplevel
+    |> String.concat "\n"
+  in
+  let js_code = process tina in
+  Printf.fprintf js "%s" js_code;
+  close_out js; close_in tina 
+
 and process_load = function
   | [] -> ()
   | file :: files ->
