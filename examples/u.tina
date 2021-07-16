@@ -1,3 +1,12 @@
 
 
-if (fn (x) x) (10) then true else false
+-- if (fn (x) x) (10) then true else false
+
+
+-- def f (x) = x
+
+if f (10) then true else false
+
+
+
+-- (fn (xx) xx, 23, c)

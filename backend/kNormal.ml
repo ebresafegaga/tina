@@ -1,4 +1,4 @@
-
+open Utility
 open Syntax
 open Naming
 open Runtime    
@@ -30,7 +30,7 @@ let insert_let expr k =
     let e = k x in
     Let (x, expr, e)
 
-let rec g = function
+let rec g0 = function
   | A.LitUnit _loc -> LitUnit
   | A.LitBool (_loc, b) -> LitBool b
   | A.LitInteger (_loc, i) -> LitInteger i
@@ -38,38 +38,52 @@ let rec g = function
   | A.LitString (_loc, s) -> LitString s
   | A.Variable (_loc, x) -> Variable x
   | A.If (_loc, p, pt, pf) ->
-    insert_let (g p)
+    insert_let (g0 p)
       (fun x ->
-         If (x, (g pt), (g pf)))
+         If (x, (g0 pt), (g0 pf)))
   | A.Application (_loc, f, args) ->
-    insert_let (g f)
+    insert_let (g0 f)
       (fun f ->
          sequence args
            (fun args ->
               Application (f, args)))
-  | A.Let (_loc, x, expr, body) -> Let (x, g expr, g body)
-  | A.Fn (_loc, args, body) -> Fn (args, g body)
+  | A.Let (_loc, x, expr, body) -> Let (x, g0 expr, g0 body)
+  | A.Fn (_loc, args, body) -> Fn (args, g0 body)
   | A.Record (_loc, fields) ->
     let tags, exprs = List.split fields in
     sequence exprs
       (fun xs ->
          Record (List.combine tags xs))
   | A.RecordIndex (_loc, expr, index) ->
-    insert_let (g expr)
+    insert_let (g0 expr)
       (fun x ->
          RecordIndex (x, index))
-  | A.Absurd (s, e) -> Absurd (s, g e)
+  | A.Absurd (s, e) -> Absurd (s, g0 e)
 
 (* t list -> (VarName.t list -> t) -> t*)
 and sequence es k =
   match es with
   | [] -> k []
   | e :: es ->
-    insert_let (g e)
+    insert_let (g0 e)
       (fun x ->
          sequence es
            (fun xs ->
               k (x :: xs)))
+
+let rec g1 = function
+  | If (p, pt, pf) -> If (p, g1 pt, g1 pf)
+  | Fn (args, body) -> Fn (args, g1 body)
+  | Let (x, expr, body) ->
+    let rec insert = function
+      | Let (y, yexpr, ybody) -> Let (y, yexpr, insert ybody)
+      | e -> Let (x, e, g1 body)
+    in
+    insert (g1 expr)
+  | e -> e
+
+
+let g = g0 >> g1
 
 let handle_top = function
   | A.Def (_loc, name, body) -> Def (name, g body)
