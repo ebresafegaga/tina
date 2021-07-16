@@ -46,9 +46,7 @@ type pattern =
   | PRecord of (FieldName.t * pattern) list
   
 type t =
-  | LitTodo of Loc.t
                  
-  | LitUnit of Loc.t 
   | LitBool of Loc.t * bool 
   | LitInteger of Loc.t * int 
   | LitFloat of Loc.t * float 
@@ -127,8 +125,8 @@ let rec g expr =
     let fields = List.map snd fields in
     let tag = LitInteger (loc, 0) in
     reduce_to_erecord g fields tag
-  | A.LitTodo loc -> LitTodo loc
-  | A.LitUnit loc -> LitUnit loc
+  | A.LitTodo loc -> Absurd ("Unreplaced TODO", LitInteger (loc, 0))
+  | A.LitUnit loc -> LitInteger (loc, 0) (* zero is unit *)
   | A.LitBool (loc, b) -> LitBool (loc, b)
   | A.LitInteger (loc, i) -> LitInteger (loc, i)
   | A.LitFloat (loc, f) -> LitFloat (loc, f)
@@ -199,8 +197,6 @@ let rec pp_pattern = function
     pp_list es (fun (name, pattern) -> Printf.sprintf "%s: %s" (FieldName.to_string name) (pp_pattern pattern))
 
 let rec pp_expression = function 
-  | LitTodo _loc -> "TODO"
-  | LitUnit _loc -> "()"
   | LitBool (_loc, b) -> Bool.to_string b
   | LitInteger (_loc, i) -> Int.to_string i
   | LitFloat (_loc, f) -> Float.to_string f

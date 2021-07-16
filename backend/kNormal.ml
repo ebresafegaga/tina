@@ -5,8 +5,7 @@ open Runtime
 
 module A = DesugarCase
 
-type t = 
-  | LitUnit 
+type t =
   | LitBool of bool 
   | LitInteger of  int 
   | LitFloat of float 
@@ -22,6 +21,7 @@ type t =
 
 type toplevel = Def of VarName.t * t | Expression of t
 
+(* this function does all the magic *)
 let insert_let expr k =
   match expr with
   | Variable x -> k x
@@ -31,7 +31,6 @@ let insert_let expr k =
     Let (x, expr, e)
 
 let rec g0 = function
-  | A.LitUnit _loc -> LitUnit
   | A.LitBool (_loc, b) -> LitBool b
   | A.LitInteger (_loc, i) -> LitInteger i
   | A.LitFloat (_loc, f) -> LitFloat f
@@ -60,7 +59,7 @@ let rec g0 = function
          RecordIndex (x, index))
   | A.Absurd (s, e) -> Absurd (s, g0 e)
 
-(* t list -> (VarName.t list -> t) -> t*)
+(* A.t list -> (VarName.t list -> t) -> t*)
 and sequence es k =
   match es with
   | [] -> k []
@@ -71,6 +70,7 @@ and sequence es k =
            (fun xs ->
               k (x :: xs)))
 
+(* flatten nested let bindings *)
 let rec g1 = function
   | If (p, pt, pf) -> If (p, g1 pt, g1 pf)
   | Fn (args, body) -> Fn (args, g1 body)
@@ -96,7 +96,6 @@ let handle_toplevel = List.map handle_top
 let pp_list es f = es |> List.map f |> String.concat ", "
 
 let rec pp_expression = function
-  | LitUnit -> "()"
   | LitBool (b) -> Bool.to_string b
   | LitInteger ( i) -> Int.to_string i
   | LitFloat ( f) -> Float.to_string f

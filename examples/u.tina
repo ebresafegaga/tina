@@ -5,8 +5,14 @@
 
 -- def f (x) = x
 
-if f (10) then true else false
+-- if f (10) then true else false
 
 
 
 -- (fn (xx) xx, 23, c)
+
+datatype me = { claim ogaga String }
+
+-- g (f (let x = 10; let y = "ole"; x)).ogaga
+
+f (if f (x) then 10 else 34)

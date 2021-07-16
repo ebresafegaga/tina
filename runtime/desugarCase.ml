@@ -34,8 +34,7 @@ let fresh = VarName.fresh
 
 module A = DesugarData
     
-type t = 
-  | LitUnit of Loc.t 
+type t =
   | LitBool of Loc.t * bool 
   | LitInteger of Loc.t * int 
   | LitFloat of Loc.t * float 
@@ -128,8 +127,6 @@ let rec transform0 expr =
           top pattern body)
     in
     A.Case (loc, transform0 expr, clauses)
-  | A.LitTodo _
-  | A.LitUnit _
   | A.LitBool _
   | A.LitInteger _
   | A.LitFloat _
@@ -176,8 +173,6 @@ let var_of_pat = function
 let rec transform1 expr =
   match expr with
   | A.Variable (loc, name) -> Variable (loc, name)
-  | A.LitTodo loc -> Absurd ("Unreplaced TODO", LitUnit loc)
-  | A.LitUnit loc -> LitUnit loc
   | A.LitBool (loc, b) -> LitBool (loc, b)
   | A.LitInteger (loc, i) -> LitInteger (loc, i)
   | A.LitFloat (loc, f) -> LitFloat (loc, f)
@@ -204,7 +199,7 @@ let rec transform1 expr =
 
 and top1 e clauses =
   match clauses with
-  | [] -> Absurd ("Pattern match failure", LitUnit d)
+  | [] -> Absurd ("Pattern match failure", LitInteger (d, 0))
   | (A.PVariable x, body) :: rest ->
     if' (LitBool (d, true))
       (let' x e (transform1 body))
@@ -256,7 +251,6 @@ let rec handle_toplevel = function
 let pp_list es f = es |> List.map f |> String.concat ", "
 
 let rec pp_expression = function
-  | LitUnit _loc -> "()"
   | LitBool (_loc, b) -> Bool.to_string b
   | LitInteger (_loc, i) -> Int.to_string i
   | LitFloat (_loc, f) -> Float.to_string f
