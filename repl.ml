@@ -74,6 +74,7 @@ let rec process_command input =
     print_to_repl "dumping ending ...\n";
     state#end_dump (); repl ()
   | ":desugar" :: "data" :: files -> process_desugar_data files; repl ()
+  | ":desugar" :: "knormal" :: files -> process_desugar_knormal files; repl ()
   | ":desugar" :: "case" :: files -> process_desugar_case files; repl ()
   | ":compile" :: "js" :: [tina; js] -> process_js_compile tina js; repl ()
   | invalid :: _args ->
@@ -81,20 +82,8 @@ let rec process_command input =
     print_error msg;
     repl ()
 
-and process_js_compile tina js =
-  let process_data channel =
-    channel
-    |> Lexing.from_channel
-    |> P.parse
-    |> DesugarData.handle_toplevel
-    |> DesugarCase.handle_toplevel
-    |> Js.gen_toplevel
-    |> String.concat "\n"
-  in
-  let tina = open_in tina in 
-  let file = open_out js in
-  close_in tina; close_out file;
-  Printf.fprintf file "%s" (process_data tina)
+and process_js_compile _tina _js =
+  () (* for now, do nothing *)
     
 and process_load = function
   | [] -> ()
@@ -109,6 +98,30 @@ and process_load = function
     | exception Sys_error msg ->
       print_error msg;
       process_load files
+
+and process_desugar_knormal =
+  let process_knormal channel =
+    channel
+    |> Lexing.from_channel
+    |> P.parse
+    |> DesugarData.handle_toplevel
+    |> DesugarCase.handle_toplevel
+    |> KNormal.handle_toplevel
+    |> List.map KNormal.pp_toplevel
+    |> String.concat "\n"
+    |> print_to_repl
+  in
+  function 
+  | [] -> ()
+  | file :: files ->
+    match open_in file with
+    | channel ->
+      (try process_knormal channel with
+         Errors.RuntimeError m -> print_error m);
+      process_desugar_knormal files
+    | exception Sys_error msg ->
+      print_error msg;
+      process_desugar_knormal files
 
 and process_desugar_data =
   let process_data channel =
