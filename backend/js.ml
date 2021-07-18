@@ -36,6 +36,12 @@ let add_current_level statement =
     let lvl = x :: xs in
     levels := lvl
 let incr_level () = levels := [] :: !levels
+let remove_level () =
+  match !levels with
+  | [] -> []
+  | x :: xs ->
+    levels := xs;
+    x
 
 let variable name = Variable (VarName.to_string name)
 
@@ -45,7 +51,9 @@ let rec gexpr = function
   | A.LitInteger i -> LitInteger i
   | A.LitFloat f -> LitFloat f
   | A.LitString s -> LitString s
-  | A.Fn (args, e) -> Fn (args, gstate e)
+  | A.Fn (args, e) ->
+    incr_level ();
+    Fn (args, gstate e)
   | A.Application (f, args) ->
     let args = args |> List.map variable in 
     let f = variable f in
@@ -63,9 +71,17 @@ let rec gexpr = function
     Application (absurd, [LitString s])
       
   (* these are statements in javascript *)
-  | A.Let _ ->
-    failwith ""
-  | A.If _ -> Errors.runtime "expected an an expression, but got if"
+  | A.Let (x, expr, body) ->
+    let l = Let (x, gexpr expr) in
+    add_current_level l;
+    gexpr body
+  | A.If _ as iff ->
+    let name = VarName.fresh "if" in
+    let exp = Fn ([], gstate iff) in
+    let stm = Let (name, exp) in
+    add_current_level stm;
+    Variable (VarName.to_string name)
+      
 
 and gstate expr =
   match expr with 
@@ -134,5 +150,6 @@ and gen_statement = function
 
 let gen_toplevel = function
   | Def (name, expr) ->
-    Printf.sprintf "const %s = %s;" name (gen_expression expr)
+    Printf.sprintf "const %s = %s; %s" name (gen_expression expr)
+      (combine_statement (List.map gen_statement @@ remove_level ()))
   | Expression (e) -> Printf.sprintf "%s;" (gen_expression e)

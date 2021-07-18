@@ -32,3 +32,10 @@
   functions (e.g comparision functions, numerical operations functiona)
 
 * we need a desugaring pass to remove wierd things like `Sequence` and `Annotation`
+
+
+
+  - rec functions
+  - new syntax
+  - type system
+  - fix interpreter 
