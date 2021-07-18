@@ -1,6 +1,19 @@
 (executable
- (name main)
+ (name jstina)
  (modes js)
- (preprocess (pps js_of_ocaml-ppx))
- (libraries brr js_of_ocaml js_of_ocaml-compiler)
- )
+ (preprocess
+  (pps js_of_ocaml-ppx))
+ (libraries
+  utility
+  ;syntax
+  ;parser
+  ;backend
+  ;runtime
+  shell
+  settings
+  js_of_ocaml
+  js_of_ocaml-compiler)
+ (promote
+  (until-clean)
+  (into .)
+  (only jstina.bc.js)))

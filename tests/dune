@@ -1,4 +1,4 @@
 
 (executable
  (name tests)
- (libraries parser syntax alcotest))
+ (libraries parsing syntax alcotest))

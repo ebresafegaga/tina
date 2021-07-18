@@ -1,3 +1,4 @@
-10
 
-def id (x) = x
+
+def id (x) =
+   fn (y)  (x, y)

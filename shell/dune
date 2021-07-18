@@ -1,0 +1,3 @@
+(library
+ (name shell)
+ (libraries utility settings syntax parsing backend runtime))

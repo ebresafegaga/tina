@@ -1,2 +1,1 @@
-10;
-const id =  (x) => { return x; } ;
+const id =  (x) => { return  (y) => { let x_0 = 0; return { 0: x_0, 1: x, 2: y }; } ; } ;

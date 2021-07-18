@@ -1,53 +1,56 @@
 function main() {
-  let x_34 = "afoke";
-  let x_35 = 0;
-  let x_36 = "ogaga";
-  let x_37 = 10;
-  let x_38 = { 0: x_35, 1: x_36, 2: x_37 };
-  let x_39 = equal(x_34, x_38);
-  if (x_39) {
-    return false;
+  let x_89 = 0;
+  let x_90 = 3;
+  let x_91 = 10;
+  let x_92 = "ooo";
+  let x_93 = 4;
+  let x_94 = 23;
+  let x_95 = 2;
+
+  const o = { 0: x_89 };
+  const y = { 0: x_90, 1: x_91, 2: x_92 };
+  const v = { 0: x_93, 1: x_94, 2: x_95 };
+  let x_96 = v[0];
+  let x_97 = 2;
+  let x_98 = equal(x_96, x_97);
+  if (x_98) {
+    let f = v[1];
+    return f;
   } else {
-    let x_40 = 0;
-    let x_41 = "ogaga";
-    let x_42 = 10;
-    let x_43 = { 0: x_40, 1: x_41, 2: x_42 };
-    let x_44 = x_43[0];
-    let x_45 = 0;
-    let x_46 = equal(x_44, x_45);
-    if (x_46) {
-      let x_61 = 0;
-      let x_62 = "ogaga";
-      let x_63 = 10;
-      let x_64 = { 0: x_61, 1: x_62, 2: x_63 };
-      let fresh_32 = x_64[1];
-      let x_57 = 0;
-      let x_58 = "ogaga";
-      let x_59 = 10;
-      let x_60 = { 0: x_57, 1: x_58, 2: x_59 };
-      let x = x_60[2];
-      let x_53 = 0;
-      let x_54 = "ogaga";
-      let x_55 = 10;
-      let x_56 = { 0: x_53, 1: x_54, 2: x_55 };
-      let fresh_33 = x_56[3];
-      let x_47 = "ogaga";
-      let x_48 = equal(x_47, fresh_32);
-      if (x_48) {
-        let x_49 = 5;
-        let x_50 = equal(x_49, fresh_33);
-        if (x_50) {
-          let x_51 = 0;
-          let x_52 = true;
-          return { 0: x_51, 1: x_52, 2: x };
-        } else {
-          return absurd("Pattern match failure");
-        }
-      } else {
-        return absurd("Pattern match failure");
-      }
+    let x_99 = v[0];
+    let x_100 = 0;
+    let x_101 = equal(x_99, x_100);
+    if (x_101) {
+      return "ogaga";
     } else {
-      return absurd("Pattern match failure");
+      let x_102 = v[0];
+      let x_103 = 1;
+      let x_104 = equal(x_102, x_103);
+      if (x_104) {
+        return "afoks";
+      } else {
+        let x_105 = v[0];
+        let x_106 = 3;
+        let x_107 = equal(x_105, x_106);
+        if (x_107) {
+          let a = v[1];
+          let b = v[2];
+          let x_112 = 0;
+          return { 0: x_112, 1: b, 2: a };
+        } else {
+          let x_108 = v[0];
+          let x_109 = 4;
+          let x_110 = equal(x_108, x_109);
+          if (x_110) {
+            let x = v[1];
+            let b = v[2];
+            let x_111 = 0;
+            return { 0: x_111, 1: x, 2: b };
+          } else {
+            return absurd("Pattern match failure");
+          }
+        }
+      }
     }
   }
 }

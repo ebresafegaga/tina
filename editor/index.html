@@ -1,10 +1,171 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Hello, Bonsai!</title>
-    </head>
-    <body>
-        <div id="app"></div>
-    </body>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tina Programming Language</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.40/css/uikit.min.css" />
+    <script src="jstina.bc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.40/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.40/js/uikit-icons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.min.js" integrity="sha256-ag7KgA1S7cuuU2FCC2G7/L8IpaijDSPqzcLLLeJv5Iw=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/codemirror.min.css" integrity="sha256-I8NyGs4wjbMuBSUE40o55W6k6P7tu/7G28/JGUUYCIs=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/theme/monokai.min.css" integrity="sha256-6ov3WWd9ybfZPeJBlXBgQuD/aLhTRCEp5kBhqD9ke0o=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/mode/mllike/mllike.min.js" integrity="sha256-BOCKMndg6/AI2iWczANGB1/QIky96Pzxaj9l2yKKfkY=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/addon/edit/matchbrackets.min.js" integrity="sha256-BzzUspurJPtHi1Ux5geUVUtDLQDqDeUu9SMkOrsShUY=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/addon/edit/closebrackets.min.js" integrity="sha256-ckZJSSEwRjAtCl8YzZuhIqHYq+Bt+Csy3keSLdp8uxA=" crossorigin="anonymous"></script>
+    <!-- Jquery Terminal -->
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/2.20.1/js/jquery.terminal.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/2.20.1/css/jquery.terminal.min.css" rel="stylesheet"/>
+    <!-- suport for resizable CodeMirror editor -->
+    <script src="https://unpkg.com/cm-resize"></script>
+    
+    
+    <!-- local Javascript code -->
+    <style>
+    .CodeMirror {
+        height: 60vh;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+    }
+
+    .CodeMirror pre {
+        padding-left: 7px;
+        line-height: 1.25;
+    }
+
+    em {
+        color: inherit !important;
+    }
+
+    body {
+        background: #f5f6fa;
+        color: #2f3640;
+    }
+
+    .uk-navbar-container {
+        background: #192a56 !important;
+    }
+
+    .uk-navbar-container, .uk-navbar-container a {
+        height: 40px !important;
+    }
+
+    .uk-navbar-container a,
+    .uk-button-primary {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+.uk-navbar-container li.uk-active a {
+        color: rgba(255, 255, 255, 1) !important;
+    }
+
+    a {
+        color: #0097e6;
+    }
+
+    #load-file-button {
+        background: #0097e6;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    #try-out {
+        font-weight: bold;
+        font-size: 1.5em;
+    }
+
+span.cm-number, span.cm-string { color: #c23616 !important; }
+span.cm-comment { color: #718093 !important; }
+span.cm-variable, span.cm-operator { color: #2f3640 !important; }
+span.cm-keyword { color: #192a56 !important; font-weight: bold;}
+
+.CodeMirror-activeline-background { background: #e8f2ff; }
+.CodeMirror-matchingbracket { outline:1px solid grey; color:black !important; }
+
+.terminal {
+    --background: #192a56;
+    --color: #f5f6fa;
+    }
+    </style>
+</head>
+
+<body>
+    <nav class="uk-navbar-container" uk-navbar>
+        <div class="uk-navbar-center">
+            <a href="/" class="uk-navbar-item uk-logo" style="height: 50px">
+              TINA
+            </a>
+            <ul class="uk-navbar-nav">
+                <li><a href="https://github.com/ebresafegaga/tina">
+                    <span uk-icon="github"></span>
+                    Contribute
+                </a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="uk-container uk-padding-small uk-container">
+        <div uk-height-viewport="offset-top: true" style="position: relative">
+        <ul class="uk-tab" uk-tab>
+<li><a id="syntaxLoad">A</a></li>
+<li><a id="printingLoad">B</a></li>
+<li><a id="nondeterminismLoad">C</a></li>
+<li><a id="probabilityLoad">D</a></li>
+<li><a id="stateLoad">E</a></li>
+<li><a id="threadsLoad">F</a></li>
+        </ul>
+            <textarea id="sourcecode"></textarea>
+
+            <script>
+            
+            var editor = CodeMirror.fromTextArea(document.getElementById("sourcecode"), {
+                mode: "text/x-eff",
+                lineNumbers: true,
+                matchBrackets: true
+            });
+            cmResize(editor, {resizableWidth: false});
+            </script>
+            <!-- The terminal window -->
+            <div style="position: absolute; right: 0px">
+	      
+              <button style="position: relative; float: right; z-index:100000" id="load-file-button" class="uk-button uk-button-small uk-button-primary">LOAD FILE</button>
+
+	      <button style="position: relative; float: right; z-index:100000" id="compile-js-button" class="uk-button uk-button-small uk-button-primary">COMPILE JS </button>
+
+	      <button style="position: relative; float: right; z-index:100000" id="compile-llvm-button" class="uk-button uk-button-small uk-button-primary">COMPILE LLVM</button>
+            </div>
+            <div id="terminal" style="--size: 16px">
+            </div>
+            <!-- Code to setup the terminal and the buttons -->
+            <script>
+            var terminal =
+                $('#terminal').terminal(function(command, term) {
+                    if (command !== '') {
+			console.log ("command not empty")
+                        jstina.executeSource()(command);
+                    }
+                }, {
+                    greetings: '',
+                    name: 'repl_terminal',
+                    height: 'calc(30vh - 50px)',
+                    width: "auto",
+                    prompt: '# '
+                });
+
+            jstina.initialize()(terminal.echo);
+
+              $('#load-file-button').click(function() {
+		  console.log ("button clicked")
+                  jstina.executeSource()(editor.getValue());
+              });
+
+	      $('#compile-js-button').click(function() {
+		  console.log ("compile js button clicked")
+                  jstina.compileJS()(editor.getValue());
+            });
+            </script>
+        </div>
+</body>
+
 </html>

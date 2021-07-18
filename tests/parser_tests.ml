@@ -1,4 +1,4 @@
-open Parser
+open Parsing
 open Syntax
 
 module G = Grammar
