@@ -43,7 +43,7 @@ let is_command s = s.[0] = ':'
 let eval lexbuf =
   lexbuf
   |> P.parse
-  |> DesugarEffect.desugar_toplevel
+  |> DesugarEffect.handle_toplevel
   |> List.map (fun expr ->
          if state#get_dump () then (
            expr |> DesugarEffect.pp_toplevel |> print_endline;
@@ -103,7 +103,7 @@ and process_js_compile tina js =
   let js = open_out js in
   let tina = open_in tina in
   let process channel =
-    channel |> Lexing.from_channel |> P.parse |> DesugarData.handle_toplevel
+    channel |> Lexing.from_channel |> P.parse |> DesugarEffect.handle_toplevel |> DesugarData.handle_toplevel
     |> DesugarCase.handle_toplevel |> KNormal.handle_toplevel
     |> Js.handle_toplevel |> List.map Js.gen_toplevel |> String.concat "\n"
   in
@@ -128,7 +128,7 @@ and process_load = function
 
 and process_desugar_knormal =
   let process_knormal channel =
-    channel |> Lexing.from_channel |> P.parse |> DesugarData.handle_toplevel
+    channel |> Lexing.from_channel |> P.parse |> DesugarEffect.handle_toplevel |> DesugarData.handle_toplevel
     |> DesugarCase.handle_toplevel |> KNormal.handle_toplevel
     |> List.map KNormal.pp_toplevel
     |> String.concat "\n" |> print_to_repl
@@ -147,7 +147,7 @@ and process_desugar_knormal =
 
 and process_desugar_data =
   let process_data channel =
-    channel |> Lexing.from_channel |> P.parse |> DesugarData.handle_toplevel
+    channel |> Lexing.from_channel |> P.parse |> DesugarEffect.handle_toplevel |> DesugarData.handle_toplevel
     (* |> DesugarCase.handle_toplevel *)
     |> List.map DesugarData.pp_toplevel
     |> String.concat "\n" |> print_to_repl
@@ -166,7 +166,7 @@ and process_desugar_data =
 
 and process_desugar_case =
   let process_data channel =
-    channel |> Lexing.from_channel |> P.parse |> DesugarData.handle_toplevel
+    channel |> Lexing.from_channel |> P.parse |> DesugarEffect.handle_toplevel |> DesugarData.handle_toplevel
     |> DesugarCase.handle_toplevel
     |> List.map DesugarCase.pp_toplevel
     |> String.concat "\n" |> print_to_repl

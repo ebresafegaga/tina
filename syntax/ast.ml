@@ -1,19 +1,6 @@
 
 open Naming
 
-type ty = 
-    | TyBool
-    | TyString
-    | TyNat
-    | TyInt
-    | TyFloat
-    | TyUnit
-    | TyArrow of ty list * ty
-    | TyRecord of (FieldName.t * ty) list
-    | TyTuple of ty list 
-    (* Variant type? *)
-
-
 (* TODO: add locations to pattern *)
 type pattern = 
     | PInteger of int 
@@ -48,7 +35,7 @@ type expression =
   | Let of Loc.t * pattern * expression * expression
   (* LetMut maybe? *)
   | Fn of Loc.t * VarName.t list * expression
-  | Annotated of Loc.t * expression * ty 
+  | Annotated of Loc.t * expression * Type.t 
   | Sequence of Loc.t * expression * expression
   | Case of Loc.t * expression * (pattern * expression) list (* tbi *)
   | Record of Loc.t * DataName.t * (FieldName.t * expression) list
@@ -65,11 +52,11 @@ and handler_clauses =
   | Operation of VarName.t * VarName.t list * VarName.t * expression (* ability name, values gotten, cont-var name*)
 
 type toplevel =
-  | Claim of Loc.t * VarName.t * ty
+  | Claim of Loc.t * VarName.t * Type.t
   | Def of Loc.t * VarName.t * expression
-  | VariantDef of Loc.t * DataName.t * (VarName.t * ty list) list
-  | RecordDef of Loc.t * DataName.t * (FieldName.t * ty) list
-  | AbilityDef of Loc.t * VarName.t * ty list
+  | VariantDef of Loc.t * DataName.t * (VarName.t * Type.t list) list
+  | RecordDef of Loc.t * DataName.t * (FieldName.t * Type.t) list
+  | AbilityDef of Loc.t * VarName.t * Type.t list
   | Expression of expression
 
 (* pretty printing facilities for the the ast *)
@@ -77,19 +64,6 @@ type toplevel =
 
 
 let pp_list es f = es |> List.map f |> String.concat ", "
-
-let rec pp_ty = function
-  | TyNat -> "Nat"
-  | TyString -> "String"
-  | TyInt -> "Int"
-  | TyFloat -> "Float"
-  | TyBool -> "Bool"
-  | TyUnit -> "Unit"
-  | TyTuple ts -> Printf.sprintf "(%s)" (pp_list ts pp_ty)
-  | TyRecord ts ->
-    Printf.sprintf "{%s}" @@
-    pp_list ts (fun (n, t) -> Printf.sprintf "claim %s %s" (FieldName.to_string n) (pp_ty t))
-  | TyArrow (ts, t) -> Printf.sprintf "(%s) -> %s" (pp_list ts pp_ty) (pp_ty t)
   
 let rec pp_pattern = function
   | PInteger i -> Int.to_string i
@@ -131,7 +105,7 @@ let rec pp_expression = function
   | Annotated (_loc, expr, ty) ->
     Printf.sprintf "(the %s %s)"
       (pp_expression expr)
-      (pp_ty ty)
+      (Type.pp_ty ty)
   | Sequence (_loc, a, b) ->
     Printf.sprintf "%s; %s;"
       (pp_expression a)
@@ -172,7 +146,7 @@ let pp_toplevel = function
     Printf.sprintf
       "claim %s %s"
       (VarName.to_string name)
-      (pp_ty ty)
+      (Type.pp_ty ty)
   | Def (_loc, name, expr) -> (* TODO: add a special case for fn *)
     Printf.sprintf "def %s = %s"
       (VarName.to_string name)

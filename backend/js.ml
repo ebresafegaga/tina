@@ -76,11 +76,11 @@ let rec gexpr = function
       add_current_level l;
       gexpr body
   | A.If _ as iff ->
-      let name = VarName.fresh "if" in
+    (* let name = VarName.fresh "if" in *)
       let exp = Fn ([], gstate iff) in
-      let stm = Let (name, Application (exp, [])) in
-      add_current_level stm;
-      Variable (VarName.to_string name)
+      (* let stm = Let (name, Application (exp, [])) in *)
+      (* add_current_level stm; *)
+      Application (exp, [])
 
 and gstate expr =
   match expr with
@@ -150,7 +150,7 @@ and gen_statement = function
   | Ignore e -> Printf.sprintf "%s;" (gen_expression e)
 
 let gen_toplevel = function
-  | Def (name, expr) ->
+  | Def (name, expr) -> (* make const for constant values and function for function definations *)
       Printf.sprintf "const %s = %s; %s" name (gen_expression expr)
         (combine_statement (List.map gen_statement @@ remove_level ()))
   | Expression e ->

@@ -63,7 +63,7 @@
 %start toplevel
 
 %type <Ast.toplevel list> toplevel
-%type <Ast.ty> ty
+%type <Type.t> ty
 %type <toplevel> claim 
 %type <toplevel> def
 %type <toplevel> record_decl

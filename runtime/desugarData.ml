@@ -19,7 +19,7 @@ open Syntax
 open Naming
 open Utility
 
-module A = Ast
+module A = DesugarEffect
 
 (* contaains bindings of varinats names to positional indexes *)
 let variant_table : (DataName.t * int) list ref = ref []
@@ -57,7 +57,7 @@ type t =
   | Application of Loc.t * t * t list 
   | Let of Loc.t * pattern * t * t
   | Fn of Loc.t * VarName.t list * t
-  | Annotated of Loc.t * t * A.ty 
+  | Annotated of Loc.t * t * Type.t 
   | Sequence of Loc.t * t * t
   | Case of Loc.t * t * (pattern * t) list
   | Record of Loc.t * (FieldName.t * t) list
@@ -65,11 +65,11 @@ type t =
   | Absurd of string * t
 
 type toplevel =
-  | Claim of Loc.t * VarName.t * A.ty
+  | Claim of Loc.t * VarName.t * Type.t
   | Def of Loc.t * VarName.t * t
-  | VariantDef of Loc.t * DataName.t * (VarName.t * A.ty list) list
-  | RecordDef of Loc.t * DataName.t * (FieldName.t * A.ty) list
-  | AbilityDef of Loc.t * VarName.t * A.ty list
+  | VariantDef of Loc.t * DataName.t * (VarName.t * Type.t list) list
+  | RecordDef of Loc.t * DataName.t * (FieldName.t * Type.t) list
+  | AbilityDef of Loc.t * VarName.t * Type.t list
   | Expression of t
 
 
@@ -150,9 +150,6 @@ let rec g expr =
     let index = lookup_record name |> string_of_int |> FieldName.of_string in
     RecordIndex (loc, g expr, index)
 
-  |A.Do (_, _, _)
-  |A.Handle (_, _, _) -> failwith "leave this for now, fix after we implment the Type module"
-
 let toplevel = function
   | A.Claim (loc, name, ty) -> Claim (loc, name, ty)
   | A.Def (loc, name, expr) -> Def (loc, name, g expr)
@@ -223,7 +220,7 @@ let rec pp_expression = function
   | Annotated (_loc, expr, ty) ->
     Printf.sprintf "(the %s %s)"
       (pp_expression expr)
-      (A.pp_ty ty)
+      (Type.pp_ty ty)
   | Sequence (_loc, a, b) ->
     Printf.sprintf "%s; %s;"
       (pp_expression a)
@@ -257,7 +254,7 @@ let pp_toplevel = function
     Printf.sprintf
       "claim %s %s"
       (VarName.to_string name)
-      (A.pp_ty ty)
+      (Type.pp_ty ty)
   | Def (_loc, name, expr) -> (* TODO: add a special case for fn *)
     Printf.sprintf "def %s = %s"
       (VarName.to_string name)

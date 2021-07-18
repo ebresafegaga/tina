@@ -7,7 +7,7 @@ let eval source =
   source
   |> Lexing.from_string
   |> P.parse
-  |> DesugarEffect.desugar_toplevel
+  |> DesugarEffect.handle_toplevel
   |> Eval2.process_toplevel
   |> String.concat "\n"
 
@@ -24,7 +24,7 @@ let load_source = eval
 
 let compile_js source =
   let process src =
-    src |> Lexing.from_string |> P.parse |> DesugarData.handle_toplevel
+    src |> Lexing.from_string |> P.parse |> DesugarEffect.handle_toplevel |> DesugarData.handle_toplevel
     |> DesugarCase.handle_toplevel |> KNormal.handle_toplevel
     |> Js.handle_toplevel |> List.map Js.gen_toplevel |> String.concat "\n"
   in
