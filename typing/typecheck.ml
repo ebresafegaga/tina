@@ -75,6 +75,7 @@ let rec synth ctx term =
       List.combine es ts
       |> List.iter (fun (e, t) -> check ctx e t);
     T.TyVariant vt
+  | _ -> failwith "not yet supported by the type checker"
 
 and check ctx term ty =
   match term with
@@ -145,3 +146,34 @@ and check ctx term ty =
     let t_rec = synth ctx term in
     if not (T.tyequal ty t_rec) then
       report_expected_at ~expected:ty ~got:t_rec ~loc
+  | _ -> failwith "not yet supported by the type checker"
+
+
+let handle_top ctx top =
+  match top with
+  | A.VariantDef (_, _name, fields) ->
+    let fields' =
+      fields
+      |> List.map (fun (v, fields) ->
+          let label = v |> VarName.to_string |> DataName.of_string in
+          { T.label; fields })
+    in
+    let ty = T.TyVariant fields' in
+    let ctx_new = List.map (fun (name, _) -> name, ty) fields in
+    ctx_new @ ctx
+  | A.RecordDef (_, name, body) ->
+    let ty = T.TyRecord body in
+    let name = name |> DataName.to_string |> VarName.of_string in
+    Ctx.assume ctx name ty
+  | AbilityDef _ -> ctx
+  | Claim (_, name, ty) -> Ctx.assume ctx name ty
+  | Def (_, name, expr) ->
+    let ty = Ctx.lookup_claim ctx name in
+    check ctx expr ty;
+    ctx
+  | Expression e ->
+    let ty = synth ctx e in
+    let e = VarName.of_string @@ A.pp_expression e in
+    Ctx.assume ctx e ty
+    
+let handle_toplevel = List.fold_left handle_top Ctx.empty

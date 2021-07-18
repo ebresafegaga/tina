@@ -1,6 +1,7 @@
 open Syntax
 open Runtime
 open Backend
+open Typing    
 module P = Parsing.ParserEntry
 
 (* THE TINA REPL *)
@@ -41,15 +42,19 @@ let print_list lst = lst |> List.iter print_to_repl
 let is_command s = s.[0] = ':'
 
 let eval lexbuf =
-  lexbuf
-  |> P.parse
+  let syntax = lexbuf |> P.parse in
+  syntax
   |> DesugarEffect.handle_toplevel
   |> List.map (fun expr ->
          if state#get_dump () then (
            expr |> DesugarEffect.pp_toplevel |> print_endline;
            expr)
          else expr)
-  |> Eval2.process_toplevel |> String.concat "\n" |> print_to_repl
+  |> Eval2.process_toplevel |> String.concat "\n" |> print_to_repl;
+  syntax
+  |> Typecheck.handle_toplevel
+  |> Ctx.pp_ctx
+  |> String.concat "\n" |> print_to_repl
 
 let rec process_command input =
   let commands = String.split_on_char ' ' input in

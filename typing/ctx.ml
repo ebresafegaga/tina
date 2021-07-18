@@ -20,6 +20,13 @@ let lookup ctx x =
     let msg = Printf.sprintf "Unbound Variable %s" (VarName.to_string x) in
     Errors.runtime msg
 
+let lookup_claim ctx x =
+  match List.assoc x ctx with
+  | value -> value
+  | exception Not_found ->
+    let msg = Printf.sprintf "You must specify a type for the toplevel declaration %s" (VarName.to_string x) in
+    Errors.runtime msg
+
 let is_recordty = function
   | T.TyRecord _ -> true
   | _ -> false 
@@ -45,8 +52,13 @@ let rec lookup_variant ctx name =
     Errors.runtime msg
   | (x, t) :: ctx when x = name' ->
     (match t with
-    | T.TyVariant v -> v, (v |> List.find (fun {T.label; _} -> label = name)).fields
+    | T.TyVariant v -> v, (v |> List.find (fun { T.label; _ } -> label = name)).fields
     | _ -> lookup_variant ctx name)
   | (_x, _t) :: ctx -> lookup_variant ctx name
   
 let empty = []
+
+
+let pp_ctx =
+  List.map (fun (name, ty) ->
+      Printf.sprintf "%s : %s" (VarName.to_string name) (T.pp_ty ty))

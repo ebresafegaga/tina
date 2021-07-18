@@ -25,7 +25,7 @@ and record = (FieldName.t * t) list
 
 let tyequal : t -> t -> bool = (=) (* for now *)
 
-let pp_list es f = es |> List.map f |> String.concat ", "
+let pp_list es f ~sep = es |> List.map f |> String.concat sep
 
 let rec pp_ty = function
   | TyNat -> "Nat"
@@ -34,9 +34,17 @@ let rec pp_ty = function
   | TyFloat -> "Float"
   | TyBool -> "Bool"
   | TyUnit -> "Unit"
-  | TyTuple ts -> Printf.sprintf "(%s)" (pp_list ts pp_ty)
+  | TyTuple ts -> Printf.sprintf "(%s)" (pp_list ts pp_ty ~sep:", ")
   | TyRecord ts ->
     Printf.sprintf "{%s}" @@
     pp_list ts (fun (n, t) -> Printf.sprintf "claim %s %s" (FieldName.to_string n) (pp_ty t))
-  | TyArrow (ts, t) -> Printf.sprintf "(%s) -> %s" (pp_list ts pp_ty) (pp_ty t)
+      ~sep:", "
+  | TyVariant elems ->
+    let e = Printf.sprintf "%s" @@
+      pp_list elems (fun {label; fields} ->
+          Printf.sprintf "%s (%s)" (DataName.to_string label) (pp_list fields pp_ty ~sep:", "))
+        ~sep:"| "
+    in
+    Printf.sprintf "< %s >" e
+  | TyArrow (ts, t) -> Printf.sprintf "(%s) -> %s" (pp_list ts pp_ty ~sep:", ") (pp_ty t)
   | _ -> ""

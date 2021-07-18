@@ -1,0 +1,7 @@
+
+
+claim tuple (Nat, Nat -> Nat)
+def tuple (x, y) = y
+
+claim id (Nat -> Nat)
+def id = fn (x) x
