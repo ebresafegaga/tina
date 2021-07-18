@@ -8,3 +8,10 @@ function absurd(s) {
 function equal(a, b) {
   return a === b;
 }
+
+
+function hoist () {
+  console.log (b)
+  let b = 19;
+  return b;
+}

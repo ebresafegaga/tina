@@ -15,7 +15,6 @@ type expression =
   | Fn of VarName.t list * statement list
   | Record of (VarName.t * expression) list
   | RecordIndex of expression * VarName.t
-  | Compound of statement list
 
 and statement =
   | Ignore of expression 
@@ -26,6 +25,17 @@ and statement =
 type toplevel =
   | Def of string * expression
   | Expression of expression
+
+type statements = statement list 
+let levels = ref ([] : statements list)
+let add_current_level statement =
+  match !levels with
+  | [] -> levels := [statement] :: []
+  | x :: xs ->
+    let x = statement :: x in
+    let lvl = x :: xs in
+    levels := lvl
+let incr_level () = levels := [] :: !levels
 
 let variable name = Variable (VarName.to_string name)
 
@@ -53,7 +63,9 @@ let rec gexpr = function
     Application (absurd, [LitString s])
       
   (* these are statements in javascript *)
-  | A.Let _ | A.If _ as e -> Compound (gcomp e)
+  | A.Let _ ->
+    failwith ""
+  | A.If _ -> Errors.runtime "expected an an expression, but got if"
 
 and gstate expr =
   match expr with 
@@ -105,7 +117,6 @@ let rec gen_expression = function
         Printf.sprintf "%s: %s" (VarName.to_string name) (gen_expression expr)))
   | RecordIndex (expr, index) ->
     Printf.sprintf "%s[%s]" (gen_expression expr) (VarName.to_string index)
-  | Compound ss -> (combine_statement (List.map gen_statement ss))
 
 and gen_statement = function
   | Return (Some e) -> Printf.sprintf "return %s;" (gen_expression e)
