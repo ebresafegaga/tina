@@ -1,5 +1,11 @@
 
 
+datatype name = Ogaga | Afoke 
+
+
+claim me nam
+def me = Ogaga
+
 claim tuple (Nat, Nat -> Nat)
 def tuple (x, y) = y
 

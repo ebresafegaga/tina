@@ -176,4 +176,4 @@ let handle_top ctx top =
     let e = VarName.of_string @@ A.pp_expression e in
     Ctx.assume ctx e ty
     
-let handle_toplevel = List.fold_left handle_top Ctx.empty
+let handle_toplevel = List.fold_left handle_top Ctx.default

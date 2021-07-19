@@ -140,6 +140,9 @@ let rec eval = function
     in
     Errors.runtime msg
   | A.Application (_loc, A.Fn (_, vars, body), args) -> eval @@ subst_list (List.combine args vars) body
+  | A.Application (loc, Variable (_, v), [A.LitInteger (_, i); A.LitInteger (_, i')])
+    when VarName.to_string v = "+" ->
+    A.return @@ A.LitInteger (loc, i + i') (* we should really be returning this as a computation *)
   | A.Application (_loc, f, _args) when is_value f -> 
     Errors.runtime @@ Printf.sprintf "this value %s is not a function so it can't be applied" (A.pp_expression f)
   | A.Application (loc, f, args) -> eval @@ A.Application (loc, eval f, args)

@@ -58,6 +58,9 @@ let rec lookup_variant ctx name =
   
 let empty = []
 
+let default =
+  ["+", T.TyArrow ([T.TyInt; T.TyInt], T.TyInt)]
+  |> List.map (fun (n, t) -> VarName.of_string n, t)
 
 let pp_ctx =
   List.map (fun (name, ty) ->

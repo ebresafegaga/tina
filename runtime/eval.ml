@@ -151,7 +151,7 @@ let rec eval env = function
     Ok (V.VTuple result)
   | A.Sequence (_loc, _e1, _e2) -> Error "Sequence expressions not yet implemented"
   | A.LitTodo _loc -> Error "Not yet supported"
-  | A.Do _ | A.Handle _ -> failwith "should not be evaluated by me"
+(* | A.Do _ | A.Handle _ -> failwith "should not be evaluated by me" *)
 
 let guard_values_by_len n f values = 
     let arg_len = List.length values in 

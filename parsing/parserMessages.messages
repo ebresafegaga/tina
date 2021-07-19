@@ -1,6 +1,6 @@
 toplevel: ABILITY ID LPAREN TRUE
 ##
-## Ends in an error in state: 184.
+## Ends in an error in state: 189.
 ##
 ## ability -> ABILITY ID LPAREN . loption(separated_nonempty_list(COMMA,ty)) RPAREN [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ##
@@ -12,7 +12,7 @@ toplevel: ABILITY ID LPAREN TRUE
 
 toplevel: ABILITY ID LPAREN TY_STRING ARROW
 ##
-## Ends in an error in state: 186.
+## Ends in an error in state: 191.
 ##
 ## ability -> ABILITY ID LPAREN loption(separated_nonempty_list(COMMA,ty)) . RPAREN [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ##
@@ -23,15 +23,15 @@ toplevel: ABILITY ID LPAREN TY_STRING ARROW
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 12, spurious reduction of production separated_nonempty_list(COMMA,ty) -> ty
-## In state 185, spurious reduction of production loption(separated_nonempty_list(COMMA,ty)) -> separated_nonempty_list(COMMA,ty)
+## In state 17, spurious reduction of production separated_nonempty_list(COMMA,ty) -> ty
+## In state 190, spurious reduction of production loption(separated_nonempty_list(COMMA,ty)) -> separated_nonempty_list(COMMA,ty)
 ##
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
 toplevel: ABILITY ID LPAREN TY_STRING TY_STRING
 ##
-## Ends in an error in state: 12.
+## Ends in an error in state: 17.
 ##
 ## separated_nonempty_list(COMMA,ty) -> ty . [ RPAREN ARROW ]
 ## separated_nonempty_list(COMMA,ty) -> ty . COMMA separated_nonempty_list(COMMA,ty) [ RPAREN ARROW ]
@@ -44,7 +44,7 @@ toplevel: ABILITY ID LPAREN TY_STRING TY_STRING
 
 toplevel: ABILITY ID TY_STRING
 ##
-## Ends in an error in state: 183.
+## Ends in an error in state: 188.
 ##
 ## ability -> ABILITY ID . LPAREN loption(separated_nonempty_list(COMMA,ty)) RPAREN [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ##
@@ -56,7 +56,7 @@ toplevel: ABILITY ID TY_STRING
 
 toplevel: ABILITY TY_STRING
 ##
-## Ends in an error in state: 182.
+## Ends in an error in state: 187.
 ##
 ## ability -> ABILITY . ID LPAREN loption(separated_nonempty_list(COMMA,ty)) RPAREN [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ##
@@ -68,7 +68,7 @@ toplevel: ABILITY TY_STRING
 
 toplevel: CASE TRUE LBRACE TRUE ARROW FALSE COMMA TY_STRING
 ##
-## Ends in an error in state: 102.
+## Ends in an error in state: 107.
 ##
 ## separated_nonempty_list(COMMA,case_expr_body) -> case_expr_body COMMA . separated_nonempty_list(COMMA,case_expr_body) [ RBRACE ]
 ##
@@ -80,7 +80,7 @@ toplevel: CASE TRUE LBRACE TRUE ARROW FALSE COMMA TY_STRING
 
 toplevel: CASE TRUE LBRACE TRUE ARROW TRUE TY_STRING
 ##
-## Ends in an error in state: 100.
+## Ends in an error in state: 105.
 ##
 ## case_expr_body -> pattern ARROW expression . [ RBRACE COMMA ]
 ## expression -> expression . expr_list [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
@@ -99,7 +99,7 @@ toplevel: CASE TRUE LBRACE TRUE ARROW TRUE TY_STRING
 
 toplevel: CASE TRUE LBRACE TRUE ARROW TY_STRING
 ##
-## Ends in an error in state: 99.
+## Ends in an error in state: 104.
 ##
 ## case_expr_body -> pattern ARROW . expression [ RBRACE COMMA ]
 ##
@@ -111,7 +111,7 @@ toplevel: CASE TRUE LBRACE TRUE ARROW TY_STRING
 
 toplevel: CASE TRUE LBRACE TRUE TY_STRING
 ##
-## Ends in an error in state: 98.
+## Ends in an error in state: 103.
 ##
 ## case_expr_body -> pattern . ARROW expression [ RBRACE COMMA ]
 ##
@@ -123,7 +123,7 @@ toplevel: CASE TRUE LBRACE TRUE TY_STRING
 
 toplevel: CASE TRUE LBRACE TY_STRING
 ##
-## Ends in an error in state: 95.
+## Ends in an error in state: 100.
 ##
 ## expression -> CASE expression LBRACE . separated_nonempty_list(COMMA,case_expr_body) RBRACE [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -135,7 +135,7 @@ toplevel: CASE TRUE LBRACE TY_STRING
 
 toplevel: CASE TRUE TY_STRING
 ##
-## Ends in an error in state: 74.
+## Ends in an error in state: 79.
 ##
 ## expression -> expression . expr_list [ STAR SEMICOLON PLUS MINUS LPAREN LBRACE DOT DIV ]
 ## expression -> expression . SEMICOLON expression [ STAR SEMICOLON PLUS MINUS LPAREN LBRACE DOT DIV ]
@@ -154,7 +154,7 @@ toplevel: CASE TRUE TY_STRING
 
 toplevel: CASE TY_STRING
 ##
-## Ends in an error in state: 73.
+## Ends in an error in state: 78.
 ##
 ## expression -> CASE . expression LBRACE separated_nonempty_list(COMMA,case_expr_body) RBRACE [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -164,21 +164,9 @@ toplevel: CASE TY_STRING
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: CLAIM ID TRUE
+toplevel: CLAIM ID ID TY_STRING
 ##
-## Ends in an error in state: 180.
-##
-## claim -> CLAIM ID . ty [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
-##
-## The known suffix of the stack is as follows:
-## CLAIM ID
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: CLAIM ID TY_FLOAT TY_STRING
-##
-## Ends in an error in state: 190.
+## Ends in an error in state: 195.
 ##
 ## list(top) -> top . list(top) [ EOF ]
 ##
@@ -188,9 +176,21 @@ toplevel: CLAIM ID TY_FLOAT TY_STRING
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
+toplevel: CLAIM ID TRUE
+##
+## Ends in an error in state: 185.
+##
+## claim -> CLAIM ID . ty [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
+##
+## The known suffix of the stack is as follows:
+## CLAIM ID
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
 toplevel: CLAIM TY_STRING
 ##
-## Ends in an error in state: 179.
+## Ends in an error in state: 184.
 ##
 ## claim -> CLAIM . ID ty [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ##
@@ -202,7 +202,7 @@ toplevel: CLAIM TY_STRING
 
 toplevel: DATA ID EQUALS ID BAR TY_STRING
 ##
-## Ends in an error in state: 176.
+## Ends in an error in state: 181.
 ##
 ## separated_nonempty_list(BAR,single_variant) -> single_variant BAR . separated_nonempty_list(BAR,single_variant) [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ##
@@ -212,21 +212,9 @@ toplevel: DATA ID EQUALS ID BAR TY_STRING
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DATA ID EQUALS ID LPAREN TRUE
+toplevel: DATA ID EQUALS ID LPAREN ID RPAREN TY_STRING
 ##
-## Ends in an error in state: 172.
-##
-## single_variant -> ID LPAREN . separated_nonempty_list(COMMA,ty) RPAREN [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE BAR ABILITY ]
-##
-## The known suffix of the stack is as follows:
-## ID LPAREN
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID EQUALS ID LPAREN TY_FLOAT RPAREN TY_STRING
-##
-## Ends in an error in state: 175.
+## Ends in an error in state: 180.
 ##
 ## separated_nonempty_list(BAR,single_variant) -> single_variant . [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ## separated_nonempty_list(BAR,single_variant) -> single_variant . BAR separated_nonempty_list(BAR,single_variant) [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
@@ -237,9 +225,21 @@ toplevel: DATA ID EQUALS ID LPAREN TY_FLOAT RPAREN TY_STRING
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
+toplevel: DATA ID EQUALS ID LPAREN TRUE
+##
+## Ends in an error in state: 177.
+##
+## single_variant -> ID LPAREN . separated_nonempty_list(COMMA,ty) RPAREN [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE BAR ABILITY ]
+##
+## The known suffix of the stack is as follows:
+## ID LPAREN
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
 toplevel: DATA ID EQUALS ID LPAREN TY_STRING ARROW
 ##
-## Ends in an error in state: 173.
+## Ends in an error in state: 178.
 ##
 ## single_variant -> ID LPAREN separated_nonempty_list(COMMA,ty) . RPAREN [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE BAR ABILITY ]
 ##
@@ -250,14 +250,14 @@ toplevel: DATA ID EQUALS ID LPAREN TY_STRING ARROW
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 12, spurious reduction of production separated_nonempty_list(COMMA,ty) -> ty
+## In state 17, spurious reduction of production separated_nonempty_list(COMMA,ty) -> ty
 ##
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
 toplevel: DATA ID EQUALS ID TY_STRING
 ##
-## Ends in an error in state: 171.
+## Ends in an error in state: 176.
 ##
 ## single_variant -> ID . [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE BAR ABILITY ]
 ## single_variant -> ID . LPAREN separated_nonempty_list(COMMA,ty) RPAREN [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE BAR ABILITY ]
@@ -268,21 +268,9 @@ toplevel: DATA ID EQUALS ID TY_STRING
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DATA ID EQUALS LBRACE CLAIM ID TRUE
+toplevel: DATA ID EQUALS LBRACE CLAIM ID ID COMMA TY_STRING
 ##
-## Ends in an error in state: 164.
-##
-## record_claim -> CLAIM ID . ty [ RBRACE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## CLAIM ID
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT COMMA TY_STRING
-##
-## Ends in an error in state: 169.
+## Ends in an error in state: 174.
 ##
 ## separated_nonempty_list(COMMA,record_claim) -> record_claim COMMA . separated_nonempty_list(COMMA,record_claim) [ RBRACE ]
 ##
@@ -292,9 +280,9 @@ toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT COMMA TY_STRING
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT TY_STRING
+toplevel: DATA ID EQUALS LBRACE CLAIM ID ID TY_STRING
 ##
-## Ends in an error in state: 168.
+## Ends in an error in state: 173.
 ##
 ## separated_nonempty_list(COMMA,record_claim) -> record_claim . [ RBRACE ]
 ## separated_nonempty_list(COMMA,record_claim) -> record_claim . COMMA separated_nonempty_list(COMMA,record_claim) [ RBRACE ]
@@ -305,9 +293,21 @@ toplevel: DATA ID EQUALS LBRACE CLAIM ID TY_FLOAT TY_STRING
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
+toplevel: DATA ID EQUALS LBRACE CLAIM ID TRUE
+##
+## Ends in an error in state: 169.
+##
+## record_claim -> CLAIM ID . ty [ RBRACE COMMA ]
+##
+## The known suffix of the stack is as follows:
+## CLAIM ID
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
 toplevel: DATA ID EQUALS LBRACE CLAIM TY_STRING
 ##
-## Ends in an error in state: 163.
+## Ends in an error in state: 168.
 ##
 ## record_claim -> CLAIM . ID ty [ RBRACE COMMA ]
 ##
@@ -319,7 +319,7 @@ toplevel: DATA ID EQUALS LBRACE CLAIM TY_STRING
 
 toplevel: DATA ID EQUALS LBRACE TY_STRING
 ##
-## Ends in an error in state: 162.
+## Ends in an error in state: 167.
 ##
 ## record_decl -> DATA ID EQUALS LBRACE . separated_nonempty_list(COMMA,record_claim) RBRACE [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ##
@@ -331,7 +331,7 @@ toplevel: DATA ID EQUALS LBRACE TY_STRING
 
 toplevel: DATA ID EQUALS TY_STRING
 ##
-## Ends in an error in state: 161.
+## Ends in an error in state: 166.
 ##
 ## record_decl -> DATA ID EQUALS . LBRACE separated_nonempty_list(COMMA,record_claim) RBRACE [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ## variant_decl -> DATA ID EQUALS . separated_nonempty_list(BAR,single_variant) [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
@@ -344,7 +344,7 @@ toplevel: DATA ID EQUALS TY_STRING
 
 toplevel: DATA ID TY_STRING
 ##
-## Ends in an error in state: 160.
+## Ends in an error in state: 165.
 ##
 ## record_decl -> DATA ID . EQUALS LBRACE separated_nonempty_list(COMMA,record_claim) RBRACE [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ## variant_decl -> DATA ID . EQUALS separated_nonempty_list(BAR,single_variant) [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
@@ -357,7 +357,7 @@ toplevel: DATA ID TY_STRING
 
 toplevel: DATA TY_STRING
 ##
-## Ends in an error in state: 159.
+## Ends in an error in state: 164.
 ##
 ## record_decl -> DATA . ID EQUALS LBRACE separated_nonempty_list(COMMA,record_claim) RBRACE [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ## variant_decl -> DATA . ID EQUALS separated_nonempty_list(BAR,single_variant) [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
@@ -370,7 +370,7 @@ toplevel: DATA TY_STRING
 
 toplevel: DEF ID EQUALS TRUE TY_STRING
 ##
-## Ends in an error in state: 155.
+## Ends in an error in state: 160.
 ##
 ## def -> DEF ID EQUALS expression . [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ## expression -> expression . expr_list [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DOT DO DIV DEF DATA CLAIM CASE ABILITY ]
@@ -389,7 +389,7 @@ toplevel: DEF ID EQUALS TRUE TY_STRING
 
 toplevel: DEF ID EQUALS TY_STRING
 ##
-## Ends in an error in state: 154.
+## Ends in an error in state: 159.
 ##
 ## def -> DEF ID EQUALS . expression [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ##
@@ -401,7 +401,7 @@ toplevel: DEF ID EQUALS TY_STRING
 
 toplevel: DEF ID LPAREN RPAREN EQUALS TRUE TY_STRING
 ##
-## Ends in an error in state: 158.
+## Ends in an error in state: 163.
 ##
 ## def -> DEF ID arg_list EQUALS expression . [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ## expression -> expression . expr_list [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DOT DO DIV DEF DATA CLAIM CASE ABILITY ]
@@ -420,7 +420,7 @@ toplevel: DEF ID LPAREN RPAREN EQUALS TRUE TY_STRING
 
 toplevel: DEF ID LPAREN RPAREN EQUALS TY_STRING
 ##
-## Ends in an error in state: 157.
+## Ends in an error in state: 162.
 ##
 ## def -> DEF ID arg_list EQUALS . expression [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ##
@@ -432,7 +432,7 @@ toplevel: DEF ID LPAREN RPAREN EQUALS TY_STRING
 
 toplevel: DEF ID LPAREN RPAREN TY_STRING
 ##
-## Ends in an error in state: 156.
+## Ends in an error in state: 161.
 ##
 ## def -> DEF ID arg_list . EQUALS expression [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ##
@@ -444,7 +444,7 @@ toplevel: DEF ID LPAREN RPAREN TY_STRING
 
 toplevel: DEF ID TY_STRING
 ##
-## Ends in an error in state: 153.
+## Ends in an error in state: 158.
 ##
 ## def -> DEF ID . EQUALS expression [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ## def -> DEF ID . arg_list EQUALS expression [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
@@ -457,7 +457,7 @@ toplevel: DEF ID TY_STRING
 
 toplevel: DEF TY_STRING
 ##
-## Ends in an error in state: 152.
+## Ends in an error in state: 157.
 ##
 ## def -> DEF . ID EQUALS expression [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
 ## def -> DEF . ID arg_list EQUALS expression [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA CLAIM CASE ABILITY ]
@@ -470,7 +470,7 @@ toplevel: DEF TY_STRING
 
 toplevel: DO ID LPAREN TY_STRING
 ##
-## Ends in an error in state: 72.
+## Ends in an error in state: 77.
 ##
 ## expression -> DO ID LPAREN . loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -482,7 +482,7 @@ toplevel: DO ID LPAREN TY_STRING
 
 toplevel: DO ID TY_STRING
 ##
-## Ends in an error in state: 71.
+## Ends in an error in state: 76.
 ##
 ## expression -> DO ID . LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -494,7 +494,7 @@ toplevel: DO ID TY_STRING
 
 toplevel: DO TY_STRING
 ##
-## Ends in an error in state: 70.
+## Ends in an error in state: 75.
 ##
 ## expression -> DO . ID LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -506,7 +506,7 @@ toplevel: DO TY_STRING
 
 toplevel: FN LPAREN ID COMMA TY_STRING
 ##
-## Ends in an error in state: 63.
+## Ends in an error in state: 68.
 ##
 ## separated_nonempty_list(COMMA,param) -> param COMMA . separated_nonempty_list(COMMA,param) [ RPAREN ]
 ##
@@ -518,7 +518,7 @@ toplevel: FN LPAREN ID COMMA TY_STRING
 
 toplevel: FN LPAREN ID TY_STRING
 ##
-## Ends in an error in state: 62.
+## Ends in an error in state: 67.
 ##
 ## separated_nonempty_list(COMMA,param) -> param . [ RPAREN ]
 ## separated_nonempty_list(COMMA,param) -> param . COMMA separated_nonempty_list(COMMA,param) [ RPAREN ]
@@ -531,7 +531,7 @@ toplevel: FN LPAREN ID TY_STRING
 
 toplevel: FN LPAREN RPAREN TRUE TY_STRING
 ##
-## Ends in an error in state: 106.
+## Ends in an error in state: 111.
 ##
 ## expression -> FN arg_list expression . [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
@@ -550,7 +550,7 @@ toplevel: FN LPAREN RPAREN TRUE TY_STRING
 
 toplevel: FN LPAREN RPAREN TY_STRING
 ##
-## Ends in an error in state: 67.
+## Ends in an error in state: 72.
 ##
 ## expression -> FN arg_list . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -562,7 +562,7 @@ toplevel: FN LPAREN RPAREN TY_STRING
 
 toplevel: FN LPAREN TY_STRING
 ##
-## Ends in an error in state: 59.
+## Ends in an error in state: 64.
 ##
 ## arg_list -> LPAREN . loption(separated_nonempty_list(COMMA,param)) RPAREN [ TRUE TK_TODO THE STRING LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EQUALS DO CASE ]
 ##
@@ -574,7 +574,7 @@ toplevel: FN LPAREN TY_STRING
 
 toplevel: FN TY_STRING
 ##
-## Ends in an error in state: 58.
+## Ends in an error in state: 63.
 ##
 ## expression -> FN . arg_list expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -586,7 +586,7 @@ toplevel: FN TY_STRING
 
 toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN ID COMMA TY_STRING
 ##
-## Ends in an error in state: 118.
+## Ends in an error in state: 123.
 ##
 ## separated_nonempty_list(COMMA,ID) -> ID COMMA . separated_nonempty_list(COMMA,ID) [ RPAREN ]
 ##
@@ -598,7 +598,7 @@ toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN ID COMMA TY_S
 
 toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN ID TY_STRING
 ##
-## Ends in an error in state: 117.
+## Ends in an error in state: 122.
 ##
 ## separated_nonempty_list(COMMA,ID) -> ID . [ RPAREN ]
 ## separated_nonempty_list(COMMA,ID) -> ID . COMMA separated_nonempty_list(COMMA,ID) [ RPAREN ]
@@ -611,7 +611,7 @@ toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN ID TY_STRING
 
 toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN RPAREN ID ARROW FALSE COMMA TY_STRING
 ##
-## Ends in an error in state: 130.
+## Ends in an error in state: 135.
 ##
 ## separated_nonempty_list(COMMA,handler_clause) -> handler_clause COMMA . separated_nonempty_list(COMMA,handler_clause) [ RBRACE ]
 ##
@@ -623,7 +623,7 @@ toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN RPAREN ID ARR
 
 toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN RPAREN ID ARROW TRUE TY_STRING
 ##
-## Ends in an error in state: 125.
+## Ends in an error in state: 130.
 ##
 ## expression -> expression . expr_list [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
 ## expression -> expression . SEMICOLON expression [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
@@ -642,7 +642,7 @@ toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN RPAREN ID ARR
 
 toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN RPAREN ID ARROW TY_STRING
 ##
-## Ends in an error in state: 124.
+## Ends in an error in state: 129.
 ##
 ## handler_clause -> ID LPAREN loption(separated_nonempty_list(COMMA,ID)) RPAREN ID ARROW . expression [ RBRACE COMMA ]
 ##
@@ -654,7 +654,7 @@ toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN RPAREN ID ARR
 
 toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN RPAREN ID TY_STRING
 ##
-## Ends in an error in state: 123.
+## Ends in an error in state: 128.
 ##
 ## handler_clause -> ID LPAREN loption(separated_nonempty_list(COMMA,ID)) RPAREN ID . ARROW expression [ RBRACE COMMA ]
 ##
@@ -666,7 +666,7 @@ toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN RPAREN ID TY_
 
 toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN RPAREN TY_STRING
 ##
-## Ends in an error in state: 122.
+## Ends in an error in state: 127.
 ##
 ## handler_clause -> ID LPAREN loption(separated_nonempty_list(COMMA,ID)) RPAREN . ID ARROW expression [ RBRACE COMMA ]
 ##
@@ -678,7 +678,7 @@ toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN RPAREN TY_STR
 
 toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN TY_STRING
 ##
-## Ends in an error in state: 116.
+## Ends in an error in state: 121.
 ##
 ## handler_clause -> ID LPAREN . loption(separated_nonempty_list(COMMA,ID)) RPAREN ID ARROW expression [ RBRACE COMMA ]
 ##
@@ -690,7 +690,7 @@ toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID LPAREN TY_STRING
 
 toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID TY_STRING
 ##
-## Ends in an error in state: 115.
+## Ends in an error in state: 120.
 ##
 ## handler_clause -> ID . LPAREN loption(separated_nonempty_list(COMMA,ID)) RPAREN ID ARROW expression [ RBRACE COMMA ]
 ##
@@ -702,7 +702,7 @@ toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA ID TY_STRING
 
 toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA TY_STRING
 ##
-## Ends in an error in state: 114.
+## Ends in an error in state: 119.
 ##
 ## expression -> HANDLE expression LBRACE return_clause COMMA . loption(separated_nonempty_list(COMMA,handler_clause)) RBRACE [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -714,7 +714,7 @@ toplevel: HANDLE TRUE LBRACE RETURN ID ARROW FALSE COMMA TY_STRING
 
 toplevel: HANDLE TRUE LBRACE RETURN ID ARROW TRUE TY_STRING
 ##
-## Ends in an error in state: 112.
+## Ends in an error in state: 117.
 ##
 ## expression -> expression . expr_list [ STAR SEMICOLON PLUS MINUS LPAREN DOT DIV COMMA ]
 ## expression -> expression . SEMICOLON expression [ STAR SEMICOLON PLUS MINUS LPAREN DOT DIV COMMA ]
@@ -733,7 +733,7 @@ toplevel: HANDLE TRUE LBRACE RETURN ID ARROW TRUE TY_STRING
 
 toplevel: HANDLE TRUE LBRACE RETURN ID ARROW TY_STRING
 ##
-## Ends in an error in state: 111.
+## Ends in an error in state: 116.
 ##
 ## return_clause -> RETURN ID ARROW . expression [ COMMA ]
 ##
@@ -745,7 +745,7 @@ toplevel: HANDLE TRUE LBRACE RETURN ID ARROW TY_STRING
 
 toplevel: HANDLE TRUE LBRACE RETURN ID TY_STRING
 ##
-## Ends in an error in state: 110.
+## Ends in an error in state: 115.
 ##
 ## return_clause -> RETURN ID . ARROW expression [ COMMA ]
 ##
@@ -757,7 +757,7 @@ toplevel: HANDLE TRUE LBRACE RETURN ID TY_STRING
 
 toplevel: HANDLE TRUE LBRACE RETURN TY_STRING
 ##
-## Ends in an error in state: 109.
+## Ends in an error in state: 114.
 ##
 ## return_clause -> RETURN . ID ARROW expression [ COMMA ]
 ##
@@ -769,7 +769,7 @@ toplevel: HANDLE TRUE LBRACE RETURN TY_STRING
 
 toplevel: HANDLE TRUE LBRACE TY_STRING
 ##
-## Ends in an error in state: 108.
+## Ends in an error in state: 113.
 ##
 ## expression -> HANDLE expression LBRACE . return_clause COMMA loption(separated_nonempty_list(COMMA,handler_clause)) RBRACE [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -781,7 +781,7 @@ toplevel: HANDLE TRUE LBRACE TY_STRING
 
 toplevel: HANDLE TRUE TY_STRING
 ##
-## Ends in an error in state: 107.
+## Ends in an error in state: 112.
 ##
 ## expression -> expression . expr_list [ STAR SEMICOLON PLUS MINUS LPAREN LBRACE DOT DIV ]
 ## expression -> expression . SEMICOLON expression [ STAR SEMICOLON PLUS MINUS LPAREN LBRACE DOT DIV ]
@@ -800,7 +800,7 @@ toplevel: HANDLE TRUE TY_STRING
 
 toplevel: HANDLE TY_STRING
 ##
-## Ends in an error in state: 57.
+## Ends in an error in state: 62.
 ##
 ## expression -> HANDLE . expression LBRACE return_clause COMMA loption(separated_nonempty_list(COMMA,handler_clause)) RBRACE [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -812,7 +812,7 @@ toplevel: HANDLE TY_STRING
 
 toplevel: ID LBRACE ID COLON FALSE COMMA TY_STRING
 ##
-## Ends in an error in state: 136.
+## Ends in an error in state: 141.
 ##
 ## separated_nonempty_list(COMMA,record_expr_body) -> record_expr_body COMMA . separated_nonempty_list(COMMA,record_expr_body) [ RBRACE ]
 ##
@@ -824,7 +824,7 @@ toplevel: ID LBRACE ID COLON FALSE COMMA TY_STRING
 
 toplevel: ID LBRACE ID COLON TRUE TY_STRING
 ##
-## Ends in an error in state: 132.
+## Ends in an error in state: 137.
 ##
 ## expression -> expression . expr_list [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
 ## expression -> expression . SEMICOLON expression [ STAR SEMICOLON RBRACE PLUS MINUS LPAREN DOT DIV COMMA ]
@@ -843,7 +843,7 @@ toplevel: ID LBRACE ID COLON TRUE TY_STRING
 
 toplevel: ID LBRACE ID COLON TY_STRING
 ##
-## Ends in an error in state: 56.
+## Ends in an error in state: 61.
 ##
 ## record_expr_body -> ID COLON . expression [ RBRACE COMMA ]
 ##
@@ -855,7 +855,7 @@ toplevel: ID LBRACE ID COLON TY_STRING
 
 toplevel: ID LBRACE ID TY_STRING
 ##
-## Ends in an error in state: 55.
+## Ends in an error in state: 60.
 ##
 ## record_expr_body -> ID . COLON expression [ RBRACE COMMA ]
 ##
@@ -867,7 +867,7 @@ toplevel: ID LBRACE ID TY_STRING
 
 toplevel: ID LBRACE TY_STRING
 ##
-## Ends in an error in state: 54.
+## Ends in an error in state: 59.
 ##
 ## expression -> ID LBRACE . separated_nonempty_list(COMMA,record_expr_body) RBRACE [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -879,7 +879,7 @@ toplevel: ID LBRACE TY_STRING
 
 toplevel: ID TY_STRING
 ##
-## Ends in an error in state: 53.
+## Ends in an error in state: 58.
 ##
 ## expression -> ID . [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ## expression -> ID . LBRACE separated_nonempty_list(COMMA,record_expr_body) RBRACE [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
@@ -892,7 +892,7 @@ toplevel: ID TY_STRING
 
 toplevel: IF TRUE THEN TRUE ELSE TRUE TY_STRING
 ##
-## Ends in an error in state: 142.
+## Ends in an error in state: 147.
 ##
 ## expression -> IF expression THEN expression ELSE expression . [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
@@ -911,7 +911,7 @@ toplevel: IF TRUE THEN TRUE ELSE TRUE TY_STRING
 
 toplevel: IF TRUE THEN TRUE ELSE TY_STRING
 ##
-## Ends in an error in state: 141.
+## Ends in an error in state: 146.
 ##
 ## expression -> IF expression THEN expression ELSE . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -923,7 +923,7 @@ toplevel: IF TRUE THEN TRUE ELSE TY_STRING
 
 toplevel: IF TRUE THEN TRUE TY_STRING
 ##
-## Ends in an error in state: 140.
+## Ends in an error in state: 145.
 ##
 ## expression -> IF expression THEN expression . ELSE expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ## expression -> expression . expr_list [ STAR SEMICOLON PLUS MINUS LPAREN ELSE DOT DIV ]
@@ -942,7 +942,7 @@ toplevel: IF TRUE THEN TRUE TY_STRING
 
 toplevel: IF TRUE THEN TY_STRING
 ##
-## Ends in an error in state: 139.
+## Ends in an error in state: 144.
 ##
 ## expression -> IF expression THEN . expression ELSE expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -954,7 +954,7 @@ toplevel: IF TRUE THEN TY_STRING
 
 toplevel: IF TRUE TY_STRING
 ##
-## Ends in an error in state: 138.
+## Ends in an error in state: 143.
 ##
 ## expression -> IF expression . THEN expression ELSE expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ## expression -> expression . expr_list [ THEN STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
@@ -973,7 +973,7 @@ toplevel: IF TRUE TY_STRING
 
 toplevel: IF TY_STRING
 ##
-## Ends in an error in state: 52.
+## Ends in an error in state: 57.
 ##
 ## expression -> IF . expression THEN expression ELSE expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -985,7 +985,7 @@ toplevel: IF TY_STRING
 
 toplevel: LET ID LBRACE ID COLON FALSE COMMA TY_STRING
 ##
-## Ends in an error in state: 43.
+## Ends in an error in state: 48.
 ##
 ## separated_nonempty_list(COMMA,record_pattern_expr) -> record_pattern_expr COMMA . separated_nonempty_list(COMMA,record_pattern_expr) [ RBRACE ]
 ##
@@ -997,7 +997,7 @@ toplevel: LET ID LBRACE ID COLON FALSE COMMA TY_STRING
 
 toplevel: LET ID LBRACE ID COLON FALSE TY_STRING
 ##
-## Ends in an error in state: 42.
+## Ends in an error in state: 47.
 ##
 ## separated_nonempty_list(COMMA,record_pattern_expr) -> record_pattern_expr . [ RBRACE ]
 ## separated_nonempty_list(COMMA,record_pattern_expr) -> record_pattern_expr . COMMA separated_nonempty_list(COMMA,record_pattern_expr) [ RBRACE ]
@@ -1010,7 +1010,7 @@ toplevel: LET ID LBRACE ID COLON FALSE TY_STRING
 
 toplevel: LET ID LBRACE ID COLON TY_STRING
 ##
-## Ends in an error in state: 38.
+## Ends in an error in state: 43.
 ##
 ## record_pattern_expr -> ID COLON . pattern [ RBRACE COMMA ]
 ##
@@ -1022,7 +1022,7 @@ toplevel: LET ID LBRACE ID COLON TY_STRING
 
 toplevel: LET ID LBRACE ID TY_STRING
 ##
-## Ends in an error in state: 37.
+## Ends in an error in state: 42.
 ##
 ## record_pattern_expr -> ID . COLON pattern [ RBRACE COMMA ]
 ##
@@ -1034,7 +1034,7 @@ toplevel: LET ID LBRACE ID TY_STRING
 
 toplevel: LET ID LBRACE TY_STRING
 ##
-## Ends in an error in state: 36.
+## Ends in an error in state: 41.
 ##
 ## pattern -> ID LBRACE . separated_nonempty_list(COMMA,record_pattern_expr) RBRACE [ RPAREN RBRACE EQUALS COMMA ARROW ]
 ##
@@ -1046,7 +1046,7 @@ toplevel: LET ID LBRACE TY_STRING
 
 toplevel: LET ID LPAREN TRUE TY_STRING
 ##
-## Ends in an error in state: 33.
+## Ends in an error in state: 38.
 ##
 ## separated_nonempty_list(COMMA,pattern) -> pattern . [ RPAREN ]
 ## separated_nonempty_list(COMMA,pattern) -> pattern . COMMA separated_nonempty_list(COMMA,pattern) [ RPAREN ]
@@ -1059,7 +1059,7 @@ toplevel: LET ID LPAREN TRUE TY_STRING
 
 toplevel: LET ID LPAREN TY_STRING
 ##
-## Ends in an error in state: 29.
+## Ends in an error in state: 34.
 ##
 ## pattern -> ID LPAREN . separated_nonempty_list(COMMA,pattern) RPAREN [ RPAREN RBRACE EQUALS COMMA ARROW ]
 ##
@@ -1071,7 +1071,7 @@ toplevel: LET ID LPAREN TY_STRING
 
 toplevel: LET ID TY_STRING
 ##
-## Ends in an error in state: 28.
+## Ends in an error in state: 33.
 ##
 ## pattern -> ID . [ RPAREN RBRACE EQUALS COMMA ARROW ]
 ## pattern -> ID . LBRACE separated_nonempty_list(COMMA,record_pattern_expr) RBRACE [ RPAREN RBRACE EQUALS COMMA ARROW ]
@@ -1085,7 +1085,7 @@ toplevel: LET ID TY_STRING
 
 toplevel: LET LPAREN TRUE COMMA TY_STRING
 ##
-## Ends in an error in state: 34.
+## Ends in an error in state: 39.
 ##
 ## separated_nonempty_list(COMMA,pattern) -> pattern COMMA . separated_nonempty_list(COMMA,pattern) [ RPAREN ]
 ##
@@ -1097,7 +1097,7 @@ toplevel: LET LPAREN TRUE COMMA TY_STRING
 
 toplevel: LET LPAREN TRUE TY_STRING
 ##
-## Ends in an error in state: 47.
+## Ends in an error in state: 52.
 ##
 ## pattern -> LPAREN pattern . RPAREN [ RPAREN RBRACE EQUALS COMMA ARROW ]
 ## separated_nonempty_list(COMMA,pattern) -> pattern . [ RPAREN ]
@@ -1111,7 +1111,7 @@ toplevel: LET LPAREN TRUE TY_STRING
 
 toplevel: LET LPAREN TY_STRING
 ##
-## Ends in an error in state: 26.
+## Ends in an error in state: 31.
 ##
 ## pattern -> LPAREN . pattern RPAREN [ RPAREN RBRACE EQUALS COMMA ARROW ]
 ## pattern -> LPAREN . separated_nonempty_list(COMMA,pattern) RPAREN [ RPAREN RBRACE EQUALS COMMA ARROW ]
@@ -1124,7 +1124,7 @@ toplevel: LET LPAREN TY_STRING
 
 toplevel: LET TRUE EQUALS TRUE SEMICOLON TRUE TY_STRING
 ##
-## Ends in an error in state: 146.
+## Ends in an error in state: 151.
 ##
 ## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
@@ -1144,7 +1144,7 @@ toplevel: LET TRUE EQUALS TRUE SEMICOLON TRUE TY_STRING
 
 toplevel: LET TRUE EQUALS TRUE SEMICOLON TY_STRING
 ##
-## Ends in an error in state: 144.
+## Ends in an error in state: 149.
 ##
 ## expression -> LET pattern EQUALS expression SEMICOLON . maybe_empty_expr [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ## expression -> expression SEMICOLON . expression [ STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
@@ -1157,7 +1157,7 @@ toplevel: LET TRUE EQUALS TRUE SEMICOLON TY_STRING
 
 toplevel: LET TRUE EQUALS TRUE TY_STRING
 ##
-## Ends in an error in state: 143.
+## Ends in an error in state: 148.
 ##
 ## expression -> LET pattern EQUALS expression . SEMICOLON maybe_empty_expr [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ## expression -> expression . expr_list [ STAR SEMICOLON PLUS MINUS LPAREN DOT DIV ]
@@ -1176,7 +1176,7 @@ toplevel: LET TRUE EQUALS TRUE TY_STRING
 
 toplevel: LET TRUE EQUALS TY_STRING
 ##
-## Ends in an error in state: 50.
+## Ends in an error in state: 55.
 ##
 ## expression -> LET pattern EQUALS . expression SEMICOLON maybe_empty_expr [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -1188,7 +1188,7 @@ toplevel: LET TRUE EQUALS TY_STRING
 
 toplevel: LET TRUE TY_STRING
 ##
-## Ends in an error in state: 49.
+## Ends in an error in state: 54.
 ##
 ## expression -> LET pattern . EQUALS expression SEMICOLON maybe_empty_expr [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -1200,7 +1200,7 @@ toplevel: LET TRUE TY_STRING
 
 toplevel: LET TY_STRING
 ##
-## Ends in an error in state: 23.
+## Ends in an error in state: 28.
 ##
 ## expression -> LET . pattern EQUALS expression SEMICOLON maybe_empty_expr [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -1212,7 +1212,7 @@ toplevel: LET TY_STRING
 
 toplevel: LPAREN TRUE COMMA TY_STRING
 ##
-## Ends in an error in state: 93.
+## Ends in an error in state: 98.
 ##
 ## separated_nonempty_list(COMMA,expression) -> expression COMMA . separated_nonempty_list(COMMA,expression) [ RPAREN ]
 ##
@@ -1224,7 +1224,7 @@ toplevel: LPAREN TRUE COMMA TY_STRING
 
 toplevel: LPAREN TRUE TY_STRING
 ##
-## Ends in an error in state: 149.
+## Ends in an error in state: 154.
 ##
 ## expression -> expression . expr_list [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV COMMA ]
 ## expression -> expression . SEMICOLON expression [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV COMMA ]
@@ -1245,7 +1245,7 @@ toplevel: LPAREN TRUE TY_STRING
 
 toplevel: LPAREN TY_STRING
 ##
-## Ends in an error in state: 21.
+## Ends in an error in state: 26.
 ##
 ## expression -> LPAREN . RPAREN [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ## expression -> LPAREN . expression RPAREN [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
@@ -1257,6 +1257,42 @@ toplevel: LPAREN TY_STRING
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
+toplevel: THE LPAREN RPAREN ARROW TRUE
+##
+## Ends in an error in state: 10.
+##
+## ty -> LPAREN RPAREN ARROW . ty RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA COMMA CLAIM CASE ARROW ABILITY ]
+##
+## The known suffix of the stack is as follows:
+## LPAREN RPAREN ARROW
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+toplevel: THE LPAREN RPAREN ARROW TY_STRING TY_STRING
+##
+## Ends in an error in state: 12.
+##
+## ty -> LPAREN RPAREN ARROW ty . RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA COMMA CLAIM CASE ARROW ABILITY ]
+##
+## The known suffix of the stack is as follows:
+## LPAREN RPAREN ARROW ty
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+toplevel: THE LPAREN RPAREN TY_STRING
+##
+## Ends in an error in state: 9.
+##
+## ty -> LPAREN RPAREN . ARROW ty RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA COMMA CLAIM CASE ARROW ABILITY ]
+##
+## The known suffix of the stack is as follows:
+## LPAREN RPAREN
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
 toplevel: THE LPAREN TRUE
 ##
 ## Ends in an error in state: 8.
@@ -1264,6 +1300,7 @@ toplevel: THE LPAREN TRUE
 ## ty -> LPAREN . ty RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA COMMA CLAIM CASE ARROW ABILITY ]
 ## ty -> LPAREN . separated_nonempty_list(COMMA,ty) RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA COMMA CLAIM CASE ARROW ABILITY ]
 ## ty -> LPAREN . separated_nonempty_list(COMMA,ty) ARROW ty RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA COMMA CLAIM CASE ARROW ABILITY ]
+## ty -> LPAREN . RPAREN ARROW ty RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA COMMA CLAIM CASE ARROW ABILITY ]
 ##
 ## The known suffix of the stack is as follows:
 ## LPAREN
@@ -1273,7 +1310,7 @@ toplevel: THE LPAREN TRUE
 
 toplevel: THE LPAREN TY_STRING ARROW TRUE
 ##
-## Ends in an error in state: 16.
+## Ends in an error in state: 21.
 ##
 ## ty -> LPAREN separated_nonempty_list(COMMA,ty) ARROW . ty RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA COMMA CLAIM CASE ARROW ABILITY ]
 ##
@@ -1285,7 +1322,7 @@ toplevel: THE LPAREN TY_STRING ARROW TRUE
 
 toplevel: THE LPAREN TY_STRING ARROW TY_STRING TY_STRING
 ##
-## Ends in an error in state: 17.
+## Ends in an error in state: 22.
 ##
 ## ty -> LPAREN separated_nonempty_list(COMMA,ty) ARROW ty . RPAREN [ TRUE TK_TODO THE STRING RPAREN RBRACE LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DO DEF DATA COMMA CLAIM CASE ARROW ABILITY ]
 ##
@@ -1297,7 +1334,7 @@ toplevel: THE LPAREN TY_STRING ARROW TY_STRING TY_STRING
 
 toplevel: THE LPAREN TY_STRING COMMA TRUE
 ##
-## Ends in an error in state: 11.
+## Ends in an error in state: 16.
 ##
 ## separated_nonempty_list(COMMA,ty) -> ty COMMA . separated_nonempty_list(COMMA,ty) [ RPAREN ARROW ]
 ##
@@ -1309,7 +1346,7 @@ toplevel: THE LPAREN TY_STRING COMMA TRUE
 
 toplevel: THE LPAREN TY_STRING TY_STRING
 ##
-## Ends in an error in state: 9.
+## Ends in an error in state: 14.
 ##
 ## separated_nonempty_list(COMMA,ty) -> ty . [ RPAREN ARROW ]
 ## separated_nonempty_list(COMMA,ty) -> ty . COMMA separated_nonempty_list(COMMA,ty) [ RPAREN ARROW ]
@@ -1335,7 +1372,7 @@ toplevel: THE TRUE
 
 toplevel: THE TY_STRING TRUE TY_STRING
 ##
-## Ends in an error in state: 151.
+## Ends in an error in state: 156.
 ##
 ## expression -> THE ty expression . [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
@@ -1354,7 +1391,7 @@ toplevel: THE TY_STRING TRUE TY_STRING
 
 toplevel: THE TY_STRING TY_STRING
 ##
-## Ends in an error in state: 19.
+## Ends in an error in state: 24.
 ##
 ## expression -> THE ty . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -1366,7 +1403,7 @@ toplevel: THE TY_STRING TY_STRING
 
 toplevel: TRUE DIV TRUE TY_STRING
 ##
-## Ends in an error in state: 91.
+## Ends in an error in state: 96.
 ##
 ## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
@@ -1385,7 +1422,7 @@ toplevel: TRUE DIV TRUE TY_STRING
 
 toplevel: TRUE DIV TY_STRING
 ##
-## Ends in an error in state: 90.
+## Ends in an error in state: 95.
 ##
 ## expression -> expression DIV . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -1397,7 +1434,7 @@ toplevel: TRUE DIV TY_STRING
 
 toplevel: TRUE DOT TY_STRING
 ##
-## Ends in an error in state: 88.
+## Ends in an error in state: 93.
 ##
 ## expression -> expression DOT . ID [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -1409,7 +1446,7 @@ toplevel: TRUE DOT TY_STRING
 
 toplevel: TRUE LPAREN TRUE TY_STRING
 ##
-## Ends in an error in state: 85.
+## Ends in an error in state: 90.
 ##
 ## expression -> expression . expr_list [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV COMMA ]
 ## expression -> expression . SEMICOLON expression [ STAR SEMICOLON RPAREN PLUS MINUS LPAREN DOT DIV COMMA ]
@@ -1429,7 +1466,7 @@ toplevel: TRUE LPAREN TRUE TY_STRING
 
 toplevel: TRUE LPAREN TY_STRING
 ##
-## Ends in an error in state: 81.
+## Ends in an error in state: 86.
 ##
 ## expr_list -> LPAREN . loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -1441,7 +1478,7 @@ toplevel: TRUE LPAREN TY_STRING
 
 toplevel: TRUE MINUS TRUE TY_STRING
 ##
-## Ends in an error in state: 87.
+## Ends in an error in state: 92.
 ##
 ## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
@@ -1460,7 +1497,7 @@ toplevel: TRUE MINUS TRUE TY_STRING
 
 toplevel: TRUE MINUS TY_STRING
 ##
-## Ends in an error in state: 86.
+## Ends in an error in state: 91.
 ##
 ## expression -> expression MINUS . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -1472,7 +1509,7 @@ toplevel: TRUE MINUS TY_STRING
 
 toplevel: TRUE PLUS TRUE TY_STRING
 ##
-## Ends in an error in state: 80.
+## Ends in an error in state: 85.
 ##
 ## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
@@ -1491,7 +1528,7 @@ toplevel: TRUE PLUS TRUE TY_STRING
 
 toplevel: TRUE PLUS TY_STRING
 ##
-## Ends in an error in state: 79.
+## Ends in an error in state: 84.
 ##
 ## expression -> expression PLUS . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -1503,7 +1540,7 @@ toplevel: TRUE PLUS TY_STRING
 
 toplevel: TRUE SEMICOLON TRUE TY_STRING
 ##
-## Ends in an error in state: 78.
+## Ends in an error in state: 83.
 ##
 ## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
@@ -1522,7 +1559,7 @@ toplevel: TRUE SEMICOLON TRUE TY_STRING
 
 toplevel: TRUE SEMICOLON TY_STRING
 ##
-## Ends in an error in state: 77.
+## Ends in an error in state: 82.
 ##
 ## expression -> expression SEMICOLON . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -1534,7 +1571,7 @@ toplevel: TRUE SEMICOLON TY_STRING
 
 toplevel: TRUE STAR TRUE TY_STRING
 ##
-## Ends in an error in state: 76.
+## Ends in an error in state: 81.
 ##
 ## expression -> expression . expr_list [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
@@ -1553,7 +1590,7 @@ toplevel: TRUE STAR TRUE TY_STRING
 
 toplevel: TRUE STAR TY_STRING
 ##
-## Ends in an error in state: 75.
+## Ends in an error in state: 80.
 ##
 ## expression -> expression STAR . expression [ TRUE TK_TODO THEN THE STRING STAR SEMICOLON RPAREN RBRACE PLUS MINUS LPAREN LET LBRACE INT IF ID HANDLE FN FLOAT FALSE EOF ELSE DOT DO DIV DEF DATA COMMA CLAIM CASE ABILITY ]
 ##
@@ -1565,7 +1602,7 @@ toplevel: TRUE STAR TY_STRING
 
 toplevel: TRUE TY_STRING
 ##
-## Ends in an error in state: 193.
+## Ends in an error in state: 198.
 ##
 ## expression -> expression . expr_list [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DOT DO DIV DEF DATA CLAIM CASE ABILITY ]
 ## expression -> expression . SEMICOLON expression [ TRUE TK_TODO THE STRING STAR SEMICOLON PLUS MINUS LPAREN LET INT IF ID HANDLE FN FLOAT FALSE EOF DOT DO DIV DEF DATA CLAIM CASE ABILITY ]

@@ -2,6 +2,33 @@
     open Syntax
     open Ast
     open Naming
+    open Errors
+
+   let ty_of_record_def = function
+     | RecordDef (_, _, fields) ->
+         Type.TyRecord fields
+     | _ -> Errors.runtime "expected a record def"
+
+
+  let ty_of_variant_def = function
+    | VariantDef (_loc, _name, fields) ->
+    let conv s = s |> VarName.to_string |> DataName.of_string in 
+    let fields =
+      fields
+      |> List.map (fun (var, ty) ->
+          { Type.label = conv var; fields = ty })
+    in
+    Type.TyVariant fields
+  | _ -> Errors.runtime "expected a variant definition"
+
+  let type_synonyms : (string * Type.t) list ref = ref []
+  let add_synonym name ty  =
+    type_synonyms := (name, ty) :: !type_synonyms
+
+    let get_type_synonym name =
+      match List.assoc_opt name !type_synonyms with
+      | Some value -> Some value
+      | None -> None 	      
 
     let empty_variants : VarName.t list ref = ref []
     let non_empty_variants : VarName.t list ref = ref []
@@ -102,7 +129,10 @@ record_claim:
 
 record_decl: 
     | DATA; id = ID; EQUALS; LBRACE; claims = separated_nonempty_list(COMMA, record_claim); RBRACE
-      { RecordDef ($loc, DataName.of_string id, claims)  }
+    { let def = RecordDef ($loc, DataName.of_string id, claims) in
+      let ty = ty_of_record_def def in
+      add_synonym id ty;
+      def }
 
 
 single_variant:
@@ -114,8 +144,9 @@ variant_decl:
     | DATA; name = ID; EQUALS; body = separated_nonempty_list(BAR, single_variant);
       { let variant_def = VariantDef ($loc, DataName.of_string name, body) in 
         collect_empty_variants variant_def;
+	let ty = ty_of_variant_def variant_def in
+	add_synonym name ty;
         variant_def }
-
 
 record_expr_body: 
     | field = ID; COLON; e = expression; { (FieldName.of_string field, e) }
@@ -132,7 +163,15 @@ ty:
     | LPAREN; body = separated_nonempty_list(COMMA, ty); RPAREN 
       { TyTuple (body) }
     | LPAREN a = separated_nonempty_list(COMMA, ty); ARROW; b = ty; RPAREN 
-      { TyArrow (a, b) }
+       { TyArrow (a, b) }
+    | LPAREN; RPAREN; ARROW; b = ty; RPAREN 
+       { TyArrow ([], b) }
+    | id = ID
+    { match get_type_synonym id with
+      | None ->
+	 let msg = Printf.sprintf "Unbound type name %s" id in
+	 Errors.runtime msg
+      | Some ty -> ty }
     
 
 arg_list: 
