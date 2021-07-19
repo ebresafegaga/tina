@@ -6,11 +6,11 @@ module P = Parsing.ParserEntry
 
 let eval source =
   let syntax = source |> Lexing.from_string |> P.parse in
-  (* let ty =
-    syntax |> Typecheck.handle_toplevel |> Ctx.pp_ctx |> String.concat "\n"
-     in*)
+  let ty =
+   syntax |> Typecheck.handle_toplevel |> Ctx.pp_ctx |> String.concat "\n"
+     in
   let term = syntax (* |> DesugarEffect.handle_toplevel*) |> Eval.process_toplevel |> String.concat "\n" in
-  Printf.sprintf "%s" term
+  Printf.sprintf "%s \n %s" term ty
 
 let eval source =
   match eval source with
