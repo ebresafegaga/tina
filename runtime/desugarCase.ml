@@ -110,7 +110,6 @@ let rec top pat body =
     (* don't reduce the first pattern in pat because it is the tag *)
     let tag = List.hd pats in
     let pats = List.tl pats in
-      
     let names = List.map fst pats in
     let pats = List.map snd pats in
     let pats, frontier = freshen pats in
@@ -158,7 +157,7 @@ let app f args = Application (Loc.dummy, f, args)
 let let' name expr body = Let (Loc.dummy, name, expr, body)
 let var name = Variable (d, VarName.of_string name)
 let record_index record name = RecordIndex (d, record, FieldName.of_string name)
-let equal = var "equal"    
+let equal = var "equal"
 
 let expr_of_pat = function
   | A.PBool b -> LitBool (d, b)
@@ -236,7 +235,7 @@ and top1 e clauses =
       predicate_true
       (top1 e rest)
 
-let g = transform0 >> transform1 
+let g = transform0 >> transform1
 
 let rec handle_toplevel = function
   | [] -> []
