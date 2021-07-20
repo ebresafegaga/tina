@@ -1,0 +1,12 @@
+
+
+claim f (String -> Int)
+def f (x) =
+    case (x) {
+    	 x -> x
+   }
+
+claim b (String -> (Int, String))
+def b (str) =
+    let s = "";
+    let c = 10; (c, s)

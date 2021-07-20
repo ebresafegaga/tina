@@ -186,7 +186,10 @@ and check ctx term ty =
     if not (T.tyequal ty t_rec) then
       report_expected_at ~expected:ty ~got:t_rec ~loc
   | A.Case (loc, expr, clauses) ->
-    clauses |> List.iter (fun (pattern, body) -> tc_pattern ctx expr pattern body ~loc |> ignore)
+    clauses |> List.iter (fun (pattern, body) ->
+        let t1 = (tc_pattern ctx expr pattern body ~loc) in
+        if not (T.tyequal ty t1) then
+          report_expected_at ~expected:ty ~got:t1 ~loc)
   | Do _ | Handle _  -> Errors.runtime "not yet supported by the type checker"
 
 and tc_pattern ctx expr pattern body ~loc =
