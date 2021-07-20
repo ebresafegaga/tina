@@ -14,6 +14,39 @@ let report_error_at msg loc =
   let msg = Printf.sprintf "%s at %s" msg (Loc.pp loc) in
   Errors.runtime msg
 
+let rec bind_pattern_ty ctx pattern ty ~loc =
+  match pattern, ty with 
+  | A.PVariable name, ty -> Ctx.assume ctx name ty
+  | A.PInteger _, T.TyInt -> ctx
+  | A.PInteger _, ty -> report_expected_at ~expected:T.TyInt ~got:ty ~loc
+  | A.PBool _, T.TyBool -> ctx
+  | A.PBool _, ty -> report_expected_at ~expected:T.TyBool ~got:ty ~loc
+  | A.PString _, T.TyString -> ctx
+  | A.PString _, ty -> report_expected_at ~expected:T.TyString ~got:ty ~loc
+  | A.PTuple pats, T.TyTuple tys ->
+    List.fold_right2 (fun pat ty s_ctx -> bind_pattern_ty s_ctx pat ty ~loc) pats tys ctx
+  | A.PTuple _, ty ->
+    let msg = Printf.sprintf "the type of this pattern should not be %s, it has a tuple type" (T.pp_ty ty) in
+    report_error_at msg loc
+  | A.PRecord (name, fields), T.TyRecord fields_ty ->
+    let name_var = name |> DataName.to_string |> VarName.of_string in
+    Ctx.is_bound ctx name_var;
+    let pats = List.map snd fields in
+    let tys = List.map snd fields_ty in
+    List.fold_right2 (fun pat ty s_ctx -> bind_pattern_ty s_ctx pat ty ~loc) pats tys ctx
+  | A.PRecord _, ty ->
+    let msg = Printf.sprintf "the type of this pattern should not be %s, it has a record type" (T.pp_ty ty) in
+    report_error_at msg loc                          
+  | A.PVariant (name, pats), T.TyVariant vs ->
+    Ctx.is_bound ctx name;
+    let name = name |> VarName.to_string |> DataName.of_string in
+    let v =  vs |> List.find (fun { T.label; _ } -> label = name) in
+    let tys = v.fields in
+    List.fold_right2 (fun pat ty s_ctx -> bind_pattern_ty s_ctx pat ty ~loc) pats tys ctx
+  | A.PVariant _, ty ->
+    let msg = Printf.sprintf "the type of this pattern should not be %s, it has a variant type" (T.pp_ty ty) in
+    report_error_at msg loc
+
 let rec synth ctx term =
   match term with
   | A.LitTodo _ | A.Absurd _ ->
@@ -75,7 +108,9 @@ let rec synth ctx term =
       List.combine es ts
       |> List.iter (fun (e, t) -> check ctx e t);
     T.TyVariant vt
-  | _ -> failwith "not yet supported by the type checker"
+  | A.Let (loc, pattern, expr, body) -> tc_pattern ctx expr pattern body ~loc
+  | A.Case (loc, _, _) -> report_error_at "Can't infer the type of the case expression" loc
+  | Do _ | Handle _ -> Errors.runtime "not yet supported by the type checker"
 
 and check ctx term ty =
   match term with
@@ -146,7 +181,18 @@ and check ctx term ty =
     let t_rec = synth ctx term in
     if not (T.tyequal ty t_rec) then
       report_expected_at ~expected:ty ~got:t_rec ~loc
-  | _ -> failwith "not yet supported by the type checker"
+  | A.Let (loc, _, _, _) ->
+    let t_rec = synth ctx term in
+    if not (T.tyequal ty t_rec) then
+      report_expected_at ~expected:ty ~got:t_rec ~loc
+  | A.Case (loc, expr, clauses) ->
+    clauses |> List.iter (fun (pattern, body) -> tc_pattern ctx expr pattern body ~loc |> ignore)
+  | Do _ | Handle _  -> Errors.runtime "not yet supported by the type checker"
+
+and tc_pattern ctx expr pattern body ~loc =
+  let expr_ty = synth ctx expr in
+  let body_ctx = bind_pattern_ty ctx pattern expr_ty ~loc in
+  synth body_ctx body
 
 
 let handle_top ctx top =

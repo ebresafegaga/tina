@@ -55,6 +55,8 @@ let rec lookup_variant ctx name =
     | T.TyVariant v -> v, (v |> List.find (fun { T.label; _ } -> label = name)).fields
     | _ -> lookup_variant ctx name)
   | (_x, _t) :: ctx -> lookup_variant ctx name
+
+let is_bound ctx name = lookup ctx name |> ignore
   
 let empty = []
 
