@@ -32,3 +32,7 @@ let rec pp_value v =
     | VVariant (name, []) -> VarName.to_string name
     | VVariant (name, values) -> Printf.sprintf "%s (%s)" (VarName.to_string name) (pp_value_list values ", ")
     | VTuple (values) -> Printf.sprintf "(%s)" (pp_value_list values ", ")
+
+
+
+(* a binary search tree *)     

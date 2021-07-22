@@ -19,6 +19,7 @@ x_4(x_16);
 let x_16 = x_6(x_7, x_15);
 let x_15 = x_9(x_13, x_14);
 let x_14 = 0;
+
 let x_13 = (comp_0, ks_0) => {
   let x_10 = comp_0[0];
   let x_11 = 0;
