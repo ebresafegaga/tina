@@ -10,8 +10,9 @@ type t = (VarName.t * Type.t) list
 let assume ctx x t = (x, t) :: ctx
 
 let assume_list ctx xs ts =
-  let alist = List.combine xs ts in
-  alist @ ctx
+  List.fold_right2 (fun name ty ctx -> Ctx.assume ctx name ty) xs ts ctx
+  (* let alist = List.combine xs ts in
+     alist @ ctx *)
 
 let lookup ctx x =
   match List.assoc x ctx with
