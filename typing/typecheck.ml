@@ -147,8 +147,7 @@ and check ctx term ty =
     check ctx pf ty
   | A.Fn (loc, args, body) -> (
       match ty with
-      | T.TyArrow (args_ty, ret_ty) when List.length args_ty = List.length args
-        ->
+      | T.TyArrow (args_ty, ret_ty) when List.length args_ty = List.length args ->
         let body_ctx = Ctx.assume_list ctx args args_ty in
         check body_ctx body ret_ty
       | T.TyArrow _ -> report_error_at "Function argument mismatch" loc
@@ -196,7 +195,6 @@ and tc_pattern ctx expr pattern body ~loc =
   let expr_ty = synth ctx expr in
   let body_ctx = bind_pattern_ty ctx pattern expr_ty ~loc in
   synth body_ctx body
-
 
 let handle_top ctx top =
   match top with

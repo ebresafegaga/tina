@@ -1,0 +1,19 @@
+effect state<a> {
+  fun get() : a
+  fun set( x : a ) : ()
+}
+
+fun pstate( init : b, action : () -> <state<b>> (a, b) ) : () -> (a, b) {
+  fn () {
+     with handler {
+      return(x) { fn (st) { (x,st) } }
+      fun get() { fn (st) { resume (st) (st) } }
+      fun set(i) { fn (idk) { resume () (i) }  }
+     }
+     action () (init)
+  }
+}
+
+fun main () {
+}
+

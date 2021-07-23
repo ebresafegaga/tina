@@ -25,6 +25,17 @@ and record = (FieldName.t * t) list
 
 let tyequal : t -> t -> bool = (=) (* for now *)
 
+(* this is majorly used for effect record types 
+   for example int <: int!{ get : unit -> int } 
+
+   claim g int!{get : unit -> int}
+   def g = 10
+
+   this should type check correctly
+
+*)
+let subtype : t -> t -> bool = (=) (* for now, also *)
+
 let pp_list es f ~sep = es |> List.map f |> String.concat sep
 
 let rec pp_ty = function
