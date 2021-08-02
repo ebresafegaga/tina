@@ -13,7 +13,9 @@
   settings
   js_of_ocaml
   js_of_ocaml-compiler)
- (promote
-  (until-clean)
-  (into .)
-  (only jstina.bc.js)))
+
+; (promote
+;  (until-clean)
+;  (into .)
+;  (only jstina.bc.js))
+)

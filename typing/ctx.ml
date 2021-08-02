@@ -10,7 +10,7 @@ type t = (VarName.t * Type.t) list
 let assume ctx x t = (x, t) :: ctx
 
 let assume_list ctx xs ts =
-  List.fold_right2 (fun name ty ctx -> Ctx.assume ctx name ty) xs ts ctx
+  List.fold_right2 (fun name ty ctx -> assume ctx name ty) xs ts ctx
   (* let alist = List.combine xs ts in
      alist @ ctx *)
 
@@ -30,7 +30,7 @@ let lookup_claim ctx x =
 
 let is_recordty = function
   | T.TyRecord _ -> true
-  | _ -> false 
+  | _ -> false
 
 (* (FieldName.t * t) list *)
 let rec lookup_record ctx name =
