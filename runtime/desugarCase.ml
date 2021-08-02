@@ -70,6 +70,12 @@ let rec freshen pats =
     (A.PVariable var :: row), (var, pat) :: frech
   | [] -> [], []
 
+(** [g body frontier] consumes a [body] expression and a
+    [frontier] which is represented a list of an association 
+    of variable and patterns. This is basically used to assign 
+    fresh variables name to recursive/nested patterns 
+    (and later pattern match on the variable) in order to 
+    un-nest recursive/nested patterns. *)
 let rec g body frontier =
   let g = g body in
   let variable name = A.Variable (d, name) in
@@ -99,6 +105,9 @@ let rec g body frontier =
     case (variable name)
       [A.PRecord name_pat, g frontier]
 
+(** [top pat body] is like the entry point to the [g] transformation. 
+    It assumes [pat] is not the outer pattern of a case expression. 
+    So it transforms patterns the way [g] should. *)
 let rec top pat body =
   match pat with
   | A.PVariable _ 
@@ -149,7 +158,6 @@ let rec transform0 expr =
     A.Record (loc, fields)
   | A.RecordIndex (loc, expr, name) -> A.RecordIndex (loc, transform0 expr, name)
   | A.Absurd (s, e) -> A.Absurd (s, e)
-
 
 
 let if' p pt pf = If (Loc.dummy, p, pt, pf)
@@ -242,8 +250,6 @@ let rec handle_toplevel = function
   | A.Def (loc, name, expr) :: rest -> Def (loc, name, g expr) :: handle_toplevel rest
   | A.Expression e :: rest -> Expression (g e) :: handle_toplevel rest
   | (A.VariantDef _ | A.RecordDef _ | A.AbilityDef _  | A.Claim _) :: rest -> handle_toplevel rest
-
-
 
 (* boilerplate pretty pprinting stuff *)
 
