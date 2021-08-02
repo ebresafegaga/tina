@@ -232,7 +232,10 @@ and top1 e clauses =
   | (A.PRecord pats, body) :: rest ->
     let e_0 = record_index e "0" in
     let v_0 = pats |> List.map snd |> List.hd |> expr_of_pat in
-    let pats = pats |> List.tl |> List.map (fun (n, p) -> FieldName.to_string n, var_of_pat p) in 
+    let pats = pats |> List.tl |> List.map (fun (n, p) -> FieldName.to_string n, var_of_pat p) in
+    (* instead of disturbing the current lexical scope with potentially unused 
+       (variable) bindings, we can substitue each variable usage in `body` with 
+       the coresponding record-index operation. *)
     let predicate_true =
       List.fold_right (fun (field, variable) s -> let' variable (record_index e field) s)
         pats
@@ -243,6 +246,26 @@ and top1 e clauses =
       predicate_true
       (top1 e rest)
 
+(* tbh this second pass is *very* unecessary;
+   the first pass is the real deal. in fact, 
+   the seperation of the two passes is the source 
+   of the bug in this pattern matching compiler. 
+
+                how? why? which bug?
+
+    bug: there is no backtracking for a failure when 
+         compiling a nested pattern case. when one of the
+         inner pattern fails, it should continue by checking 
+         the next pattern-expression clause. the current 
+         implementation doesn't.
+   why?: first of all, the two transforms operate on *different* 
+         syntax trees. also, `transform0` doesn't have access to 
+         the next branch (i.e pattern-expression clause), so what 
+         should it do when a nested pattern its un-nesting fails? 
+         NOTHING. because it doens't have access to this contextual 
+         information.
+
+   so please fix this bug (if you understand, of course.) *)
 let g = transform0 >> transform1
 
 let rec handle_toplevel = function
