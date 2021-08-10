@@ -62,7 +62,10 @@ let is_bound ctx name = lookup ctx name |> ignore
 let empty = []
 
 let default =
-  ["+", T.TyArrow ([T.TyInt; T.TyInt], T.TyInt)]
+  ["+", T.TyArrow ([T.TyInt; T.TyInt], T.TyInt); 
+  "-", T.TyArrow ([T.TyInt; T.TyInt], T.TyInt); 
+  "*", T.TyArrow ([T.TyInt; T.TyInt], T.TyInt)]
+  
   |> List.map (fun (n, t) -> VarName.of_string n, t)
 
 let pp_ctx =

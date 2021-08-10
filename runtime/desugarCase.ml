@@ -70,12 +70,11 @@ let rec freshen pats =
     (A.PVariable var :: row), (var, pat) :: frech
   | [] -> [], []
 
-(** [g body frontier] consumes a [body] expression and a
-    [frontier] which is represented a list of an association 
-    of variable and patterns. This is basically used to assign 
-    fresh variables name to recursive/nested patterns 
-    (and later pattern match on the variable) in order to 
-    un-nest recursive/nested patterns. *)
+(** [g body frontier] consumes a [body] expression and a [frontier]
+   which is represented a list of an association of variable and
+   patterns. This is basically used to assign fresh variables name to
+   recursive/nested patterns (and later pattern match on the variable)
+   in order to un-nest recursive/nested patterns. *)
 let rec g body frontier =
   let g = g body in
   let variable name = A.Variable (d, name) in
@@ -125,6 +124,23 @@ let rec top pat body =
     let name_pat = List.combine names pats in
     A.PRecord (tag :: name_pat), g body frontier (* add the tag back *)
 
+let if' p pt pf = If (Loc.dummy, p, pt, pf)
+let app f args = Application (Loc.dummy, f, args)
+let let' name expr body = Let (Loc.dummy, name, expr, body)
+let var name = Variable (d, VarName.of_string name)
+let record_index record name = RecordIndex (d, record, FieldName.of_string name)
+let equal = var "equal"
+
+let expr_of_pat = function
+  | A.PBool b -> LitBool (d, b)
+  | A.PInteger i -> LitInteger (d, i)
+  | A.PString s -> LitString (d, s)
+  | A.PVariable _ | A.PRecord _ -> Errors.runtime "expr_of_pat: expected a constant pat"
+
+let var_of_pat = function
+  | A.PVariable v -> v
+  | _ -> Errors.runtime "var_of_pat: expected a variable pattern"
+
 let rec transform0 expr =
   match expr with
   | A.Case (loc, expr, clauses) ->
@@ -148,7 +164,7 @@ let rec transform0 expr =
     A.Let (loc, A.PVariable name, transform0 expr, transform0 body)
   | A.Let (loc, pat, expr, body) ->
     (* transform a let with pattern to a case expression *)
-    let e = A.Case (loc, expr, [pat, body]) in 
+    let e = A.Case (loc, expr, [pat, body]) in
     transform0 e
   | A.Fn (loc, vars, body) -> A.Fn (loc, vars, transform0 body)
   | A.Annotated (loc, e, ty) -> A.Annotated (loc, transform0 e, ty)
@@ -158,24 +174,6 @@ let rec transform0 expr =
     A.Record (loc, fields)
   | A.RecordIndex (loc, expr, name) -> A.RecordIndex (loc, transform0 expr, name)
   | A.Absurd (s, e) -> A.Absurd (s, e)
-
-
-let if' p pt pf = If (Loc.dummy, p, pt, pf)
-let app f args = Application (Loc.dummy, f, args)
-let let' name expr body = Let (Loc.dummy, name, expr, body)
-let var name = Variable (d, VarName.of_string name)
-let record_index record name = RecordIndex (d, record, FieldName.of_string name)
-let equal = var "equal"
-
-let expr_of_pat = function
-  | A.PBool b -> LitBool (d, b)
-  | A.PInteger i -> LitInteger (d, i)
-  | A.PString s -> LitString (d, s)
-  | A.PVariable _ | A.PRecord _ -> Errors.runtime "expr_of_pat: expected a constant pat"
-
-let var_of_pat = function
-  | A.PVariable v -> v
-  | _ -> Errors.runtime "var_of_pat: expected a variable pattern"
 
 let rec transform1 expr =
   match expr with
@@ -189,6 +187,7 @@ let rec transform1 expr =
     let args = args |> List.map transform1 in
     Application (loc, transform1 f, args)
   | A.Let (loc, var, expr, body) ->
+    (* assumes all patterns are now variables *)
     let var = var_of_pat var in
     Let (loc, var, transform1 expr, transform1 body)
   | A.Fn (loc, vars, body) -> Fn (loc, vars, transform1 body) 
@@ -196,7 +195,7 @@ let rec transform1 expr =
   | A.Sequence (_loc, a, b) ->
     let' (fresh "seq") (transform1 a)
       (transform1 b)
-  | A.Case (_loc, expr, clauses) -> top1 (transform1 expr) clauses
+  | A.Case (_loc, expr, clauses) -> case (transform1 expr) clauses
   | A.Record (loc, names) ->
     let names = names |> List.map (fun (name, e) -> name, transform1 e) in
     Record (loc, names)
@@ -204,31 +203,32 @@ let rec transform1 expr =
     RecordIndex (loc, transform1 expr, index)
   | A.Absurd (s, e) -> Absurd (s, transform1 e)
 
-and top1 e clauses =
+and case e clauses =
   match clauses with
   | [] -> Absurd ("Pattern match failure", LitInteger (d, 0))
-  | (A.PVariable x, body) :: rest ->
-    if' (LitBool (d, true))
-      (let' x e (transform1 body))
-      (top1 e rest)
+  | (A.PVariable x, body) :: _rest ->
+    (* if' (LitBool (d, true))
+       (let' x e (transform1 body))
+       (case e rest) *)
+    (let' x e (transform1 body)) (* it's a pattern variable - it's always going to match *)
   | (A.PInteger q, body) :: rest ->
     let q = LitInteger (d, q) in
     let predicate = app equal [q; e] in
     if' predicate
       (transform1 body)
-      (top1 e rest)
+      (case e rest)
   | (A.PString s, body) :: rest ->
     let s = LitString (d, s) in
     let predicate = app equal [s; e] in
     if' predicate
       (transform1 body)
-      (top1 e rest)
+      (case e rest)
   | (A.PBool b, body) :: rest ->
     let b = LitBool (d, b) in
     let predicate = app equal [b; e] in
     if' predicate
       (transform1 body)
-      (top1 e rest)
+      (case e rest)
   | (A.PRecord pats, body) :: rest ->
     let e_0 = record_index e "0" in
     let v_0 = pats |> List.map snd |> List.hd |> expr_of_pat in
@@ -244,7 +244,7 @@ and top1 e clauses =
     let predicate = app equal [e_0; v_0] in
     if' predicate
       predicate_true
-      (top1 e rest)
+      (case e rest)
 
 (* tbh this second pass is *very* unecessary;
    the first pass is the real deal. in fact, 
@@ -323,4 +323,3 @@ let pp_toplevel = function
       (VarName.to_string name)
       (pp_expression expr)
   | Expression expr -> pp_expression expr
-  

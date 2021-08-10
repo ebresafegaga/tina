@@ -1,56 +1,75 @@
-const o = { 0: x_0 };
-let if_24 = () => {
-  if (x_9) {
-    let f = v[1];
-    return f;
+const o = x_5(x_17);
+let x_230 = x_220(x_221, x_229);
+let x_229 = x_223(x_227, x_228);
+let x_228 = 0;
+let x_227 = (comp_0, ks_0) => {
+  let x_224 = comp_0[0];
+  let x_225 = 0;
+  let x_226 = equal(x_224, x_225);
+  if (x_226) {
+    let l_0 = comp_0[1];
+    let idk1_0 = comp_0[2];
+    let idk2_0 = comp_0[3];
+    return absurd("Unhandled effect");
   } else {
-    let x_10 = v[0];
-    let x_11 = 0;
-    let x_12 = equal(x_10, x_11);
-    if (x_12) {
-      return "ogaga";
-    } else {
-      let x_13 = v[0];
-      let x_14 = 1;
-      let x_15 = equal(x_13, x_14);
-      if (x_15) {
-        return "afoks";
-      } else {
-        let x_16 = v[0];
-        let x_17 = 3;
-        let x_18 = equal(x_16, x_17);
-        if (x_18) {
-          let a = v[1];
-          let b = v[2];
-          let x_23 = 0;
-          return { 0: x_23, 1: b, 2: a };
-        } else {
-          let x_19 = v[0];
-          let x_20 = 4;
-          let x_21 = equal(x_19, x_20);
-          if (x_21) {
-            let x = v[1];
-            let b = v[2];
-            let x_22 = 0;
-            return { 0: x_22, 1: x, 2: b };
-          } else {
-            return absurd("Pattern match failure");
-          }
-        }
-      }
-    }
+    return absurd("Pattern match failure");
   }
 };
-let x_9 = equal(x_7, x_8);
-let x_8 = 2;
-let x_7 = v[0];
-let x_6 = 2;
-let x_5 = 23;
-let x_4 = 4;
-let x_3 = "ooo";
-let x_2 = 10;
-let x_1 = 3;
-let x_0 = 0;
-const y = { 0: x_1, 1: x_2, 2: x_3 };
-const v = { 0: x_4, 1: x_5, 2: x_6 };
-if_24;
+const y = x_25(x_37);
+let x_223 = (e1_0, e2_0) => {
+  let x_222 = 0;
+  return { 0: x_222, 1: e1_0, 2: e2_0 };
+};
+const v = x_45(x_57);
+let x_221 = (x_0, ks_0) => {
+  return x_0;
+};
+const ebresafe = x_63(x_75);
+let x_220 = (e1_0, e2_0) => {
+  let x_219 = 0;
+  return { 0: x_219, 1: e1_0, 2: e2_0 };
+};
+const class_ = x_84(x_96);
+let x_218 = (ks_0) => {
+  let x_203 = ks_0[0];
+  let x_204 = 0;
+  let x_205 = equal(x_203, x_204);
+  if (x_205) {
+    let k_0 = ks_0[1];
+    let ks__0 = ks_0[2];
+    let fn_0 = (x_0, ks___0) => {
+      let x_213 = 10;
+      let x_214 = x_0(x_213);
+      let x_216 = (e1_0, e2_0) => {
+        let x_215 = 0;
+        return { 0: x_215, 1: e1_0, 2: e2_0 };
+      };
+      let x_217 = x_216(k_0, ks_0);
+      return x_214(x_217);
+    };
+    let x_209 = (___ks____0) => {
+      let x_206 = ___ks____0[0];
+      let x_207 = 0;
+      let x_208 = equal(x_206, x_207);
+      if (x_208) {
+        let ___k____0 = ___ks____0[1];
+        let ___ks____0 = ___ks____0[2];
+        return ___k____0(fib, ___ks____0);
+      } else {
+        return absurd("Pattern match failure");
+      }
+    };
+    let x_211 = (e1_0, e2_0) => {
+      let x_210 = 0;
+      return { 0: x_210, 1: e1_0, 2: e2_0 };
+    };
+    let x_212 = x_211(fn_0, ks_prime_0);
+    return x_209(x_212);
+  } else {
+    return absurd("Pattern match failure");
+  }
+};
+const og = x_107(x_119);
+const sum = x_145(x_157);
+const fib = x_190(x_202);
+x_218(x_230);

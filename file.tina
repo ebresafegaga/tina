@@ -2,18 +2,66 @@
 
 
 
-datatype Name = Ogaga | Afoke | Fejiro (Float) | Yoma (Nat, String) | Vovwero (Nat, Nat)
+datatype Name = Ogaga | Afoke | Fejiro (Float) | Yoma (Int, String) | Vovwero (Int, Int)
 
+claim o Name
 def o = Ogaga
 
+claim y Name
 def y = Yoma (10, "ooo")
 
+claim v Name
 def v = Vovwero (23, 2)
 
-case (v) {
-     Fejiro (f) -> f,
-     Ogaga -> "ogaga",
-     Afoke -> "afoks",
-     Yoma (a, b) -> (b, a),
-      Vovwero (x, b) -> (x, b)
-}
+
+-- these are github pilot auto generated lol
+
+claim ebresafe (Name, Name, Name)
+def ebresafe = (o, y, v)
+
+-- i defined this 
+datatype expr = 
+      { claim name String, 
+        claim age Int,
+        claim class Int }
+
+
+-- function to get the class from an expr 
+claim class (expr -> Int)
+def class (e) = case (e) {
+      expr -> e.class,
+      _ -> 0
+   }
+
+-- function to decide if a name if Ogaga
+claim og (String -> Int) 
+def og (n) = case (n) {
+      "ogaga" -> 1,
+      _ -> 0
+   }
+
+-- function to sum two values from a pair 
+claim sum ((Int, Int) -> Int)
+def sum (p) = case (p) {
+      (a, b) -> a + b,
+      _ -> 0
+   }
+
+-- function to calculate fibonacci 
+claim fib (Int -> Int)
+def fib (n) = case (n) {
+      0 -> 0,
+      1 -> 1,
+      _ -> fib (n - 1) + fib (n - 2)
+   }
+
+fib (10)
+
+-- function to calculte factorial 
+claim fact (Int -> Int)
+def fact (n) = case (n) {
+      0 -> 1,
+      _ -> n * fact (n - 1)   
+   }
+
+-- function to get the k-means from a vector as input 
