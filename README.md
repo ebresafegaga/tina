@@ -8,6 +8,7 @@
 ## Welcome to Tina
 
 Tina is a programming language based algebraic effects and handlers.
+This implementation contains an interpreter and two compilers (JavaScript and LLVM)
 
 While algebraic effects and handlers might be the central concept
 aroun Tina, it also supports other features such as pattern matching,
