@@ -14,6 +14,8 @@ While algebraic effects and handlers might be the central concept
 aroun Tina, it also supports other features such as pattern matching,
 closures, algebraic data types, and a type system.
 
+This is a work in progress. 
+
 
 ## Contributing to Tina
 
