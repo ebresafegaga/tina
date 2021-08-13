@@ -29,24 +29,33 @@ Building Tina is relatively straight forward once you have the
 required toolchains installed.
 
 You would need:
-    - Dune
-    - OCaml (>= 4.12)
-    - Opam
+  - Dune
+  - OCaml (>= 4.12)
+  - Opam
 
-Once you have them installed, you can the build it like so:
+Steps to build
+ - Clone this repo:
+ ```
+ $ git clone https://github.com/ebresafegaga/tina
+ ```
 
-     Clone this repo:
-     ```$ git clone https://github.com/ebresafegaga/tina```
+ - Pin it to the this version
+ ```
+ $ opam pin add tina.dev -n .
+ ```
 
-     Pin it to the this version
-     ```$ opam pin add tina.dev -n .```
+ - Install native dependecies 
+ ```
+ $ opam depext -yt tina
+ ```
 
-     Install native dependecies 
-      ```$ opam depext -yt tina```
+  - Install library dependecies
+  ```
+  $ opam install -t . --deps-only
+  ```
 
-      Install library dependecies
-      ```$ opam install -t . --deps-only```
-
-      Build the whole project
-      ```$ dune build```
+- Build the whole project
+```
+$ dune build
+```
 
